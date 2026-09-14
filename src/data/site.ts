@@ -43,9 +43,10 @@ export const site = {
   phone: '(913) 963-3160',
   phoneHref: 'tel:+19139633160',
 
-  /** [CONFIRMAR] e-mail de atendimento. Nulo enquanto não vem: link de
-      contato quebrado no rodapé é o tipo de coisa que ninguém revisa depois. */
-  email: null as string | null,
+  /* O e-mail de atendimento, confirmado pela academia. O campo continua
+     podendo ser nulo porque o rodapé sabe imprimir a pendência no lugar dele:
+     link de contato quebrado é o tipo de coisa que ninguém revisa depois. */
+  email: 'holanda.bjjacademy@gmail.com' as string | null,
 
   /** [CONFIRMAR] o número tem WhatsApp? A referência oferece "fale no WhatsApp"
       ao lado do botão principal, e aqui isso só entra depois de alguém
