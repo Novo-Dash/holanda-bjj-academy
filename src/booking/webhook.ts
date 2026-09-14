@@ -16,20 +16,58 @@
 
 const PLACEHOLDER = 'PLACEHOLDER'
 
-const GHL_LOCATION_ID = PLACEHOLDER
-const LEAD_WEBHOOK_UUID = PLACEHOLDER
+/* Confirmados. Os dois saem da mesma URL que o operador entrega
+   (https://services.leadconnectorhq.com/hooks/<location>/webhook-trigger/<uuid>),
+   e o `location_id` foi conferido contra o cadastro: bate com
+   "Holanda BJJ - Framingham MA". Esse cross-check é o que impede o pior erro
+   possível aqui, que é o lead cair na sub-account de outra academia sem nada
+   quebrar.
+
+   Anotados como `string` e não deixados inferir o literal: com o literal o
+   TypeScript conclui que a comparação com PLACEHOLDER em `isConfigured()` nunca
+   é verdadeira e reprova o arquivo. A guarda existe para o próximo clone deste
+   módulo, que nasce com os dois em PLACEHOLDER. */
+const GHL_LOCATION_ID: string = 'umbThmlnc77LC745O8FF'
+const LEAD_WEBHOOK_UUID: string = 'ESLBfsTWuNBfFiKrha6G'
 
 /** Fixo em todas as unidades. Nunca parametrizar. */
 const N8N_BOOKING_URL = 'https://n8n.novodash.com/webhook/landing-page-booking'
 
 export const SOURCE_LABEL = 'Landing Page - Free Trial'
 
-/** [CONFIRMAR] um calendário por programa, na conta da academia. */
+/** [CONFIRMAR] um calendário por programa.
+ *
+ *  A chave `advanced` estava aqui e NÃO existe em `programs` do site.ts; a que
+ *  faltava era `adults`. Do jeito antigo, um agendamento de "Adults Jiu-Jitsu"
+ *  saía com `calendar_id: undefined` e o fluxo do n8n quebrava sem ninguém ver.
+ *
+ *  OS CINCO CALENDÁRIOS DA ACADEMIA JÁ EXISTEM E TÊM HORÁRIO (um `get_programs`
+ *  na location devolve Adults BJJ All Levels, Adults No-Gi All Levels, Kids BJJ
+ *  4-6, Kids BJJ 7-13 e Kids No-Gi 7-13, todos com slots e no grupo certo).
+ *  Eles continuam PLACEHOLDER aqui porque as quatro turmas desta página NÃO
+ *  casam uma a uma com os cinco do CRM: a página tem "Beginners", que não é
+ *  calendário nenhum, e tem uma turma de kids só, contra três lá. Escolher o
+ *  par no chute manda gente para a aula errada.
+ *
+ *  A saída certa é a da spec: a lista de turmas vem do `get_programs` em
+ *  runtime e este mapa deixa de existir. Enquanto isso não acontece, o envio ao
+ *  fluxo de agendamento fica travado pela guarda em `sendBooking`. */
 const PROGRAM_CALENDAR_ID: Record<string, string> = {
   beginners: PLACEHOLDER,
-  advanced: PLACEHOLDER,
+  adults: PLACEHOLDER,
   kids: PLACEHOLDER,
   nogi: PLACEHOLDER,
+}
+
+/** adults | kids, por turma. O `[ND] Primary Workflow` é o MESMO para todas as
+ *  academias, e é este campo que a Condition dele usa para rotear. Sem ele o
+ *  lead cai no branch `None` e não é classificado: não ganha tag, não abre
+ *  oportunidade. Estava faltando no payload. */
+const PROGRAM_AUDIENCE: Record<string, 'adults' | 'kids'> = {
+  beginners: 'adults',
+  adults: 'adults',
+  kids: 'kids',
+  nogi: 'adults',
 }
 
 export type BookingData = {
@@ -148,11 +186,30 @@ export function sendBooking(d: BookingData): void {
       phoneE164: toE164(d.phone),
       interest: d.programId,
       program: d.programLabel,
+      audience: PROGRAM_AUDIENCE[d.programId] ?? 'adults',
       submittedAt: new Date().toISOString(),
       source: SOURCE_LABEL,
       ...getAttribution(),
     }
   )
+
+  /* O FLUXO COMPARTILHADO SÓ RECEBE QUANDO EXISTE CALENDÁRIO DE VERDADE.
+
+     Sem esta guarda, ligar os dois identificadores do lead ligava os DOIS
+     envios de uma vez, e o segundo caía no n8n de produção, que é compartilhado
+     com todas as academias, carregando `calendar_id: "PLACEHOLDER"`. Do outro
+     lado isso é um `No active calendar with id` e uma execução vermelha por
+     lead, num fluxo que não é só desta unidade.
+
+     A guarda é o próprio dado e não uma bandeira à parte: no dia em que os ids
+     entrarem no mapa acima, o envio religa sozinho. */
+  const calendarId = PROGRAM_CALENDAR_ID[d.programId]
+  if (!calendarId || calendarId === PLACEHOLDER) {
+    console.info(
+      '[booking] lead enviado; agendamento NÃO enviado porque o programa ainda não tem calendar_id. Ver src/booking/webhook.ts'
+    )
+    return
+  }
 
   /* Schema do fluxo compartilhado. Contrato crítico: não acrescentar campos. */
   post(N8N_BOOKING_URL, {
@@ -160,7 +217,7 @@ export function sendBooking(d: BookingData): void {
     ...(child ? { child_name: child } : {}),
     email: d.email.trim(),
     phone: d.phone.trim(),
-    calendar_id: PROGRAM_CALENDAR_ID[d.programId] ?? PLACEHOLDER,
+    calendar_id: calendarId,
     location_id: GHL_LOCATION_ID,
     /* `lead_captured` e não `appointment_selected`: a folha não marca mais
        hora. A grade de aulas nunca foi confirmada pela academia, então o
