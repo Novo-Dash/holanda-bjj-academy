@@ -162,7 +162,6 @@ export const site = {
     count: 35,
     provisional: false,
     /** [CONFIRMAR] link do perfil do Google, para o "read them on Google". */
-    profileUrl: null as string | null,
   },
 }
 
@@ -371,14 +370,6 @@ export const reasons: Reason[] = [
    Faixa e linhagem não se preenchem com um chute: dizer a faixa errada de um
    professor de jiu-jitsu é o erro mais caro que esta página poderia cometer, e
    ele não sairia num teste, sairia na boca de um aluno. */
-export const instructor = {
-  name: 'Diego do Nascimento Holanda',
-  shortName: 'Diego',
-  role: 'Head coach',
-  /** [CONFIRMAR] faixa e linhagem. */
-  belt: null as string | null,
-  lineage: null as string | null,
-}
 
 /* ── A aula experimental ─────────────────────────────────────────────────────
    A seção que entrou no lugar do corpo técnico, a pedido do Adryan.
@@ -510,70 +501,6 @@ export const reviews: Review[] = [
   },
 ]
 
-/* ── Grade de horários ───────────────────────────────────────────────────────
-   [CONFIRMAR] a grade REAL, por turma. Esta é a estrutura final e o componente
-   já lê daqui, mas os horários abaixo são um rascunho e não podem ir ao ar:
-   mandar alguém para uma porta fechada é o pior erro possível numa página que
-   vai receber tráfego pago.
-
-   É também daqui que saem os horários oferecidos no agendamento, então trocar
-   esta lista arruma a página e o formulário de uma vez. */
-export const schedulePending = true
-
-export type ClassSlot = { time: string; program: string }
-
-export const schedule: { day: string; slots: ClassSlot[] }[] = [
-  {
-    day: 'Monday',
-    slots: [
-      { time: '6:30 am', program: 'Adults · Beginners' },
-      { time: '5:00 pm', program: 'Kids · 7 to 15' },
-      { time: '6:30 pm', program: 'Adults · All levels' },
-      { time: '7:30 pm', program: 'Adults · No-Gi' },
-    ],
-  },
-  {
-    day: 'Tuesday',
-    slots: [
-      { time: '12:00 pm', program: 'Adults · Beginners' },
-      { time: '5:00 pm', program: 'Kids · 7 to 15' },
-      { time: '6:30 pm', program: 'Adults · All levels' },
-    ],
-  },
-  {
-    day: 'Wednesday',
-    slots: [
-      { time: '6:30 am', program: 'Adults · Beginners' },
-      { time: '5:00 pm', program: 'Kids · 7 to 15' },
-      { time: '6:30 pm', program: 'Adults · All levels' },
-      { time: '7:30 pm', program: 'Adults · No-Gi' },
-    ],
-  },
-  {
-    day: 'Thursday',
-    slots: [
-      { time: '12:00 pm', program: 'Adults · Beginners' },
-      { time: '5:00 pm', program: 'Kids · 7 to 15' },
-      { time: '6:30 pm', program: 'Adults · All levels' },
-    ],
-  },
-  {
-    day: 'Friday',
-    slots: [
-      { time: '6:30 am', program: 'Adults · Beginners' },
-      { time: '5:00 pm', program: 'Kids · 7 to 15' },
-      { time: '6:30 pm', program: 'Adults · No-Gi' },
-    ],
-  },
-  {
-    day: 'Saturday',
-    slots: [
-      { time: '9:00 am', program: 'Kids · 7 to 15' },
-      { time: '10:00 am', program: 'Adults · Beginners' },
-      { time: '11:00 am', program: 'Adults · All levels' },
-    ],
-  },
-]
 
 /* ── Perguntas ───────────────────────────────────────────────────────────────
    No formato da referência: a pergunta escrita na voz de quem chega, e a

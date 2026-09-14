@@ -297,7 +297,7 @@ function ReviewCard({ review }: { review: Review }) {
  * bonito ficar ilegível no celular ao sol.
  */
 function RatingPanel() {
-  const { score, count, provisional, profileUrl } = site.rating
+  const { score, count, provisional } = site.rating
 
   return (
     <div className="relative isolate flex shrink-0 flex-col justify-center overflow-hidden rounded-plate bg-red p-8 text-center text-paper shadow-lift lg:w-[17rem] lg:p-9">
@@ -345,16 +345,6 @@ function RatingPanel() {
         </span>
       )}
 
-      {profileUrl && (
-        <a
-          href={profileUrl}
-          target="_blank"
-          rel="noreferrer"
-          className="label mt-6 inline-block py-1.5 text-paper underline underline-offset-4"
-        >
-          Read them on Google
-        </a>
-      )}
     </div>
   )
 }

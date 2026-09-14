@@ -23,11 +23,12 @@ const EXPLORE = [
  *
  * Quatro colunas: a marca, os programas, o índice da página e o "visite-nos".
  *
- * O horário de funcionamento saiu daqui a pedido. Com ele fora, a grade de
- * aulas não aparece em NENHUM lugar visível da página: ela só existe no passo 3
- * do agendamento, onde o formulário oferece os horários do programa escolhido.
- * Isso é defensável enquanto a grade for rascunho (`schedulePending`), e vira
- * uma lacuna real no dia em que a grade verdadeira chegar.
+ * NÃO HÁ HORÁRIO EM LUGAR NENHUM DA PÁGINA, e é decisão e não esquecimento: a
+ * academia não confirmou a grade de aulas, e horário errado numa página que
+ * recebe tráfego pago manda gente para uma porta fechada. O agendamento também
+ * deixou de oferecer hora por isso — ele recolhe o contato e a academia liga
+ * para marcar. Se a grade verdadeira chegar um dia, ela volta aqui e no
+ * formulário de uma vez.
  *
  * O padding de baixo é maior no celular por causa da barra fixa de ação, que
  * mora exatamente ali: sem a folga, a última linha do rodapé fica debaixo dela

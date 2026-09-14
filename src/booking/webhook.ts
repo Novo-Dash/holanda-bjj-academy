@@ -42,8 +42,6 @@ export type BookingData = {
   childAge: string
   programId: string
   programLabel: string
-  date: string
-  time: string
 }
 
 export function isConfigured(): boolean {
@@ -164,9 +162,12 @@ export function sendBooking(d: BookingData): void {
     phone: d.phone.trim(),
     calendar_id: PROGRAM_CALENDAR_ID[d.programId] ?? PLACEHOLDER,
     location_id: GHL_LOCATION_ID,
-    stage: 'appointment_selected',
-    appointment_date: d.date,
-    appointment_time: d.time,
+    /* `lead_captured` e não `appointment_selected`: a folha não marca mais
+       hora. A grade de aulas nunca foi confirmada pela academia, então o
+       formulário parou de oferecer horário e passou a entregar o contato para
+       a academia ligar. Quem marca a hora é a ligação, e o estágio tem de dizer
+       isso, senão o CRM recebe um agendamento sem agendamento. */
+    stage: 'lead_captured',
     source: SOURCE_LABEL,
   })
 }

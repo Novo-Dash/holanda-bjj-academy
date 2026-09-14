@@ -1,9 +1,8 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react'
 import { Button } from '@/components/ui/button'
 import { Mark } from '@/components/mark'
-import { Pending } from '@/components/paper'
-import { offer, programs, schedule, schedulePending, site } from '@/data/site'
+import { offer, programs, site } from '@/data/site'
 import { sendBooking } from '@/booking/webhook'
 import { track, trackLead } from '@/lib/track'
 import { cn } from '@/lib/utils'
@@ -11,53 +10,11 @@ import { cn } from '@/lib/utils'
 const EASE = [0.22, 1, 0.36, 1] as const
 
 /** Tempo mínimo entre abrir a folha e mandar. Um humano leva mais que isto para
-    escolher programa, digitar nome, e-mail e telefone e ainda escolher um
-    horário; um script leva 200ms. É a metade barata do anti-spam, e a outra
-    metade é o campo-armadilha logo abaixo. */
+    escolher a turma e digitar nome, e-mail e telefone; um script leva 200ms. É
+    a metade barata do anti-spam, e a outra metade é o campo-armadilha logo
+    abaixo. */
 const MIN_FILL_MS = 5000
 
-/**
- * Próximos dias com aula do programa escolhido, montados a partir da grade da
- * parede. Enquanto o calendário do CRM não existe, a disponibilidade real vem
- * daqui: é o mesmo dado que a página já mostra, então o formulário nunca
- * oferece um horário que a grade não tem.
- */
-function nextDays(programId: string) {
-  const out: { iso: string; weekday: string; label: string; times: string[] }[] = []
-  const today = new Date()
-
-  /* Que aulas da grade servem para cada programa. A turma aberta ("All levels")
-     conta para iniciante e para avançado; a de no-gi não conta para nenhum dos
-     dois, senão alguém que pediu aula de kimono apareceria de bermuda. */
-  const ACCEPTS: Record<string, string[]> = {
-    beginners: ['Adults · Beginners', 'Adults · All levels'],
-    advanced: ['Adults · Advanced', 'Adults · All levels'],
-    kids: ['Kids'],
-    nogi: ['Adults · No-Gi'],
-  }
-  const accepted = ACCEPTS[programId] ?? ['Adults']
-
-  for (let i = 1; i <= 12 && out.length < 6; i++) {
-    const date = new Date(today)
-    date.setDate(today.getDate() + i)
-    const weekday = date.toLocaleDateString('en-US', { weekday: 'long' })
-    const day = schedule.find((d) => d.day === weekday)
-    if (!day) continue
-
-    const times = day.slots
-      .filter((s) => accepted.some((prefix) => s.program.startsWith(prefix)))
-      .map((s) => s.time)
-    if (!times.length) continue
-
-    out.push({
-      iso: date.toISOString().slice(0, 10),
-      weekday: weekday.slice(0, 3),
-      label: date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
-      times,
-    })
-  }
-  return out
-}
 
 type Details = {
   firstName: string
@@ -101,10 +58,9 @@ export function BookingModal({
   onClose: () => void
 }) {
   const reduce = useReducedMotion()
-  const [step, setStep] = useState<1 | 2 | 3 | 4>(1)
+  const [step, setStep] = useState<1 | 2 | 3>(1)
   const [programId, setProgramId] = useState(programs[0].id)
   const [details, setDetails] = useState<Details>(EMPTY)
-  const [pick, setPick] = useState<{ iso: string; time: string } | null>(null)
   const [errors, setErrors] = useState<Partial<Record<keyof Details, string>>>({})
   const [tooFast, setTooFast] = useState(false)
 
@@ -117,7 +73,6 @@ export function BookingModal({
   const sheetRef = useRef<HTMLDivElement>(null)
   const firstFieldRef = useRef<HTMLInputElement>(null)
 
-  const days = useMemo(() => nextDays(programId), [programId])
   const program = programs.find((p) => p.id === programId) ?? programs[0]
   const isKids = programId === 'kids'
 
@@ -182,7 +137,6 @@ export function BookingModal({
     if (open) return
     const id = window.setTimeout(() => {
       setStep(1)
-      setPick(null)
       setErrors({})
       setTooFast(false)
     }, 360)
@@ -207,11 +161,9 @@ export function BookingModal({
   }, [details, isKids])
 
   function submit() {
-    if (!pick) return
-
     if (trap.trim()) {
       // Robô. A folha agradece e nada é enviado.
-      setStep(4)
+      setStep(3)
       return
     }
     if (Date.now() - openedAt.current < MIN_FILL_MS) {
@@ -223,11 +175,9 @@ export function BookingModal({
       ...details,
       programId,
       programLabel: program.name,
-      date: pick.iso,
-      time: pick.time,
     })
     trackLead({ program: programId, value: 0, currency: 'USD' })
-    setStep(4)
+    setStep(3)
   }
 
   return (
@@ -316,13 +266,7 @@ export function BookingModal({
                     </span>
                   ))}
                   <span className="label ml-1.5 text-ink-soft">
-                    {step === 1
-                      ? 'Which class'
-                      : step === 2
-                        ? 'Your details'
-                        : step === 3
-                          ? 'Pick a time'
-                          : 'Done'}
+                    {step === 1 ? 'Which class' : step === 2 ? 'Your details' : 'Done'}
                   </span>
                 </div>
 
@@ -388,7 +332,7 @@ export function BookingModal({
                   <form
                     onSubmit={(e) => {
                       e.preventDefault()
-                      if (validate()) setStep(3)
+                      if (validate()) submit()
                     }}
                     className="flex flex-col gap-5"
                   >
@@ -469,6 +413,12 @@ export function BookingModal({
                       </label>
                     </div>
 
+                    {tooFast && (
+                      <p role="alert" className="text-[0.82rem] text-red">
+                        That went through a little too fast. Give it a moment and send again.
+                      </p>
+                    )}
+
                     <div className="mt-2 flex items-center gap-3">
                       <Button
                         variant="outline"
@@ -479,69 +429,13 @@ export function BookingModal({
                         Back
                       </Button>
                       <Button type="submit" size="lg" className="flex-1">
-                        Pick a time
+                        Book my free class
                       </Button>
                     </div>
                   </form>
                 )}
 
                 {step === 3 && (
-                  <div>
-                    <p className="text-[0.95rem] leading-relaxed text-ink-soft">
-                      {program.name} class, {program.ages.toLowerCase()}. Choose when you want to
-                      come in.
-                    </p>
-
-                    <div className="mt-5 flex flex-col gap-4">
-                      {days.map((day) => (
-                        <div key={day.iso} className="border-b border-line pb-4 last:border-b-0">
-                          <p className="label text-ink-soft">
-                            {day.weekday} · {day.label}
-                          </p>
-                          <div className="mt-3 flex flex-wrap gap-2">
-                            {day.times.map((time) => {
-                              const on = pick?.iso === day.iso && pick.time === time
-                              return (
-                                <button
-                                  key={time}
-                                  type="button"
-                                  onClick={() => setPick({ iso: day.iso, time })}
-                                  className={cn(
-                                    'tnum rounded-inner border px-4 py-2.5 text-[0.85rem] transition-colors',
-                                    on
-                                      ? 'border-red bg-red text-paper'
-                                      : 'border-line-strong text-ink hover:border-red'
-                                  )}
-                                >
-                                  {time}
-                                </button>
-                              )
-                            })}
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-
-                    {schedulePending && <Pending>Live calendar to connect</Pending>}
-
-                    {tooFast && (
-                      <p role="alert" className="mt-4 text-[0.82rem] text-red">
-                        That went through a little too fast. Give it a moment and send again.
-                      </p>
-                    )}
-
-                    <div className="mt-7 flex items-center gap-3">
-                      <Button variant="outline" size="md" withCaret={false} onClick={() => setStep(2)}>
-                        Back
-                      </Button>
-                      <Button size="md" className="flex-1" onClick={submit} aria-disabled={!pick}>
-                        {pick ? 'Book my free class' : 'Pick a time first'}
-                      </Button>
-                    </div>
-                  </div>
-                )}
-
-                {step === 4 && (
                   <div className="py-8 text-center">
                     <Mark className="mx-auto h-14 w-14 text-red" />
                     <p className="display mt-7 text-[2rem] leading-tight text-ink">You are in.</p>
