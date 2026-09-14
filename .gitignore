@@ -1,0 +1,55 @@
+# Dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# Build / output
+dist/
+dist-ssr/
+build/
+*.local
+
+# Env & secrets (NUNCA versionar)
+.env
+.env.*
+!.env.example
+
+# Claude / ferramentas de IA
+.claude/
+.cursor/
+.aider*
+
+# Material bruto de marca e de produção: logos editáveis, fontes licenciadas,
+# vídeos e fotos originais. É o que NÃO vai para um repositório público.
+# Atenção: isto NÃO se aplica a src/data/site.ts, que é dado de marca em código
+# e tem de ser versionado.
+brand/
+raw/
+/brand-assets/
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+logs/
+*.log
+
+# Editor / OS
+.vscode/*
+!.vscode/extensions.json
+.idea/
+.DS_Store
+Thumbs.db
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Cache / temp
+.cache/
+.temp/
+.tmp/
+coverage/
+.eslintcache

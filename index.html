@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#14120f" />
+
+    <!-- PRÉ-CARGA DAS DUAS FONTES. Sem ela o navegador só descobre que precisa
+         delas depois de baixar e casar o CSS, e a troca da fonte de sistema
+         pela real remexia a primeira tela (0,233 de CLS na medição). Com a
+         pré-carga elas viajam junto com o CSS e chegam antes da primeira
+         pintura.
+
+         `crossorigin` é obrigatório mesmo sendo mesma origem: fonte é sempre
+         buscada em modo anônimo, e sem o atributo o navegador baixa o arquivo
+         DUAS vezes, uma pela pré-carga e outra pelo @font-face.
+
+         Só estas duas: são as únicas que a primeira tela usa (a headline é
+         Sofia, o resto do texto é Archivo). -->
+    <link
+      rel="preload"
+      href="/fonts/sofia-extra-condensed-latin-wght.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+    <link
+      rel="preload"
+      href="/fonts/archivo-latin-wdth.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+
+    <!-- [CONFIRMAR] O DOMÍNIO. Ele está em três lugares: no canonical e no
+         og:url aqui embaixo, e no public/sitemap.xml. É o único dado inventado
+         nesta página, e saiu da convenção da casa (lp.<dominio>). A academia
+         não tem site hoje, então o domínio ainda vai ser comprado. Trocar antes
+         de publicar: canonical apontando para host que não existe é pior que
+         canonical nenhum. -->
+    <link rel="canonical" href="https://lp.holandabjjacademy.com/" />
+
+    <title>Holanda BJJ Academy · Brazilian Jiu-Jitsu in Framingham, MA</title>
+    <meta
+      name="description"
+      content="Beginner-friendly Brazilian jiu-jitsu classes for adults, kids and no-gi in Framingham, Massachusetts. Structured training in a clean and welcoming academy. No experience needed and your first class is free."
+    />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Holanda BJJ Academy" />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:url" content="https://lp.holandabjjacademy.com/" />
+    <meta property="og:title" content="Brazilian jiu-jitsu in Framingham, Massachusetts" />
+    <meta
+      property="og:description"
+      content="Beginner-friendly classes for adults, kids and no-gi at Holanda BJJ Academy on Franklin Street. No experience needed, and your first class is free."
+    />
+    <!-- JPEG e 1200x630: é o que o Facebook e o WhatsApp aceitam sem discussão.
+         A arte é gerada com a mesma Archivo da página, então o cartão sai na
+         letra do site em vez de numa fonte de sistema. -->
+    <meta property="og:image" content="https://lp.holandabjjacademy.com/og.jpg" />
+    <meta property="og:image:type" content="image/jpeg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Holanda BJJ Academy, Framingham, Massachusetts" />
+
+    <!-- Twitter / X -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Brazilian jiu-jitsu in Framingham, Massachusetts" />
+    <meta
+      name="twitter:description"
+      content="Beginner-friendly classes for adults, kids and no-gi at Holanda BJJ Academy. No experience needed, and your first class is free."
+    />
+    <meta name="twitter:image" content="https://lp.holandabjjacademy.com/og.jpg" />
+
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
+    <link rel="icon" type="image/png" sizes="64x64" href="/favicon-64.png" />
+    <!-- PNG e 180x180: o iOS ainda ignora webp no ícone de tela inicial. -->
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+
+    <!--
+      Schema da academia. Só dados CONFIRMADOS entram aqui, e é por isso que ele
+      é curto.
+
+      O postalCode entrou: o briefing trazia 10702, que não é CEP de
+      Massachusetts, e o Google geocodifica este endereço exato como 01702.
+
+      Ficaram FORA de propósito:
+
+        · openingHours — a grade de horários ainda é rascunho, e horário errado
+          em dado estruturado é o Google mandando alguém para uma porta fechada.
+        · aggregateRating e review — e NÃO é por falta de dado confirmado: a
+          nota é 5,0 com 35 avaliações, conferida no perfil do Google (o
+          planejamento dizia 100, e estava errado). Fica de fora porque o Google
+          não aceita marcação de avaliação que o próprio negócio faz sobre si
+          mesmo em LocalBusiness: não renderiza estrela nenhuma na busca e é
+          justamente o tipo de marcação que rende aviso. A nota aparece na
+          seção de avaliações da página, que é onde ela vale.
+        · priceRange — a tabela de preços não veio.
+        · VideoObject — a VSL ainda não foi gravada. Quando ela existir, entra
+          aqui com name, description, thumbnailUrl, uploadDate e contentUrl.
+
+      À medida que cada um for confirmado, entra aqui e sai da lista.
+    -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "SportsActivityLocation",
+        "@id": "https://lp.holandabjjacademy.com/#academy",
+        "name": "Holanda BJJ Academy",
+        "description": "Beginner-friendly Brazilian jiu-jitsu academy in Framingham, Massachusetts, with classes for adults, kids ages 7 to 15 and no-gi. The first class is free.",
+        "url": "https://lp.holandabjjacademy.com/",
+        "image": "https://lp.holandabjjacademy.com/og.jpg",
+        "telephone": "+1-913-963-3160",
+        "address": {
+          "@type": "PostalAddress",
+          "streetAddress": "47 Franklin Street",
+          "postalCode": "01702",
+          "addressLocality": "Framingham",
+          "addressRegion": "MA",
+          "addressCountry": "US"
+        },
+        "areaServed": { "@type": "City", "name": "Framingham" },
+        "sport": "Brazilian Jiu-Jitsu",
+        "knowsLanguage": ["en-US", "pt-BR"],
+        "sameAs": ["https://www.instagram.com/holanda.bjjacademy/"],
+        "employee": {
+          "@type": "Person",
+          "name": "Diego do Nascimento Holanda",
+          "jobTitle": "Head coach"
+        }
+      }
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

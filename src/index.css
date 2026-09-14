@@ -1,0 +1,644 @@
+@import "tailwindcss";
+
+/* ── As duas fontes ──────────────────────────────────────────────────────────
+   Declaradas aqui e não importadas do `@fontsource-variable`, para os arquivos
+   terem NOME FIXO e poderem ser pré-carregados no index.html (ver o comentário
+   longo em main.tsx: é o que zera o salto de layout da troca de fonte).
+
+   SÓ O SUBCONJUNTO LATINO. O pacote traz também latin-ext, vietnamita, grego e
+   cirílico, e nenhum deles é baixado numa página em inglês — mas os quatro
+   ficavam no `dist` como peso morto. O conteúdo inteiro desta página cabe em
+   U+0000-00FF mais o apóstrofo tipográfico (U+2019), que já está na faixa
+   U+2000-206F declarada abaixo.
+
+   `unicode-range` é o mesmo do pacote, letra por letra: ele é o que faz o
+   navegador NÃO baixar a fonte se a página não tiver nenhum caractere dela, e
+   reescrevê-lo "simplificando" é o jeito conhecido de quebrar esse ganho.
+
+   Os eixos declarados são o que o CSS pode pedir depois: `font-weight` de 100 a
+   900 e `font-stretch` de 62% a 125% na Archivo (é o `wdth` que o
+   `display-soft` usa a 82%), e só o peso na Sofia, que não tem eixo de largura
+   porque já é desenhada estreita. */
+@font-face {
+  font-family: "Archivo Variable";
+  font-style: normal;
+  font-display: swap;
+  font-weight: 100 900;
+  font-stretch: 62% 125%;
+  src: url("/fonts/archivo-latin-wdth.woff2") format("woff2-variations");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
+    U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193,
+    U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: "Sofia Sans Extra Condensed Variable";
+  font-style: normal;
+  font-display: swap;
+  font-weight: 1 1000;
+  src: url("/fonts/sofia-extra-condensed-latin-wght.woff2") format("woff2-variations");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
+    U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193,
+    U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   HOLANDA BJJ ACADEMY — tokens
+   Preset: OLD SCHOOL, em leitura MINIMALISTA E SOFT.
+   Papel quente, tinta quase preta, vermelho da marca. Nenhum hex mora fora
+   deste arquivo.
+
+   A referência de tom é a Collective Jiu-Jitsu: placa, fio duplo, numeral
+   romano, caixa alta condensada. O que muda aqui, e é o pedido do Adryan, é a
+   TEMPERATURA: em vez da condensada de esquadro (Big Shoulders), a mesma
+   família do corpo puxada no eixo de largura, que é condensada sem ser dura.
+   Ver memory/design-decisions.md §3.
+
+   Contraste medido (§AA):
+     · --red sobre --paper ......... 5,6:1  ok (texto pequeno passa)
+     · --paper sobre --red ......... 5,9:1  ok
+     · --ink sobre --paper ........ 16,9:1  ok
+     · --ink-soft sobre --paper .... 5,6:1  ok (só texto secundário)
+     · --paper sobre --ink ........ 16,9:1  ok
+   Quem trocar o vermelho pelo hex real do logo precisa limpar 4,5:1 nos dois
+   sentidos, senão o botão sólido e o numeral do eyebrow mudam junto.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+@theme {
+  /* Papel quente, e não branco puro: branco 100% é tela, papel tem
+     temperatura, e a página inteira se apoia nessa leitura de impresso. */
+  --color-paper: #faf9f7;
+  /* Tom um degrau abaixo do papel. NÃO é superfície de seção: a página inteira
+     é branca, e a alternância clara que existia (papel / papel-2) foi removida
+     a pedido. O que separa uma seção da seguinte é o fio duplo que abre cada
+     cabeçalho, não uma troca de fundo.
+
+     Ele sobrevive para COMPONENTE: o cartão do FAQ e o slot de foto vazio.
+     Nos dois, sem o tom eles sumiriam no fundo, e o slot vazio existe
+     justamente para ser visto. */
+  --color-paper-2: #f1efea;
+
+  /* Preto quente. Preto absoluto sobre papel quente lê como buraco; este tem
+     um grão de terra dentro e assenta na mesma família do papel. */
+  --color-ink: #14120f;
+  --color-ink-2: #211d19;
+  --color-ink-soft: #6b645c;
+
+  --color-line: #e5e1da;
+  --color-line-strong: #cdc7bc;
+
+  /* [CONFIRMAR] hex do logo. Este é o vermelho do PRD. */
+  --color-red: #c8161d;
+  --color-red-deep: #a11116;
+  --color-red-soft: #f8e9e9;
+  /* Os mesmos canais em forma de lista, para as sombras coloridas. Sem este
+     token, o rgba() do botão repetiria 200,22,29 dentro do componente: trocar
+     o vermelho pelo hex real do logo arrumaria a página e deixaria a sombra do
+     botão no vermelho velho, que é o tipo de divergência que ninguém vê até o
+     cliente ver. */
+  --accent-rgb: 200 22 29;
+
+  /* Duas famílias. O título é Sofia Sans Extra Condensed, desenhada estreita;
+     o corpo é Archivo em largura normal. Ver §3 do design-decisions. */
+  --font-display: "Sofia Sans Extra Condensed Variable", "Sofia Sans Extra Condensed",
+    "Archivo Narrow", ui-sans-serif, sans-serif;
+  --font-sans: "Archivo Variable", "Archivo", ui-sans-serif, system-ui, sans-serif;
+
+  /* Canto num token só: raio espalhado em classe solta é o jeito garantido de
+     a página ter três cantos diferentes. O interno é menor porque o fio
+     recuado fica 6px dentro do externo, e dois raios iguais a distâncias
+     diferentes não leem como concêntricos. */
+  --radius-plate: 10px;
+  --radius-inner: 4px;
+
+  /* Sombras longas e fracas: é o que faz "soft". Sombra curta e escura é o
+     drop-shadow de template, e foi justamente o que a página quer evitar. */
+  --shadow-plate: 0 28px 64px -38px rgb(20 18 15 / 0.34);
+  --shadow-lift: 0 44px 96px -48px rgb(20 18 15 / 0.45);
+
+  /* Esmalte: a sombra colorida do botão sólido mais o fio branco por dentro,
+     no topo. São dois valores num token só porque eles nunca aparecem
+     separados, e porque box-shadow não acumula entre classes. */
+  --shadow-enamel: 0 12px 30px -16px rgb(var(--accent-rgb) / 0.7), inset 0 1px 0 rgb(255 255 255 / 0.22);
+  --shadow-enamel-lift: 0 26px 52px -18px rgb(var(--accent-rgb) / 0.9), inset 0 1px 0 rgb(255 255 255 / 0.22);
+  --shadow-ghost: 0 20px 40px -22px rgb(var(--accent-rgb) / 0.55);
+  --shadow-onink: 0 12px 30px -18px rgb(0 0 0 / 0.6), inset 0 -1px 0 rgb(20 18 15 / 0.12);
+  --shadow-onink-lift: 0 26px 52px -20px rgb(0 0 0 / 0.75), inset 0 -1px 0 rgb(20 18 15 / 0.12);
+
+  --ease-club: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+  /* Âncora não some sob a barra fixa. A barra flutua a 16px do topo e a peça
+     mais alta dela (a marca) tem 72px, então a aresta de baixo fica em 88px:
+     112px deixam 24px de respiro entre a barra e o título da seção que acabou
+     de ser chamada. */
+  section[id] {
+    scroll-margin-top: 112px;
+  }
+  body {
+    margin: 0;
+    background-color: var(--color-paper);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    /* clip, e não hidden: hidden mataria todo `position: sticky` da página. */
+    overflow-x: clip;
+  }
+  ::selection {
+    background: var(--color-red);
+    color: var(--color-paper);
+  }
+  img {
+    display: block;
+    max-width: 100%;
+  }
+  :focus-visible {
+    outline: 2px solid var(--color-red);
+    outline-offset: 3px;
+  }
+}
+
+/* ── Tipografia ──────────────────────────────────────────────────────────────
+   DUAS FAMÍLIAS: o título é Sofia Sans Extra Condensed a 700, o corpo é Archivo
+   em largura normal. Este bloco descrevia uma versão anterior em que o título
+   era a própria Archivo puxada a 68% de largura, e o texto ficou aqui depois de
+   a segunda família entrar — qualquer conta de largura de linha feita a partir
+   dele saía errada, porque as duas letras não têm nem a mesma largura média nem
+   a mesma altura de maiúscula (Archivo: 686/1000 e descendente 210; Sofia:
+   655/1000 e descendente 300).
+
+   Por que assim, e não uma display condensada de esquadro como na Collective:
+   o pedido foi "condensada, porém minimalista e soft". Uma condensada de placa
+   (Big Shoulders, Oswald) tem terminal cortado no esquadro e contraforma
+   fechada, que é o oposto de soft. A Archivo estreitada mantém a abertura
+   larga do C, do S e do G e o terminal reto mas macio, e por ser a mesma
+   família do corpo a página inteira lê como um sistema e não como duas fontes
+   negociando. De quebra: um arquivo de fonte a menos no caminho crítico.
+
+   Três coisas que andam junto com condensada em caixa alta, e não são
+   opcionais (ver a memória da Collective):
+     · peso 600, não 500. Em condensada o traço fino desaparece no papel.
+     · tracking POSITIVO. Maiúscula colada em condensada vira paliçada.
+     · entrelinha fechada. Caixa alta não tem descendente, então o espaço
+       entre linhas parece maior do que é. */
+@utility display {
+  font-family: var(--font-display);
+  /* Sem `font-stretch`: a Sofia Extra Condensed JÁ é estreita por desenho, e
+     não tem eixo de largura. Estreitar de novo por cima só valeria para o
+     fallback, e Archivo Narrow a 68% ficaria muito mais apertada que a fonte
+     real — o salto ao trocar a fonte carregada pela de reserva seria maior do
+     que a ausência da regra. */
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  line-height: 0.92;
+}
+
+/* Caixa baixa, peso de leitura, um toque mais estreita que o corpo. Para os
+   poucos lugares onde uma frase longa precisa de uma voz própria sem virar
+   título — hoje, só o texto dos depoimentos.
+
+   Ela usa a ARCHIVO e não a fonte de título, e isso é deliberado: a Sofia Extra
+   Condensed é estreita por desenho, e um parágrafo de quatro linhas nela vira
+   uma coluna de palitos. O eixo de largura da Archivo existe justamente para
+   este caso — dar um aperto de 18% que se nota como voz e não como esforço. */
+@utility display-soft {
+  font-family: var(--font-sans);
+  font-stretch: 82%;
+  font-weight: 500;
+  letter-spacing: 0;
+  line-height: 1.18;
+}
+
+/* Escalas fluidas. Nome sem prefixo `text-` de propósito: o tailwind-merge
+   engole utilities `text-*` quando outra `text-*` aparece na mesma chamada,
+   e é assim que um h2 vira 16px sem ninguém perceber. */
+@utility type-hero {
+  /* A escala subiu junto com a headline virando QUATRO linhas fixas, e os três
+     números saem de duas medidas e não do olho.
+
+     POR LARGURA. A linha mais longa das quatro ("Your first jiu-jitsu") mede
+     6,695em na Sofia Extra Condensed a 700, já com o tracking de 0,02em e em
+     caixa alta, que é como o `.display` a imprime. A coluna do título tem 657px
+     do lg para cima (o `shell` trava em 1240px e a coluna é 1,5 de 2,5
+     descontada a calha), então o limite por largura é 98px; a escala entrega
+     86px em 1440px, e os 12% de folga são o que absorve a fonte de sistema no
+     primeiro quadro, antes de a Sofia chegar. Em 1024px o limite é 79px contra
+     70px entregues, e em 375px é 50px contra o piso de 2,75rem (44px). A folga
+     é de 12% nos três, de propósito: a primeira versão desta escala foi
+     calculada com as métricas da Archivo e deixava 2,6px de sobra em 1440px, o
+     que é o mesmo que não ter folga.
+
+     POR ALTURA (a segunda declaração). O hero ocupa a tela inteira, e tudo o
+     que não é a headline na coluna esquerda soma ~253px (o olho do endereço, a
+     nota de apoio em três linhas, o botão e as folgas entre eles), mais 176px
+     de respiro em cima e embaixo da seção. Sobram, numa janela de 720px de
+     altura, 544px, e quatro linhas a 0,9 de entrelinha cabem nisso até 80px de
+     corpo. 11svh dá 79px nessa janela e some com o problema que o teto existe
+     para evitar: o botão da primeira tela caindo abaixo da dobra num notebook
+     de 13 polegadas. Em 900px de altura o teto por altura dá 99px e quem manda
+     volta a ser a largura.
+
+     São duas declarações e não uma porque `svh` é unidade nova: navegador que
+     não a conhece descarta a linha inteira e fica com a primeira, que é a regra
+     antiga e correta. */
+  font-size: clamp(2.75rem, 3.94vw + 1.83rem, 5.75rem);
+  font-size: clamp(2.75rem, min(3.94vw + 1.83rem, 11svh), 5.75rem);
+  line-height: 0.9;
+}
+@utility type-section {
+  font-size: clamp(2rem, 3.1vw + 0.8rem, 3.5rem);
+  line-height: 0.96;
+}
+/* Um degrau acima, para o cabeçalho que fica sozinho na largura toda (sem a
+   linha de apoio à direita). */
+@utility type-section-lg {
+  font-size: clamp(2.4rem, 4.4vw + 0.85rem, 4.9rem);
+  line-height: 0.92;
+}
+@utility type-body {
+  font-size: clamp(1rem, 0.35vw + 0.9rem, 1.125rem);
+}
+
+/* Rótulo de caixa alta, na largura normal: é legenda, não título, e estreitar
+   um texto de 11px só o deixa mais difícil de ler. */
+@utility label {
+  font-family: var(--font-sans);
+  font-stretch: 100%;
+  font-size: 0.7rem;
+  font-weight: 650;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  line-height: 1.2;
+}
+
+@utility tnum {
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── O DESTAQUE ──────────────────────────────────────────────────────────────
+   Um bloco de vermelho atrás de UMA frase de um título, e a coisa toda depende
+   de ele ser MAIS BAIXO que a letra: ele começa um pouco abaixo da metade das
+   maiúsculas e termina logo abaixo da linha de base, então o topo das letras
+   fica de fora. Um bloco da altura da linha inteira é marca-texto de papelaria;
+   este lê como traço feito à mão.
+
+   Ele substituiu o destaque anterior, que era pintar a frase de vermelho. A
+   diferença de argumento: texto vermelho é a MESMA hierarquia com outra cor, e
+   numa página em que vermelho já quer dizer "aqui se clica", uma frase vermelha
+   que não é botão é a cor mentindo. O bloco é outra camada, atrás da letra, e
+   não disputa com nada.
+
+   AS DUAS MEDIDAS SAEM DAS MÉTRICAS DA SOFIA EXTRA CONDENSED, que é a letra
+   dos títulos, e não do olho. unitsPerEm 1000, sCapHeight 655 (maiúscula tem
+   0,655em), sTypoDescender -300 (a caixa de conteúdo termina 0,3em abaixo da
+   linha de base). Um bloco de 0,4em afastado 0,18em dessa aresta de baixo
+   corre, portanto:
+
+       de  0,28em ACIMA da linha de base, ou seja 43% da altura da maiúscula,
+           o que deixa 57% da letra para fora por cima
+       a   0,12em ABAIXO dela
+
+   ANCORADO NA ARESTA DE BAIXO, e não no topo, pela mesma razão do original:
+   medir de baixo dá o mesmo bloco em qualquer navegador, porque é no
+   descendente que os conjuntos de métricas de uma fonte costumam concordar (na
+   Sofia os três dão 300; no ascendente, 900 contra 1010). Trocar a fonte do
+   título obriga a recalcular os dois números a partir das métricas DELA — esta
+   regra já nasceu errada uma vez, calculada com as da Archivo, que é a fonte do
+   corpo e não a do título.
+
+   OS 0,12em ABAIXO DA LINHA DE BASE cabem porque a entrelinha dos títulos é
+   0,92em e a maiúscula tem 0,655em: o topo das maiúsculas da linha seguinte cai
+   0,265em abaixo desta base, então o bloco para bem antes de encostar nela.
+
+   É FUNDO E NÃO PSEUDO-ELEMENTO, e é isso que o faz sobreviver ao resto:
+
+    · a frase continua INLINE. Um `::before` posicionado exigiria
+      `inline-block`, e inline-block não quebra: num título de 2,4rem em tela de
+      375px a frase vira duas linhas, e uma caixa de três palavras que não
+      quebra estoura a coluna. Fundo pinta uma vez por fragmento de linha, então
+      o bloco acompanha as palavras na quebra. `box-decoration-break: clone` é o
+      que reinicia o desenho em cada fragmento em vez de esticar um bloco só;
+    · não precisa de z-index: o fundo de um elemento já é pintado atrás do texto
+      dele;
+    · anda junto com a entrada da seção, porque está no mesmo elemento das
+      letras.
+
+   O RECUO LATERAL é um padding cancelado por uma margem negativa igual: o bloco
+   passa da primeira e da última letra sem tirar o texto da margem da coluna.
+
+   CONTRASTE. Sobre tinta (hero, reivindicação, cartão de programa) a frase é
+   papel, e papel sobre vermelho dá 5,9:1, que passa em qualquer tamanho. Sobre
+   papel (a aula experimental) a frase é tinta, e tinta sobre vermelho dá
+   3,19:1: passa no piso de TEXTO GRANDE, e só por isso o destaque é exclusivo
+   de título. Não use em corpo de texto sobre papel. */
+.mark {
+  background-image: linear-gradient(var(--color-red), var(--color-red));
+  background-repeat: no-repeat;
+  background-position: left 0 bottom 0.18em;
+  background-size: 100% 0.4em;
+  padding-inline: 0.06em;
+  margin-inline: -0.06em;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+}
+
+/* A versão que ACENDE. Mesmo bloco, riscado da esquerda para a direita quando o
+   ponteiro entra na peça que o contém (`.group`), no tempo do traço e não no de
+   um botão. Só a largura do fundo anda: a letra não se mexe, então nada aqui
+   toca o layout. */
+.mark-sweep {
+  background-size: 0% 0.4em;
+  transition: background-size 420ms var(--ease-club);
+}
+.group:hover .mark-sweep,
+.group:focus-visible .mark-sweep {
+  background-size: 100% 0.4em;
+}
+@media (prefers-reduced-motion: reduce) {
+  .mark-sweep {
+    transition: none;
+  }
+}
+
+/* ── Estrutura ────────────────────────────────────────────────────────────── */
+@utility shell {
+  width: 100%;
+  max-width: 1240px;
+  margin-inline: auto;
+  padding-inline: 1.25rem;
+}
+@media (min-width: 640px) {
+  .shell {
+    padding-inline: 1.75rem;
+  }
+}
+@media (min-width: 1024px) {
+  .shell {
+    padding-inline: 2.5rem;
+  }
+}
+/* Recuo que alinha um elemento de largura total com o CONTEÚDO do `shell`.
+   Serve para a fileira de um carrossel começar exatamente embaixo do título da
+   seção e terminar vazando pela borda da janela.
+
+   A conta usa 100% e NÃO 100vw de propósito: `vw` inclui a barra de rolagem em
+   boa parte dos navegadores, e o carrossel ficaria uns sete pixels fora do
+   alinhamento com o título, que é a distância exata em que um desalinhamento
+   deixa de parecer proposital e passa a parecer erro. */
+@utility shell-start {
+  padding-inline-start: 1.25rem;
+}
+@media (min-width: 640px) {
+  .shell-start {
+    padding-inline-start: 1.75rem;
+  }
+}
+@media (min-width: 1024px) {
+  .shell-start {
+    padding-inline-start: max(2.5rem, calc((100% - 1240px) / 2 + 2.5rem));
+  }
+}
+
+/* O par do `shell-start`, do outro lado. Um carrossel que começa alinhado com o
+   título precisa PARAR alinhado com ele também: sem isto a fileira termina com
+   um respiro de 40px na borda da janela, e o último cartão fica encostado num
+   canto onde nenhum outro elemento da página encosta. Com isto, o fim da
+   fileira cai na mesma coluna em que a nota de apoio do cabeçalho termina. */
+@utility shell-end {
+  padding-inline-end: 1.25rem;
+}
+@media (min-width: 640px) {
+  .shell-end {
+    padding-inline-end: 1.75rem;
+  }
+}
+@media (min-width: 1024px) {
+  .shell-end {
+    padding-inline-end: max(2.5rem, calc((100% - 1240px) / 2 + 2.5rem));
+  }
+}
+
+@utility band {
+  padding-block: clamp(4.5rem, 8vw, 8rem);
+}
+
+/* ── Fio duplo: o motivo que se repete na página inteira ─────────────────────
+   Duas linhas com 3px entre elas, como borda de diploma ou de placa de clube.
+   É o que amarra hero, cabeçalhos de seção e rodapé sem precisar de mais
+   ornamento. */
+@utility rule-double {
+  border-top: 1px solid var(--color-line-strong);
+  box-shadow: 0 3px 0 -2px var(--color-line-strong);
+}
+@utility rule-double-dark {
+  border-top: 1px solid rgb(255 255 255 / 0.24);
+  box-shadow: 0 3px 0 -2px rgb(255 255 255 / 0.24);
+}
+
+/* Placa: cartão de papel com fio interno recuado, como esmalte antigo. */
+@utility plate {
+  position: relative;
+  background: var(--color-paper);
+  border: 1px solid var(--color-line-strong);
+  border-radius: var(--radius-plate);
+}
+.plate::after {
+  content: "";
+  position: absolute;
+  inset: 6px;
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-inner);
+  pointer-events: none;
+}
+@utility plate-dark {
+  position: relative;
+  background: var(--color-ink-2);
+  border: 1px solid rgb(255 255 255 / 0.18);
+  border-radius: var(--radius-plate);
+  color: var(--color-paper);
+}
+.plate-dark::after {
+  content: "";
+  position: absolute;
+  inset: 6px;
+  border: 1px solid rgb(255 255 255 / 0.1);
+  border-radius: var(--radius-inner);
+  pointer-events: none;
+}
+
+/* ── Numeral vazado dos passos ───────────────────────────────────────────────
+   Numeral gigante só de contorno, e exatamente um preenchido por vez. É o
+   contorno que deixa a faixa respirar com um número de 7rem dentro dela:
+   número cheio em três colunas viraria três manchas.
+
+   `-webkit-text-stroke` é o único jeito com suporte real de contornar texto sem
+   duplicar o glifo. Sem ele (Firefox antigo) o numeral aparece cheio, que é uma
+   degradação correta e não um buraco. */
+.step-numeral {
+  --numeral-ink: rgb(200 22 29 / 0.26);
+  color: transparent;
+  -webkit-text-stroke: 1.5px var(--numeral-ink);
+  transition:
+    color 400ms var(--ease-club),
+    -webkit-text-stroke-color 400ms var(--ease-club);
+}
+.step:hover .step-numeral,
+.step[data-active="true"] .step-numeral {
+  --numeral-ink: var(--color-red);
+  color: var(--color-red);
+}
+
+/* A mesma peça sobre o vermelho da marca, onde o contorno vermelho seria
+   invisível. Vem DEPOIS de propósito: as duas regras têm a mesma
+   especificidade, e quem decide é a ordem no arquivo. */
+.step-numeral-invert {
+  --numeral-ink: rgb(255 255 255 / 0.4);
+}
+.step:hover .step-numeral-invert,
+.step[data-active="true"] .step-numeral-invert {
+  --numeral-ink: var(--color-paper);
+  color: var(--color-paper);
+}
+
+/* ── Textura de papel das seções claras ──────────────────────────────────────
+   Papel de fibra longa: trama fina de fios curtos nas duas direções, com
+   pontinhos escuros raros. Gerada para esta página, não é a lavagem de papel
+   empoeirado que a Collective e o Fight Sports Club usam.
+
+   Medida: média de canal 254, e o pixel mais escuro do ladrilho é 245. Ou seja,
+   a marca mais forte escurece o papel em dez níveis de 255, e o resto é papel
+   limpo. É essa distribuição, e não a quantidade de textura, que separa
+   "papel" de "granulado de foto mal digitalizada".
+
+   A força foi calibrada olhando quatro versões lado a lado no tamanho real
+   (100%, 45%, 30% e 20% da original). A 100% a trama lia como padrão e
+   competia com a tipografia; a 20% sumia. Esta é a de 30%.
+
+   A MARCA É PEQUENA E NUMEROSA de propósito, e isso foi descoberto errando:
+   uma versão anterior tinha manchas grandes e esparsas, muito mais bonitas
+   isoladas, e o ladrilho ficou escancarado numa tela de 2560px (o olho
+   memoriza uma mancha grande e reconhece a cópia). Com fio curto em
+   quantidade, não existe forma para reconhecer e a repetição some.
+
+   `multiply` é o que faz um arquivo servir para qualquer tom claro: a seção
+   continua pintando a própria cor de fundo e a textura escurece ela, então
+   papel e papel-2 saem com a mesma trama, sem precisar de dois arquivos.
+
+   O nome NÃO começa com `bg-`. O `cn()` é tailwind-merge, que agrupa toda
+   classe `bg-*` e mantém só a última: um prefixo `bg-` aqui apagaria em
+   silêncio o `background-color` da seção, e o multiply não teria contra o que
+   misturar.
+
+   Custo de contraste, para ficar dito: praticamente nenhum. Tinta sobre papel
+   sai de 16,9:1 para 16,7:1. */
+.textured {
+  background-image: url("/texture-fiber.webp");
+  background-repeat: repeat;
+  /* Tamanho natural do ladrilho (1024px). Ele é encaixável por construção, então
+     repetir não deixa emenda; reduzir só multiplicaria os ladrilhos numa tela
+     larga sem ganho nenhum. */
+  background-size: 1024px auto;
+  background-blend-mode: multiply;
+}
+
+/* Grão fino por cima de tudo. Fica na wrapper e não no body para não entrar no
+   compositing de cada seção com blur. 2,5% é metade do que a Collective usa:
+   a leitura pedida aqui é soft, e grão forte sobre papel quente vira areia. */
+.paper-grain::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  pointer-events: none;
+  opacity: 0.025;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* ── A palavra vazada do cabeçalho ───────────────────────────────────────────
+   O nome da seção em contorno, no lugar onde antes ficava o olho (o numeral
+   romano mais um rótulo em caixa alta).
+
+   ELA SUBSTITUIU DUAS COISAS AO MESMO TEMPO, e é por isso que ela existe: o
+   olho, que gastava uma linha inteira para dizer em miniatura o que o título
+   diz em seguida em tamanho grande ("Where to start" em cima de "Four ways to
+   start"), e a marca d'água gigante que derivava atrás da seção de programas.
+   O texto dela é o nome CURTO da seção, o mesmo que a barra do topo usa.
+   As duas eram a mesma ideia — nomear a seção — resolvidas em escalas opostas,
+   e nenhuma das duas era legível como peça: o rótulo era pequeno demais para
+   ter presença e a marca d'água estava a 5,5% de opacidade, que é textura de
+   fundo e não texto.
+
+   A 22% o contorno finalmente se lê como palavra desenhada. É o mesmo gesto
+   old school da referência, só que uma vez por seção em vez de duas.
+
+   ALINHADA COM O TÍTULO, o que significa que ela está no FLUXO e não em
+   posição absoluta: ela começa na mesma aresta em que o título começa e desce
+   com ele quando a coluna muda de largura. A marca d'água antiga era centrada
+   na janela e derivava com a rolagem; as duas coisas são incompatíveis com
+   "alinhada", e a deriva foi o preço de pôr a palavra na grade.
+
+   O contorno é 1,25px e não 1px: a 92px de corpo, 1px de traço na Archivo
+   condensada fica fino a ponto de sumir em tela sem retina.
+
+   ELA SE DISSOLVE PARA BAIXO. A máscara apaga a palavra de 45% da altura dela
+   até o pé, e é o que resolve a única coisa que não fechava quando ela cresceu:
+   a 92px, com opacidade cheia até a última linha do traço, a base das letras
+   corria a poucos pixels do topo do título e as duas tipografias brigavam
+   justamente onde se tocam. Com a dissolução, o que sobra perto do título é
+   quase nada, e a palavra lê como se estivesse impressa por baixo do papel.
+
+   É MÁSCARA E NÃO UM DEGRADÊ BRANCO POR CIMA, e a diferença aparece nas seções
+   escuras: um retângulo branco sobre tinta seria uma mancha clara, enquanto a
+   máscara simplesmente deixa o fundo da seção aparecer, seja ele papel ou
+   tinta. Uma peça, os dois fundos.
+
+   A opacidade caiu de 22% para 14% na mesma mudança: o corpo maior devolve
+   presença de sobra, e 22% num tamanho desses passava de palavra de fundo para
+   segundo título. */
+.stroke-word {
+  color: transparent;
+  -webkit-text-stroke: 1.25px var(--color-ink);
+  opacity: 0.14;
+  user-select: none;
+  -webkit-mask-image: linear-gradient(to bottom, #000 45%, transparent 100%);
+  mask-image: linear-gradient(to bottom, #000 45%, transparent 100%);
+}
+.stroke-word-light {
+  -webkit-text-stroke-color: var(--color-paper);
+  opacity: 0.2;
+}
+
+/* ── Acessibilidade ─────────────────────────────────────────────────────────── */
+.skip-link {
+  position: absolute;
+  left: 1rem;
+  top: -100%;
+  z-index: 100;
+  background: var(--color-ink);
+  color: var(--color-paper);
+  padding: 0.75rem 1.25rem;
+  border-radius: 2px;
+}
+.skip-link:focus {
+  top: 1rem;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
