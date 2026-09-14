@@ -148,7 +148,7 @@ export function Footer() {
                 Facebook
               </a>
             )}
-            <span className="text-paper/35">Built by Novo Dash</span>
+            <span className="text-paper/55">Built by Novo Dash</span>
           </div>
         </div>
       </div>
