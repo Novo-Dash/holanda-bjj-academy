@@ -84,7 +84,7 @@ export function BookingModal({
     const startAt = initialProgram && programs.some((p) => p.id === initialProgram) ? 2 : 1
     if (initialProgram) setProgramId(initialProgram)
     setStep(startAt as 1 | 2)
-    track('begin_checkout', { program: initialProgram ?? programs[0].id })
+    track('view_content', { content_name: 'Trial Booking', program: initialProgram ?? programs[0].id })
   }, [open, initialProgram])
 
   /* Esc fecha, o scroll do fundo trava, e o Tab fica preso dentro da folha
@@ -176,7 +176,10 @@ export function BookingModal({
       programId,
       programLabel: program.name,
     })
-    trackLead({ program: programId, value: 0, currency: 'USD' })
+    /* Sem `value`/`currency`: a aula experimental é gratuita, e valor zero numa
+       conversão só suja o relatório de receita. `content_category` é o público,
+       que é a dimensão pela qual a campanha separa adulto de criança. */
+    trackLead({ program: programId, content_category: programId === 'kids' ? 'kids' : 'adults' })
     setStep(3)
   }
 

@@ -16,20 +16,30 @@
  *     formulário: lead perdido é muito mais caro que evento perdido.
  *  3. Um nome de evento por acontecimento, e os nomes são os do PRD §18.
  *
- * [CONFIRMAR] VITE_GTM_ID, VITE_GA4_ID, VITE_GOOGLE_ADS_ID,
- * VITE_GOOGLE_ADS_LEAD_LABEL e VITE_META_PIXEL_ID. Enquanto forem vazios o
- * console avisa uma vez, na carga, em vez de fingir que está medindo.
+ * OS IDENTIFICADORES SÃO PÚBLICOS E FICAM NO CÓDIGO, com o `.env` servindo
+ * apenas de sobreposição. Eles moravam só em variáveis de ambiente, e o efeito
+ * disso é que a página NÃO MEDIA NADA em produção: `.env` é ignorado pelo git,
+ * então nada chegava na Vercel, e o console avisava num lugar que ninguém abre.
+ * Id de tag não é segredo (ele vai no HTML servido de qualquer jeito, qualquer
+ * um lê no devtools); segredo é o token da CAPI, que continua sendo variável de
+ * ambiente e não entra aqui.
+ *
+ * Valores conferidos no cadastro, na linha "Holanda BJJ - Framingham MA".
+ *
+ * NÃO HÁ GTM, de propósito: as tags do Google e do Meta são disparadas direto,
+ * cada uma pela biblioteca dela. Container disparando os mesmos eventos em
+ * paralelo é a receita conhecida de conversão contada em dobro.
  *
  * Lembrete de CSP: instalar a tag aqui NÃO basta. O domínio precisa estar
  * liberado em `vercel.json` (script-src e connect-src), senão a tag é bloqueada
  * em produção e funciona no `npm run dev`.
  */
 
-const GTM_ID = import.meta.env.VITE_GTM_ID ?? ''
-const GA4_ID = import.meta.env.VITE_GA4_ID ?? ''
-const ADS_ID = import.meta.env.VITE_GOOGLE_ADS_ID ?? ''
-const ADS_LEAD_LABEL = import.meta.env.VITE_GOOGLE_ADS_LEAD_LABEL ?? ''
-const PIXEL_ID = import.meta.env.VITE_META_PIXEL_ID ?? ''
+const GTM_ID = import.meta.env.VITE_GTM_ID || ''
+const GA4_ID = import.meta.env.VITE_GA4_ID || 'G-Y1PCJ5ENC9'
+const ADS_ID = import.meta.env.VITE_GOOGLE_ADS_ID || 'AW-18431194134'
+const ADS_LEAD_LABEL = import.meta.env.VITE_GOOGLE_ADS_LEAD_LABEL || 'pK_cCPHyme8cEJbo1tRE'
+const PIXEL_ID = import.meta.env.VITE_META_PIXEL_ID || '1077682874673890'
 
 type Params = Record<string, string | number | boolean | undefined>
 
@@ -122,10 +132,15 @@ export function bootTracking() {
 export function track(event: string, params: Params = {}) {
   pushLayer({ event, ...params })
 
+  /* SEM `InitiateCheckout`, e a ausência é deliberada. Ele pressupõe carrinho e
+     pagamento, que não existem neste funil: a pessoa agenda uma aula
+     experimental gratuita. O evento estava mapeado aqui e disparava na abertura
+     do formulário, ensinando à Meta que aquilo era um início de compra. O
+     evento certo para "abriu o formulário" é `ViewContent`, e é o que passou a
+     sair de lá. O conjunto é fechado: PageView, ViewContent, Lead. */
   const META_STANDARD: Record<string, string> = {
     page_view: 'PageView',
     view_content: 'ViewContent',
-    begin_checkout: 'InitiateCheckout',
     generate_lead: 'Lead',
   }
   const standard = META_STANDARD[event]
