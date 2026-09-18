@@ -95,12 +95,31 @@ export const site = {
     height: 1075,
   },
 
-  /** [CONFIRMAR] a VSL vertical 9:16 do hero. Ainda vai ser gravada: roteiro no
-      planejamento estratégico. O `poster` é o frame parado que aparece antes do
-      play; sem ele o slot fica preto. */
+  /**
+   * A VSL vertical 9:16 da primeira tela. ENTREGUE pelo cliente: 71 segundos,
+   * o professor falando com a câmera intercalado com imagens do tatame cheio,
+   * legendas queimadas no vídeo.
+   *
+   * Reencodada de 132 MB para 6,7 MB. O original vinha em 1080x1920 a 14,7
+   * Mbps, que é taxa de câmera e não de web, e resolução de câmera também: a
+   * coluna da VSL no desktop mede `calc(58svh*9/16)`, uns 293px, e no celular
+   * no máximo 304px. 608x1080 é o DOBRO disso, ou seja, a resolução cheia numa
+   * tela retina, e qualquer pixel além disso o navegador joga fora ao desenhar.
+   * A 750 kbps o frame parado é indistinguível do original nesse tamanho.
+   * O original está em `raw/`, fora da pasta publicada.
+   *
+   * NÃO é H.265 nem AV1, que cortariam isto pela metade de novo: o `VideoSlot`
+   * aceita um `src` só, sem lista de `<source>`, então um arquivo em codec
+   * moderno não é uma otimização e sim um vídeo que não abre em parte dos
+   * aparelhos. Trocar isso exige mexer no componente compartilhado.
+   *
+   * O `poster` é o frame dos 10s, que é onde o professor aparece de frente e
+   * de rosto inteiro: o pôster é a única coisa que convence alguém a dar play,
+   * e um frame de tatame não diz quem vai falar. Sem ele o slot fica preto.
+   */
   vsl: {
-    src: null as string | null,
-    poster: null as string | null,
+    src: '/video/vsl.mp4' as string | null,
+    poster: '/video/vsl-poster.webp' as string | null,
   },
 
   /**

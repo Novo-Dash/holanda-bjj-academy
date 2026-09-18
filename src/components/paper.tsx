@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type ReactNode } from 'react'
+import { useEffect, useRef, useState, type MouseEvent, type ReactNode } from 'react'
 import { cn } from '@/lib/utils'
 import { Mark } from '@/components/mark'
 import { Reveal } from '@/components/reveal'
@@ -190,7 +190,9 @@ export function Media({
    desenhada com o briefing do que precisa ser gravado. Um player quebrado ou
    um vídeo de banco de imagens no hero custa mais caro que um slot honesto.
 
-   `controls` sempre, porque é por ali que a pessoa pausa e liga o som.
+   `controls` do navegador por padrão, porque é por ali que a pessoa pausa e
+   liga o som. `soundInvite` troca esses controles por um player da casa, que
+   pede uma coisa só e a pede grande: o som. Ver `PlayableVideo`.
 
    `autoplay` é OPCIONAL e vem desligado. Ligado, ele traz `muted` e `loop`
    junto, e não por gosto: navegador nenhum autoriza autoplay com som, então
@@ -211,6 +213,7 @@ export function VideoSlot({
   brief,
   ratio = '9 / 16',
   autoplay = false,
+  soundInvite = false,
   dark = false,
   onPlay,
   className,
@@ -221,6 +224,10 @@ export function VideoSlot({
   brief: string
   ratio?: string
   autoplay?: boolean
+  /** Troca os controles do navegador por um player da casa, desenhado para
+      CONVIDAR AO SOM. Só faz sentido junto de `autoplay`, e é por isso que ele
+      é ignorado sem ele: o convite existe porque o vídeo já está rodando mudo. */
+  soundInvite?: boolean
   /** A placa vazia sobre fundo escuro. Sem isto o slot da VSL vira um retângulo
       branco no meio da primeira tela, que é a única coisa que o olho vê. */
   dark?: boolean
@@ -270,7 +277,7 @@ export function VideoSlot({
     )
   }
 
-  return <PlayableVideo {...{ src, poster, ratio, autoplay, onPlay, className }} />
+  return <PlayableVideo {...{ src, poster, ratio, autoplay, soundInvite, onPlay, className }} />
 }
 
 function PlayableVideo({
@@ -278,6 +285,7 @@ function PlayableVideo({
   poster,
   ratio,
   autoplay,
+  soundInvite,
   onPlay,
   className,
 }: {
@@ -285,6 +293,7 @@ function PlayableVideo({
   poster?: string | null
   ratio: string
   autoplay: boolean
+  soundInvite: boolean
   onPlay?: () => void
   className?: string
 }) {
@@ -293,6 +302,19 @@ function PlayableVideo({
   /* Sem autoplay o `src` entra de saída: quem clica em play espera o vídeo, não
      um observador decidindo se já pode carregar. */
   const [armed, setArmed] = useState(!autoplay)
+
+  /* O convite ao som depende do autoplay: sem ele o vídeo já começa parado e o
+     play do navegador dá conta. Não há o que convidar num vídeo que não anda. */
+  const invite = soundInvite && autoplay
+
+  /** Mudo, e portanto ainda no estado em que o vídeo é PAPEL DE PAREDE. */
+  const [silent, setSilent] = useState(true)
+  const [paused, setPaused] = useState(false)
+  const [progress, setProgress] = useState(0)
+  /* Depois que a pessoa mexe, o observador de rolagem para de dar play sozinho.
+     Sem isto, quem pausou o vídeo e rolou a página veria ele voltar a tocar ao
+     subir de novo, que é o player desobedecendo uma ordem explícita. */
+  const taken = useRef(false)
 
   useEffect(() => {
     if (!autoplay) return
@@ -317,8 +339,8 @@ function PlayableVideo({
       (entries) => {
         const node = video.current
         if (!node) return
-        if (entries[0]?.isIntersecting) void node.play().catch(() => {})
-        else node.pause()
+        if (!entries[0]?.isIntersecting) node.pause()
+        else if (!taken.current) void node.play().catch(() => {})
       },
       { threshold: 0.2 }
     )
@@ -330,10 +352,50 @@ function PlayableVideo({
     }
   }, [autoplay])
 
+  /** O clique que vale: liga o som e RECOMEÇA O VÍDEO. Quem tira o mudo aos
+      quarenta segundos pegou o argumento pela metade, e recomeçar entrega a
+      conversa inteira em vez do fim dela. O laço cai junto: repetir de graça
+      uma imagem de fundo é atmosfera, repetir alguém falando é disco riscado. */
+  function turnOnSound() {
+    const el = video.current
+    if (!el) return
+    taken.current = true
+    el.muted = false
+    el.defaultMuted = false
+    el.volume = 1
+    el.loop = false
+    el.currentTime = 0
+    void el.play().catch(() => {})
+    setSilent(false)
+    /* É AQUI que o play é contado, e não no evento do vídeo. Com autoplay o
+       evento dispara em toda visita e a métrica vira uma segunda contagem de
+       pageview; o que merece medida é a pessoa PEDINDO o som. */
+    onPlay?.()
+  }
+
+  function toggleRun() {
+    const el = video.current
+    if (!el) return
+    taken.current = true
+    if (el.paused) void el.play().catch(() => {})
+    else el.pause()
+  }
+
+  /** Clicar na régua pula para o ponto. Barra que anda mas não obedece é
+      enfeite, e o visitante descobre isso na primeira tentativa. */
+  function seek(event: MouseEvent<HTMLDivElement>) {
+    const el = video.current
+    if (!el || !el.duration) return
+    const box = event.currentTarget.getBoundingClientRect()
+    const at = (event.clientX - box.left) / box.width
+    taken.current = true
+    el.currentTime = Math.min(Math.max(at, 0), 1) * el.duration
+  }
+
   return (
     <div
       ref={holder}
-      className={cn('overflow-hidden rounded-plate bg-ink', className)}
+      className={cn('relative overflow-hidden rounded-plate bg-ink', className)}
       style={{ aspectRatio: ratio }}
     >
       <video
@@ -355,15 +417,113 @@ function PlayableVideo({
         }}
         src={armed ? src : undefined}
         poster={poster ?? undefined}
-        controls
+        controls={!invite}
         playsInline
         muted={autoplay}
         autoPlay={autoplay}
         loop={autoplay}
         preload={autoplay ? 'auto' : 'metadata'}
-        onPlay={onPlay}
+        onPlay={invite ? () => setPaused(false) : onPlay}
+        onPause={invite ? () => setPaused(true) : undefined}
+        onTimeUpdate={
+          invite
+            ? (event) => {
+                const el = event.currentTarget
+                if (el.duration) setProgress(el.currentTime / el.duration)
+              }
+            : undefined
+        }
         className="h-full w-full object-cover"
       />
+
+      {invite && (
+        <>
+          {/* O CONVITE. Enquanto está mudo, a superfície inteira é um botão, e o
+              que ele oferece é o SOM, não o play: o vídeo já está rodando, e
+              pedir play no que já se move é o convite errado. Depois que o som
+              entra, o mesmo lugar vira pausa.
+
+              O selo tem fundo próprio porque a VSL tem legenda queimada clara, e
+              rótulo branco sobre imagem clara some. */}
+          <button
+            type="button"
+            onClick={silent ? turnOnSound : toggleRun}
+            aria-label={silent ? 'Turn on sound' : paused ? 'Play video' : 'Pause video'}
+            className="group absolute inset-0 grid place-items-center focus-visible:outline focus-visible:outline-2 focus-visible:-outline-offset-4 focus-visible:outline-paper"
+          >
+            {silent ? (
+              <span className="flex flex-col items-center gap-3">
+                <span className="grid h-16 w-16 place-items-center rounded-full bg-red text-paper shadow-plate ring-4 ring-paper/20 transition-transform duration-200 group-hover:scale-105">
+                  <svg
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    aria-hidden="true"
+                  >
+                    <path d="M11 5 6 9H3v6h3l5 4V5Z" fill="currentColor" stroke="none" />
+                    <path d="M15.5 8.5a5 5 0 0 1 0 7" />
+                    <path d="M18.5 5.5a9 9 0 0 1 0 13" />
+                  </svg>
+                </span>
+                <span className="label rounded-full bg-ink/70 px-3 py-1.5 text-paper backdrop-blur-sm">
+                  Turn on sound
+                </span>
+              </span>
+            ) : (
+              paused && (
+                <span className="grid h-16 w-16 place-items-center rounded-full bg-ink/70 text-paper backdrop-blur-sm">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" className="ml-1" aria-hidden="true">
+                    <path d="M6 3.5v17l15-8.5-15-8.5Z" />
+                  </svg>
+                </span>
+              )
+            )}
+          </button>
+
+          {/* A RÉGUA. Progresso de verdade e sem relógio: o número da duração na
+              primeira tela entrega o tamanho do compromisso antes de a pessoa
+              ter motivo para assumi-lo. A faixa de clique é alta o bastante
+              para o polegar; o traço desenhado é fino. */}
+          <div
+            onClick={seek}
+            role="presentation"
+            className="absolute inset-x-0 bottom-0 flex h-6 cursor-pointer items-end"
+          >
+            <span className="block h-[3px] w-full bg-paper/25">
+              <span
+                className="block h-full bg-red transition-[width] duration-150 ease-linear"
+                style={{ width: `${Math.round(progress * 100)}%` }}
+              />
+            </span>
+          </div>
+
+          {/* O mudo continua alcançável depois do convite aceito: quem ligou o
+              som num escritório precisa desligar sem procurar. */}
+          {!silent && (
+            <button
+              type="button"
+              onClick={() => {
+                const el = video.current
+                if (!el) return
+                el.muted = !el.muted
+                setSilent(el.muted)
+              }}
+              aria-label="Mute video"
+              className="absolute right-3 top-3 grid h-9 w-9 place-items-center rounded-full bg-ink/60 text-paper backdrop-blur-sm transition-colors hover:bg-ink/80"
+            >
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true">
+                <path d="M11 5 6 9H3v6h3l5 4V5Z" fill="currentColor" stroke="none" />
+                <path d="M15.5 8.5a5 5 0 0 1 0 7" />
+              </svg>
+            </button>
+          )}
+        </>
+      )}
     </div>
   )
 }

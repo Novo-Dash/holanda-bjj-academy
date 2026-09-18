@@ -1,5 +1,5 @@
 import { Button } from '@/components/ui/button'
-import { Pending, PhotoBackdrop, VideoSlot } from '@/components/paper'
+import { PhotoBackdrop, VideoSlot } from '@/components/paper'
 import { Reveal, RevealWords } from '@/components/reveal'
 import { site } from '@/data/site'
 import { track } from '@/lib/track'
@@ -160,14 +160,25 @@ export function Hero({ onBook }: { onBook: () => void }) {
                 brief="Head coach to camera, ninety seconds: who we are, what a first class looks like, and how to book the free trial"
                 ratio="9 / 16"
                 dark
+                /* Toca sozinho, mudo e em laço. Autoplay IMPLICA mudo: navegador
+                   nenhum autoriza som sem interação. Aqui isso custa menos que
+                   em qualquer outro vídeo da página, porque a VSL tem legenda
+                   queimada no arquivo: mudo, ela continua sendo lida.
+
+                   `soundInvite` troca os controles cinza do navegador pelo
+                   player da casa. O que ele muda de verdade não é o acabamento:
+                   é O QUE ESTÁ SENDO PEDIDO. O controle nativo oferece play num
+                   vídeo que já está tocando, e o único jeito de ligar o som é
+                   achar um ícone de 12px. O player da casa pede uma coisa só, em
+                   vermelho e no meio da tela, e é a coisa certa. */
+                autoplay
+                soundInvite
+                /* Com `soundInvite` este evento sai do play automático e passa a
+                   marcar o clique no som, que é o engajamento de verdade. */
                 onPlay={() => track('vsl_play', { location: 'hero' })}
                 className="shadow-plate"
               />
             </Reveal>
-
-            <div className="mt-3 flex justify-center lg:justify-start">
-              <Pending dark>VSL to record</Pending>
-            </div>
           </div>
         </div>
       </div>
