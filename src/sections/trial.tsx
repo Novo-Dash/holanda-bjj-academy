@@ -70,10 +70,23 @@ export function Trial({ onBook }: { onBook: () => void }) {
                   brief={trial.videoBrief}
                   ratio="9 / 16"
                   /* Toca sozinho, mudo e em laço. Autoplay IMPLICA mudo:
-                     navegador nenhum autoriza som sem interação. Os controles
-                     continuam ali, então quem quiser ouvir a sala tira o mudo
-                     com um clique. */
+                     navegador nenhum autoriza som sem interação.
+
+                     `soundInvite` é o mesmo player da primeira tela, e está aqui
+                     pelo mesmo motivo: o ícone de som do controle nativo tem 12px
+                     e ninguém procura por ele. O que esta seção tem a oferecer é
+                     justamente o que o mudo esconde, que é o BARULHO DA SALA
+                     cheia de criança.
+
+                     O laço cai no clique, e isso vale aqui também: em silêncio,
+                     trinta segundos repetindo são papel de parede; com som, são
+                     o mesmo ruído recomeçando a cada meio minuto. */
                   autoplay
+                  soundInvite
+                  /* Com `soundInvite` este evento sai do play automático e passa
+                     a marcar o clique no som. Antes ele disparava em toda visita
+                     que rolasse até aqui, o que fazia de `vsl_play` uma contagem
+                     de rolagem disfarçada de engajamento. */
                   onPlay={() => track('vsl_play', { location: 'trial' })}
                   className="shadow-lift"
                 />
