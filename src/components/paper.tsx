@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type MouseEvent, type ReactNode } from 'react'
+import { useCallback, useEffect, useRef, useState, type MouseEvent, type ReactNode } from 'react'
 import { cn } from '@/lib/utils'
 import { Mark } from '@/components/mark'
 import { Reveal } from '@/components/reveal'
@@ -392,6 +392,34 @@ function PlayableVideo({
     el.currentTime = Math.min(Math.max(at, 0), 1) * el.duration
   }
 
+  /* O `muted` do JSX NÃO basta. O React aplica esse atributo de forma não
+     confiável no <video> (facebook/react#10389), e sem o mudo valendo de
+     verdade o autoplay ou é bloqueado pelo navegador, ou toca COM som quando a
+     pessoa já interagiu com a página antes de chegar aqui, que é o caso mais
+     comum numa landing page. Então ele é escrito na tag pelo ref: `muted` (o
+     estado agora) e `defaultMuted` (que escreve o atributo no HTML, e é o que
+     vale quando o vídeo recarrega).
+
+     ISTO PRECISA SER UM CALLBACK ESTÁVEL, e não uma arrow escrita dentro do
+     JSX. Ref inline muda de identidade a cada render, e o React desliga e
+     religa o ref em TODO render: o mudo seria reaplicado sozinho. Aqui isso
+     não era hipotético, era o bug — a barra de progresso chama `setProgress`
+     uma vez por quadro de tempo, então o vídeo voltava a ficar mudo cerca de
+     um quarto de segundo depois de a pessoa pedir o som.
+
+     O `taken` é o segundo cinto: depois que a pessoa mexeu, nada aqui volta a
+     mandar no som. */
+  const attach = useCallback(
+    (el: HTMLVideoElement | null) => {
+      video.current = el
+      if (!el || taken.current) return
+      el.muted = autoplay
+      el.defaultMuted = autoplay
+      if (autoplay) el.volume = 0
+    },
+    [autoplay]
+  )
+
   return (
     <div
       ref={holder}
@@ -399,22 +427,8 @@ function PlayableVideo({
       style={{ aspectRatio: ratio }}
     >
       <video
-        /* O `muted` do JSX NÃO basta. O React aplica esse atributo de forma não
-           confiável no <video> (facebook/react#10389), e sem o mudo valendo de
-           verdade o autoplay ou é bloqueado pelo navegador, ou toca COM som
-           quando a pessoa já interagiu com a página antes de chegar aqui, que é
-           o caso mais comum numa landing page.
-
-           O ref liga as duas propriedades na própria tag: `muted` (o estado
-           agora) e `defaultMuted` (que é o que escreve o atributo no HTML, e o
-           que vale quando o vídeo recarrega). */
-        ref={(el) => {
-          video.current = el
-          if (!el) return
-          el.muted = autoplay
-          el.defaultMuted = autoplay
-          if (autoplay) el.volume = 0
-        }}
+        /* Ver a nota sobre o mudo, logo acima de `attach`. */
+        ref={attach}
         src={armed ? src : undefined}
         poster={poster ?? undefined}
         controls={!invite}
