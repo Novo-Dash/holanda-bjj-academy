@@ -43,7 +43,7 @@ import { track } from '@/lib/track'
  * dentro dela, que é a única prova que uma página de captação pode dar antes
  * de a pessoa clicar.
  *
- * O VÉU É ALTO (88% de tinta) por dois motivos que puxam na mesma direção: uma
+ * O VÉU É ALTO (78% de tinta) por dois motivos que puxam na mesma direção: uma
  * foto de trinta rostos é ilegível como imagem principal, e o texto que importa
  * está por cima dela. Fechado assim, ela vira ATMOSFERA — dá volume e presença
  * ao fundo sem nunca disputar a headline. Por cima dele ainda correm três
@@ -80,7 +80,7 @@ export function Hero({ onBook }: { onBook: () => void }) {
          da própria seção. Sem isso, `-z-10` some. */
       className="relative isolate flex min-h-svh flex-col overflow-hidden bg-ink pb-12 pt-28 md:pb-16 md:pt-32"
     >
-      <PhotoBackdrop veil={0.88} scrim="left" priority />
+      <PhotoBackdrop veil={0.78} scrim="left" priority />
 
       <div className="shell relative flex flex-1 flex-col">
         <div className="grid flex-1 grid-cols-1 items-center gap-10 lg:grid-cols-[minmax(0,1.5fr)_minmax(0,1fr)] lg:gap-16">

@@ -570,7 +570,7 @@ export const faq = [
   },
   {
     q: 'Do you have classes for kids?',
-    a: 'Yes, for ages 7 to 15. Children are matched with children their own size, the class is structured from start to finish, and parents are welcome to stay and watch the whole thing.',
+    a: 'Yes, for ages 4 to 13. Children are matched with children their own size, the class is structured from start to finish, and parents are welcome to stay and watch the whole thing.',
   },
   {
     q: 'How much is membership?',
