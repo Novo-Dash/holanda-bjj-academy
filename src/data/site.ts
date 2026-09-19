@@ -74,9 +74,14 @@ export const site = {
    * [CONFIRMAR] há crianças identificáveis na foto. Rosto de menor em página
    * pública, e ainda por cima em anúncio pago, precisa de autorização dos
    * responsáveis — que é coisa diferente de ter sido postado no Instagram.
+   *
+   * O `?v=` no caminho é cache busting. As imagens saem com `max-age=604800`
+   * (vercel.json), então trocar o arquivo mantendo o nome não chega a quem já
+   * abriu a página: o celular serve a foto velha por uma semana. Ao substituir
+   * uma foto sem renomear o arquivo, incrementar o número aqui.
    */
   heroImage: {
-    src: '/hero.webp',
+    src: '/hero.webp?v=2',
     width: 1920,
     height: 917,
     alt: 'Alunos e professores da Holanda BJJ Academy reunidos na sala de treino, adultos e crianças de kimono',
@@ -261,15 +266,14 @@ export const programs: Program[] = [
       'Rounds with people who make you work',
       'One syllabus, taught in cycles',
     ],
-    image: '/programs/adults.webp',
+    image: '/programs/adults.webp?v=2',
     imageAlt: 'Two adults rolling in the gi, one working to pass the guard',
   },
   {
     id: 'kids',
     name: 'Jiu-Jitsu Kids',
     audience: 'kids',
-    /** [CONFIRMAR] a faixa etária exata. O planejamento diz 7 a 15. */
-    ages: 'Ages 7 to 15',
+    ages: 'Ages 4 to 13',
     summary:
       'Confidence, focus and discipline, taught as habits instead of speeches. Children train with children their own size, and parents are welcome to stay and watch.',
     points: [
@@ -353,7 +357,7 @@ export const reasons: Reason[] = [
     icon: 'belt',
     title: 'Safe and structured',
     body: 'Authentic Brazilian jiu-jitsu, taught the way it is taught in Brazil: a clear curriculum, controlled drilling, position before submission, and no shortcuts around the fundamentals.',
-    image: '/why/structured.webp',
+    image: '/why/structured.webp?v=2',
     imageAlt: 'A class drilling in pairs across the mat',
     brief: 'Wide shot of a class in line at the start, gis on, mat full',
   },
