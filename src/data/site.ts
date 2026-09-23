@@ -40,8 +40,8 @@ export const site = {
     zipPending: false,
   },
 
-  phone: '(913) 963-3160',
-  phoneHref: 'tel:+19139633160',
+  phone: '(508) 361-7778',
+  phoneHref: 'tel:+15083617778',
 
   /* O e-mail de atendimento, confirmado pela academia. O campo continua
      podendo ser nulo porque o rodapé sabe imprimir a pendência no lugar dele:
