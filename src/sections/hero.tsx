@@ -2,7 +2,6 @@ import { Button } from '@/components/ui/button'
 import { PhotoBackdrop, VideoSlot } from '@/components/paper'
 import { Reveal, RevealWords } from '@/components/reveal'
 import { site } from '@/data/site'
-import { track } from '@/lib/track'
 
 /**
  * [I] HERO — placa de fachada, em duas colunas, ocupando a tela inteira.
@@ -138,10 +137,7 @@ export function Hero({ onBook }: { onBook: () => void }) {
               <div className="mt-10 flex justify-center lg:justify-start">
                 <Button
                   size="lg"
-                  onClick={() => {
-                    track('cta_click', { location: 'hero' })
-                    onBook()
-                  }}
+                  onClick={onBook}
                 >
                   Try a free class
                 </Button>
@@ -173,9 +169,6 @@ export function Hero({ onBook }: { onBook: () => void }) {
                    vermelho e no meio da tela, e é a coisa certa. */
                 autoplay
                 soundInvite
-                /* Com `soundInvite` este evento sai do play automático e passa a
-                   marcar o clique no som, que é o engajamento de verdade. */
-                onPlay={() => track('vsl_play', { location: 'hero' })}
                 className="shadow-plate"
               />
             </Reveal>

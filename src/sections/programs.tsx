@@ -3,7 +3,6 @@ import { SectionHead } from '@/components/paper'
 import { ArrowDiagonal } from '@/components/icons'
 import { Mark } from '@/components/mark'
 import { programs, type Program } from '@/data/site'
-import { track } from '@/lib/track'
 import { cn } from '@/lib/utils'
 
 /**
@@ -31,7 +30,7 @@ import { cn } from '@/lib/utils'
  * da linha junto, então a seção cresce com a escada em vez de o conteúdo de
  * baixo ser invadido.
  */
-export function Programs({ onBook }: { onBook: (programId?: string) => void }) {
+export function Programs({ onBook }: { onBook: () => void }) {
   return (
     <section id="programs" className="textured band relative overflow-hidden bg-paper">
       <div className="shell relative">
@@ -72,10 +71,7 @@ export function Programs({ onBook }: { onBook: (programId?: string) => void }) {
               key={program.id}
               program={program}
               index={i}
-              onOpen={() => {
-                track('program_click', { program: program.id })
-                onBook(program.id)
-              }}
+              onOpen={onBook}
               className={cn(i % 2 === 1 && 'lg:mt-14')}
             />
           ))}

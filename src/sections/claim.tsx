@@ -4,7 +4,6 @@ import { Curtain } from '@/components/curtain'
 import { PhotoBackdrop } from '@/components/paper'
 import { Reveal } from '@/components/reveal'
 import { offer, site } from '@/data/site'
-import { track } from '@/lib/track'
 
 /**
  * [IX] O PEDIDO — última seção antes do mapa, e a segunda (e última) inversão
@@ -67,10 +66,7 @@ export function Claim({ onBook }: { onBook: () => void }) {
           <div className="mt-11 flex flex-col items-center justify-center gap-5 sm:flex-row sm:gap-7">
             <Button
               size="lg"
-              onClick={() => {
-                track('cta_click', { location: 'final' })
-                onBook()
-              }}
+              onClick={onBook}
             >
               Book here
             </Button>
@@ -80,7 +76,6 @@ export function Claim({ onBook }: { onBook: () => void }) {
                 href={site.whatsapp}
                 target="_blank"
                 rel="noreferrer"
-                onClick={() => track('cta_click', { location: 'final_whatsapp' })}
                 className="label inline-flex items-center gap-3 py-2.5 text-paper no-underline"
               >
                 Message us on WhatsApp
@@ -91,7 +86,6 @@ export function Claim({ onBook }: { onBook: () => void }) {
                 or call{' '}
                 <a
                   href={site.phoneHref}
-                  onClick={() => track('cta_click', { location: 'final_phone' })}
                   className="tnum text-paper underline underline-offset-4 decoration-red"
                 >
                   {site.phone}

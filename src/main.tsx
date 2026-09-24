@@ -35,9 +35,12 @@ import { createRoot } from 'react-dom/client'
 
 import './index.css'
 import App from './App'
+import { BookingProvider } from './nd'
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <App />
+    <BookingProvider>
+      <App />
+    </BookingProvider>
   </StrictMode>
 )

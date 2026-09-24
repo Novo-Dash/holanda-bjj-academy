@@ -642,3 +642,22 @@
     scroll-behavior: auto;
   }
 }
+
+/* Kit Novo Dash (src/nd): o modal de agendamento com as cores e as fontes da página. */
+.nd {
+  --nd-accent: var(--color-red);
+  --nd-accent-ink: var(--color-paper);
+  --nd-ink: var(--color-ink);
+  --nd-muted: var(--color-ink-soft);
+  --nd-bg: var(--color-paper);
+  --nd-surface: var(--color-paper-2);
+  --nd-line: var(--color-line-strong);
+  --nd-panel: var(--color-ink);
+  --nd-panel-ink: var(--color-paper);
+  --nd-font: var(--font-sans);
+  --nd-font-display: var(--font-display);
+  --nd-display-case: uppercase;
+  --nd-display-weight: 700;
+  --nd-radius: var(--radius-plate);
+  --nd-button-radius: var(--radius-plate);
+}
