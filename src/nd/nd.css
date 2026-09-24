@@ -11,6 +11,7 @@
   --nd-error: #b42318;
   --nd-radius: 12px;
   --nd-button-radius: 999px;
+  --nd-dialog-radius: 24px;
   --nd-font: inherit;
   --nd-font-display: inherit;
   --nd-display-case: none;
@@ -37,7 +38,7 @@
 }
 .nd-dialog {
   position: relative; display: flex; flex-direction: column; width: 100%; max-width: 940px; max-height: calc(100dvh - 24px);
-  background: var(--nd-bg); border-radius: 20px; overflow: hidden; outline: none; box-shadow: 0 32px 80px rgb(0 0 0 / 0.35);
+  background: var(--nd-bg); border-radius: min(var(--nd-dialog-radius), 20px); overflow: hidden; outline: none; box-shadow: 0 32px 80px rgb(0 0 0 / 0.35);
 }
 .nd-close {
   position: absolute; top: 14px; right: 14px; z-index: 2; display: grid; place-items: center; width: 40px; height: 40px;
@@ -50,7 +51,7 @@
 .is-page .nd-scroll { overflow: visible; }
 @media (min-width: 640px) {
   .nd-overlay { padding: 24px; }
-  .nd-dialog { max-height: 90dvh; border-radius: 24px; }
+  .nd-dialog { max-height: 90dvh; border-radius: var(--nd-dialog-radius); }
   .nd-scroll { padding: 32px 36px 36px; }
   .nd-page { align-items: center; padding: 40px 24px; }
 }
