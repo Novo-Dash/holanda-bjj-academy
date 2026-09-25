@@ -33,7 +33,7 @@
 
 /* shell: modal and /book share it */
 .nd-overlay {
-  position: fixed; inset: 0; z-index: 1000; display: flex; align-items: center; justify-content: center;
+  position: fixed; inset: 0; z-index: 10000; display: flex; align-items: center; justify-content: center;
   padding: 12px; background: rgb(0 0 0 / 0.6); backdrop-filter: blur(4px); overflow-y: auto;
 }
 .nd-dialog {
@@ -177,6 +177,8 @@
 .nd-button:hover:not(:disabled) { filter: brightness(1.08); }
 .nd-button:active:not(:disabled) { transform: translateY(1px); }
 .nd-button:disabled { background: var(--nd-surface); color: var(--nd-muted); cursor: not-allowed; }
+/* "Book another child": the link style, centred under the main button */
+.nd-another { margin: 0 auto; }
 .nd-link {
   margin-left: auto; padding: 4px 0; border: 0; background: none; color: var(--nd-ink); font: inherit;
   font-size: 13px; font-weight: 600; letter-spacing: 0; text-transform: none; cursor: pointer;
