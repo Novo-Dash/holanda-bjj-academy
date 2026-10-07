@@ -149,7 +149,7 @@ export function Footer() {
                 Facebook
               </a>
             )}
-            <span className="text-paper/55">Built by Novo Dash</span>
+            <span className="text-paper/55">Built by <a href="https://lp.novodash.com/site?utm_source=holanda-bjj-academy&utm_medium=referral&utm_campaign=lp-footer" target="_blank" rel="noopener" className="no-underline hover:text-paper">Novo Dash</a></span>
           </div>
         </div>
       </div>
