@@ -2660,3 +2660,20 @@ body {
     justify-content: flex-start;
   }
 }
+
+/* Links de telefone DENTRO de frase (FAQ e fechamento): a área de toque
+   chega a 44px sem mudar a linha (padding e margem negativa se anulam). */
+.hk-faq__head a,
+.hk-final__micro a {
+  display: inline-block;
+  padding-block: 12px;
+  margin-block: -12px;
+}
+
+/* 960 a 1279: o hero já está em duas colunas e a do texto é estreita; no
+   tamanho cheio, "that sends them" quebrava e o "them" ficava sozinho. */
+@media (min-width: 960px) and (max-width: 1279px) {
+  .hk-hero__h1 {
+    font-size: clamp(2.6rem, 4.6vw, 3.6rem);
+  }
+}
