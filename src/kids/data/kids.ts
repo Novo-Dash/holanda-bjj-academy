@@ -429,15 +429,16 @@ export const footer = {
 }
 
 export const video = {
-  /* [CONFIRMAR] o "Video Ad Kids campeão" do briefing (PRD 0.11). Até ele
-     chegar, a VSL é a aula kids de verdade, 9:16, 30 s. Trocar é mudar estes
-     dois caminhos. */
-  src: '/kids/vsl.mp4',
-  poster: '/kids/vsl-poster.webp',
+  /* A VSL do anúncio Kids aprovado (Drive, "02. Media / Kids Ads (Approved) /
+     HolandaBJJ_vídeo1.mp4"), entregue pelo Adryan em 09/10. 31 s, legenda já
+     gravada na imagem, COM áudio: o "Tap for sound" reinicia com som. O
+     original de 44 MB fica em raw/kids-vsl/; aqui, 540×960 a 24 fps (3 MB). O
+     `?v=` força o navegador a buscar a versão nova. */
+  src: '/kids/vsl.mp4?v=3',
+  poster: '/kids/vsl-poster.webp?v=3',
   width: 540,
   height: 960,
-  pending: 'Vídeo campeão do anúncio Kids (MP4 9:16)',
-  label: 'A kids class at Holanda BJJ Academy, in session',
+  label: 'Holanda BJJ Academy kids class: the kids line up, train with partners their size and learn with the coach',
   sound: 'Tap for sound',
   pause: 'Pause',
   play: 'Play',
