@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react'
-import { track } from '@/lib/track'
+import { track } from '@/kids/lib/track'
 import { firstClass } from '../data/kids'
 import { prefersReducedMotion } from '../lib/motion'
 import { Torii } from '../ui/icons'

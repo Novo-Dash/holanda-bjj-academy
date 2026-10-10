@@ -1,5 +1,5 @@
 import { useEffect, useId, useRef } from 'react'
-import { track } from '@/lib/track'
+import { track } from '@/kids/lib/track'
 import { safety } from '../data/kids'
 import { afterPaint } from '../lib/motion'
 import { EyeArt, GripArt, SeesawArt, TapArt, playEye, playGrip, playSeesaw, playTap } from '../ui/SafetyArt'

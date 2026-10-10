@@ -670,3 +670,32 @@ turma no passo 5.
 deixar o `vite` filho vivo segurando a porta; conferir com `netstat` antes de
 subir de novo.
 
+## 11. Merge do main (10/10): a Kids no kit padrão da Novo Dash
+
+Enquanto a Kids era construída, o `main` trocou o `src/booking/webhook.ts` e o
+`src/lib/track.ts` da `/` pelo KIT PADRÃO (`src/nd/`, com o `client.ts` como
+único arquivo por academia e o bloco `nd:tracking` no head). A Kids foi
+portada no merge para o mesmo kit, sem perder nada:
+
+- **Tags:** o mesmo bloco `nd:tracking` no `kids/index.html` (Pixel, GA4, Ads,
+  Clarity), mais `clarity('set','page','kids')`.
+- **Atribuição:** `captureAttribution()` do kit na montagem.
+- **Turmas:** `fetchPrograms('kids')` do kit (já aplica turmas escondidas e
+  horários aposentados do client.ts); a idade sai do nome do calendário.
+- **Envio:** `sendLead` e `sendBooking` do kit, com a origem "Landing Page -
+  Kids" e, no lead, `child_age`, `interest`, `notes` (Quick-check) e
+  `headline_variant`. Em dev continua sem enviar (`?send=1` envia).
+- **Eventos:** os do formulário do kit (`identify`, `Lead`/`generate_lead` +
+  conversão de lead, `Schedule`/`trial_booked` + conversão de agendamento,
+  com CAPI via `/api/capi`), em `src/kids/lib/track.ts`.
+- **Prerender:** o `src/nd/tracking.ts` lê `window` ao carregar; no build SSR
+  ele vira `scripts/ssr-tracking-stub.ts`. Atenção: o alias `@/` já chega
+  resolvido no plugin, por isso a condição compara o caminho absoluto.
+
+**O que se perdeu:** a guarda de localhost do Clarity (item 04 do diagnóstico)
+na `/`. O bloco do kit é gerado do client.ts e não deve ser editado à mão; o
+filtro de localhost passa a ser no próprio projeto do Clarity.
+
+Na mesma rodada: a barra do topo perdeu o botão de agendar (o telefone, com o
+número visível, ficou no lugar) e os 4 selos do hero empilham no celular.
+

@@ -1,7 +1,7 @@
 import { forwardRef, useImperativeHandle, useRef, useState } from 'react'
 import { form } from '../data/kids'
 import { BookingForm } from './BookingForm'
-import { track } from '@/lib/track'
+import { track } from '@/kids/lib/track'
 import { afterPaint } from '../lib/motion'
 
 export type SheetHandle = { open: () => void }

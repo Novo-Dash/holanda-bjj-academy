@@ -5,7 +5,6 @@ import { Curtain } from '@/components/curtain'
 import { Pending, VideoSlot } from '@/components/paper'
 import { Reveal } from '@/components/reveal'
 import { site, trial } from '@/data/site'
-import { track } from '@/lib/track'
 import { cn } from '@/lib/utils'
 
 /** Quanto tempo o item fica visível antes de se marcar. Curto o bastante para
@@ -83,11 +82,6 @@ export function Trial({ onBook }: { onBook: () => void }) {
                      o mesmo ruído recomeçando a cada meio minuto. */
                   autoplay
                   soundInvite
-                  /* Com `soundInvite` este evento sai do play automático e passa
-                     a marcar o clique no som. Antes ele disparava em toda visita
-                     que rolasse até aqui, o que fazia de `vsl_play` uma contagem
-                     de rolagem disfarçada de engajamento. */
-                  onPlay={() => track('vsl_play', { location: 'trial' })}
                   className="shadow-lift"
                 />
                 <Tape />
@@ -400,10 +394,7 @@ function Clipboard({ onBook }: { onBook: () => void }) {
             <div className="mt-7 flex flex-col items-start gap-4 border-t border-line pt-6 sm:flex-row sm:items-center sm:gap-6">
               <Button
                 size="lg"
-                onClick={() => {
-                  track('cta_click', { location: 'trial' })
-                  onBook()
-                }}
+                onClick={onBook}
               >
                 Book my free class
               </Button>
@@ -411,7 +402,6 @@ function Clipboard({ onBook }: { onBook: () => void }) {
                 or call{' '}
                 <a
                   href={site.phoneHref}
-                  onClick={() => track('cta_click', { location: 'trial_phone' })}
                   className="tnum text-ink underline underline-offset-4 decoration-red"
                 >
                   {site.phone}

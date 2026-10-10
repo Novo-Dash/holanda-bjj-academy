@@ -3,7 +3,6 @@ import { useReducedMotion } from 'motion/react'
 import { Button } from '@/components/ui/button'
 import { SectionHead } from '@/components/paper'
 import { steps } from '@/data/site'
-import { track } from '@/lib/track'
 
 const TOTAL = steps.length
 /** Quanto tempo cada passo fica sozinho antes de o próximo acender. Três
@@ -223,10 +222,7 @@ export function Steps({ onBook }: { onBook: () => void }) {
           <Button
             variant="onDark"
             size="lg"
-            onClick={() => {
-              track('cta_click', { location: 'steps' })
-              onBook()
-            }}
+            onClick={onBook}
           >
             Start step one
           </Button>

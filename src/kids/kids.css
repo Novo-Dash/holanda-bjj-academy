@@ -788,44 +788,46 @@ summary,
     background: rgb(var(--hk-ink-rgb) / 0.06);
   }
 }
+/* O telefone no lugar do botão: pílula com contorno, número sempre visível. */
 .hk-nav__phone {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: var(--s-2);
-  min-width: 44px;
   min-height: 44px;
-  padding: 0 var(--s-2);
+  padding: 0 var(--s-4) 0 var(--s-3);
   border-radius: var(--r-pill);
-  font-weight: 600;
+  background: var(--hk-paper);
+  box-shadow: inset 0 0 0 2px var(--hk-ink), 0 3px 0 rgb(var(--hk-ink-rgb) / 0.16);
+  font-weight: 700;
   font-size: 0.95rem;
   text-decoration: none;
   white-space: nowrap;
+  transition: box-shadow var(--t-tap) ease, translate var(--t-tap) ease, color var(--t-ui) ease;
 }
 .hk-nav__phone svg {
-  width: 22px;
-  height: 22px;
+  width: 20px;
+  height: 20px;
   color: var(--hk-torii);
 }
-.hk-nav__phone span {
-  display: none;
+@media (hover: hover) {
+  .hk-nav__phone:hover {
+    color: var(--hk-torii);
+    box-shadow: inset 0 0 0 2px var(--hk-torii), 0 3px 0 rgb(var(--hk-ink-rgb) / 0.16);
+  }
+}
+.hk-nav__phone:active {
+  translate: 0 2px;
+  box-shadow: inset 0 0 0 2px var(--hk-torii), 0 1px 0 rgb(var(--hk-ink-rgb) / 0.16);
 }
 @media (min-width: 960px) {
   .hk-nav__links {
     display: flex;
   }
-  .hk-nav__phone span {
-    display: inline;
-  }
 }
 @media (max-width: 559px) {
   .hk-nav__in {
     gap: var(--s-2);
-  }
-  .hk-nav .hk-btn--small {
-    padding: 0 var(--s-4);
-    font-size: 0.9rem;
-    white-space: nowrap;
   }
   .hk-brand {
     gap: var(--s-2);

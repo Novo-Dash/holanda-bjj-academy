@@ -4,7 +4,6 @@ import { Button } from '@/components/ui/button'
 import { SectionHead } from '@/components/paper'
 import { Reveal } from '@/components/reveal'
 import { faq } from '@/data/site'
-import { track } from '@/lib/track'
 import { cn } from '@/lib/utils'
 
 /**
@@ -136,10 +135,7 @@ export function Faq({ onBook }: { onBook: () => void }) {
           <div className="mt-12 flex justify-center">
             <Button
               size="lg"
-              onClick={() => {
-                track('cta_click', { location: 'faq' })
-                onBook()
-              }}
+              onClick={onBook}
             >
               Book your free trial
             </Button>

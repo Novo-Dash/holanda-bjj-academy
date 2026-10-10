@@ -1,4 +1,4 @@
-import { track } from '@/lib/track'
+import { track } from '@/kids/lib/track'
 import { hero, trust, type Variant } from '../data/kids'
 import { afterPaint } from '../lib/motion'
 import { Eye, Gi, KasagiStroke, Size, Star, Torii } from '../ui/icons'

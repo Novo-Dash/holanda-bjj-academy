@@ -3,23 +3,21 @@ import { site } from '@/data/site'
 import { nav } from '../data/kids'
 import { isInAppBrowser } from '../lib/motion'
 import { Phone } from '../ui/icons'
-import { Button } from '../ui/parts'
-import type { Book } from '../KidsApp'
 
 /**
  * Barra do topo. Transparente sobre a primeira tela; ao rolar, vidro sobre o
  * cinza do tatame (no WebView do Instagram/Facebook, cor chapada: blur em
  * scroll custa quadro em aparelho fraco, PRD 13).
  *
- * Sem menu sanfona no celular, de propósito: os quatro links são atalhos de
- * quem já está lendo, e no celular o que importa (agendar e ligar) está aqui e
- * na barra fixa de baixo. Um menu a mais seria JS, foco preso e `inert` para
- * um uso que o diagnóstico não mostrou.
+ * Sem botão de agendar na barra (pedido do Adryan, 10/10): o TELEFONE fica no
+ * lugar dele, com o número visível em todas as larguras. Agendar está no hero
+ * e em cada seção. Sem menu sanfona no celular: os quatro links são atalhos
+ * de quem já está lendo.
  *
  * O estado "rolado" é uma classe trocada por IntersectionObserver numa
  * sentinela, e não um ouvinte de scroll.
  */
-export function Nav({ onBook }: { onBook: Book }) {
+export function Nav() {
   const ref = useRef<HTMLElement>(null)
 
   useEffect(() => {
@@ -52,16 +50,10 @@ export function Nav({ onBook }: { onBook: Book }) {
             </a>
           ))}
         </nav>
-        <a className="hk-nav__phone" href={site.phoneHref} aria-label={`Call ${site.phone}`}>
+        <a className="hk-nav__phone" href={site.phoneHref}>
           <Phone />
           <span>{site.phone}</span>
         </a>
-        <Button size="small" arrow={false} onClick={() => onBook('nav')}>
-          {/* Um rótulo por largura; o escondido sai da árvore de acessibilidade
-              junto com o `display: none`. */}
-          <span className="hk-nav__cta-long">{nav.cta}</span>
-          <span className="hk-nav__cta-short">{nav.ctaShort}</span>
-        </Button>
       </div>
     </header>
   )

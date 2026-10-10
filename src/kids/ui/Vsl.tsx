@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { track } from '@/lib/track'
+import { track } from '@/kids/lib/track'
 import { video } from '../data/kids'
 import { afterPaint, prefersReducedMotion } from '../lib/motion'
 import { Pause, Play, Replay, SoundOff } from './icons'

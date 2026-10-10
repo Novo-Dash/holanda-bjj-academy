@@ -1,6 +1,6 @@
 import { useSyncExternalStore } from 'react'
-import { sendKidsBooking, sendKidsLead } from '@/booking/webhook'
-import { track, trackLead } from '@/lib/track'
+import { sendBooking, sendLead, type BookingData } from '@/nd/webhook'
+import { track, trackBooked, trackLead } from './track'
 import { loadKidsPrograms, programFor, type KidsProgram } from './programs'
 import { afterPaint } from './motion'
 import { quickCheck } from '../data/kids'
@@ -147,6 +147,32 @@ function rateLimited() {
   return false
 }
 
+/** Origem no CRM quando a visita não traz clique pago (o kit troca por Meta
+    ou Google quando traz). */
+const SOURCE = 'Landing Page - Kids'
+
+/**
+ * EM DESENVOLVIMENTO NADA É ENVIADO: um teste local criaria lead de verdade
+ * no CRM da academia. O payload vai para o console. `?send=1` envia de
+ * verdade (avisar o Adryan para apagar o contato de teste no GHL).
+ */
+const live = () => !import.meta.env.DEV || new URLSearchParams(window.location.search).has('send')
+
+function bookingData(program: KidsProgram | null): BookingData {
+  return {
+    fullName: state.name,
+    childName: '',
+    email: '',
+    phone: state.phone,
+    calendarId: program?.calendarId ?? '',
+    date: state.day ?? '',
+    time: state.time ?? '',
+    preferredAudience: 'kids',
+  }
+}
+
+const user = () => ({ name: state.name, email: '', phone: state.phone })
+
 export function submitStep1(errors: { name: string; phone: string; age: string }) {
   const e: Errors = {}
   if (state.name.trim().length < 2) e.name = errors.name
@@ -168,15 +194,18 @@ export function submitStep1(errors: { name: string; phone: string; age: string }
 
   const program = currentProgram()
   afterPaint(() => {
-    sendKidsLead({
-      name: state.name,
-      phone: state.phone,
-      childAge: state.age!,
-      program: program?.name ?? `Kids (age ${state.age})`,
+    /* O que a Kids acrescenta ao lead padrão do kit: a idade (é ela que
+       escolhe a turma), as afirmações marcadas no Quick-check e a variante
+       da headline. */
+    const extra = {
+      child_age: String(state.age),
+      interest: 'kids',
       notes: notesText(),
-      variant: state.variant,
-    })
-    trackLead({ audience: 'kids', child_age: state.age ?? undefined })
+      headline_variant: state.variant,
+    }
+    if (live()) sendLead(bookingData(program), program?.raw ?? null, SOURCE, extra)
+    else console.info('lead kids (DEV, não enviado):', bookingData(program), extra)
+    trackLead(user(), { child_age: state.age ?? undefined })
   })
   return true
 }
@@ -194,18 +223,9 @@ export function submitStep2(errors: { day: string; time: string }) {
   setBooking({ errors: {}, step: 3, booked: true })
   if (state.honey !== '') return
   afterPaint(() => {
-    sendKidsBooking({
-      name: state.name,
-      phone: state.phone,
-      childAge: state.age!,
-      program: program.name,
-      notes: notesText(),
-      variant: state.variant,
-      calendarId: program.calendarId,
-      date: state.day!,
-      time: state.time!,
-    })
-    track('trial_booked', { audience: 'kids', child_age: state.age ?? undefined, program: program.name })
+    if (live()) sendBooking(bookingData(program), program.raw, SOURCE)
+    else console.info('agendamento kids (DEV, não enviado):', bookingData(program), program.name)
+    trackBooked(user(), { child_age: state.age ?? undefined, program: program.name })
   })
 }
 

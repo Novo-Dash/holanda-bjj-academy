@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react'
-import { track } from '@/lib/track'
+import { track } from '@/kids/lib/track'
 import { quickCheck } from '../data/kids'
 import { autoFillNotes, toggleNote, useBooking } from '../lib/booking-kids'
 import { afterPaint } from '../lib/motion'

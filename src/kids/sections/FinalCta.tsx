@@ -1,5 +1,5 @@
 import { site } from '@/data/site'
-import { track } from '@/lib/track'
+import { track } from '@/kids/lib/track'
 import { finalCta, footer } from '../data/kids'
 import { afterPaint } from '../lib/motion'
 import { Phone, Pin, Torii } from '../ui/icons'

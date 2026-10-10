@@ -1,9 +1,9 @@
-import { lazy, Suspense, useCallback, useEffect, useState } from 'react'
+import { lazy, Suspense, useEffect } from 'react'
 import { Nav } from '@/components/nav'
 import { StickyCTA } from '@/components/sticky-cta'
 import { Hero } from '@/sections/hero'
 import { Programs } from '@/sections/programs'
-import { bootTracking } from '@/lib/track'
+import { useBooking } from '@/nd'
 
 /* Abaixo da dobra em chunk próprio. O <Suspense> devolve uma ALTURA RESERVADA
    em vez de null: sem ela a página encolhe enquanto o chunk chega e o scroll
@@ -16,9 +16,6 @@ const Faq = lazy(() => import('@/sections/faq').then((m) => ({ default: m.Faq })
 const Claim = lazy(() => import('@/sections/claim').then((m) => ({ default: m.Claim })))
 const MapBand = lazy(() => import('@/sections/map-band').then((m) => ({ default: m.MapBand })))
 const Footer = lazy(() => import('@/sections/footer').then((m) => ({ default: m.Footer })))
-const BookingModal = lazy(() =>
-  import('@/booking/booking-modal').then((m) => ({ default: m.BookingModal }))
-)
 
 function Hold({ children }: { children: React.ReactNode }) {
   return <Suspense fallback={<div style={{ minHeight: '60vh' }} />}>{children}</Suspense>
@@ -75,25 +72,14 @@ function jumpToHash() {
  * rodapé responde "onde fica", e a grade mora na coluna "visit us" do rodapé,
  * que é onde alguém procura por ela depois de já ter decidido.
  *
- * O modal é montado só no primeiro ocioso depois do load. Renderizar
- * `<Suspense><BookingModal open={false}/></Suspense>` de saída faria o React
- * resolver o chunk no primeiro paint, que é o oposto de adiar.
+ * O formulário, o agendamento e o rastreamento são do kit Novo Dash (src/nd),
+ * igual em todas as LPs: todo botão de agendar abre o modal dele.
  */
 export default function App() {
-  const [booking, setBooking] = useState(false)
-  const [program, setProgram] = useState<string | undefined>(undefined)
-  const [modalReady, setModalReady] = useState(false)
-
-  const openBooking = useCallback((programId?: string) => {
-    setProgram(programId)
-    setModalReady(true)
-    setBooking(true)
-  }, [])
-  const closeBooking = useCallback(() => setBooking(false), [])
+  const booking = useBooking()
+  const openBooking = booking.open
 
   useEffect(() => {
-    bootTracking()
-
     /* `#book` na URL abre o formulário direto, sem precisar de clique. Serve
        para o anúncio: uma extensão de link ou um criativo pode mandar para
        lp.../#book e a pessoa cai já no passo 1 em vez de ter que achar o
@@ -102,19 +88,6 @@ export default function App() {
       openBooking()
     } else {
       jumpToHash()
-    }
-
-    /* Pré-carrega o chunk do modal quando o navegador não tem mais nada para
-       fazer. Quem clicar antes disso não espera nada: o `openBooking` monta na
-       hora, e o Suspense cobre o intervalo. */
-    const hasIdle = typeof window.requestIdleCallback === 'function'
-    const idle = hasIdle
-      ? window.requestIdleCallback(() => setModalReady(true))
-      : window.setTimeout(() => setModalReady(true), 2500)
-
-    return () => {
-      if (hasIdle) window.cancelIdleCallback(idle)
-      else window.clearTimeout(idle)
     }
   }, [openBooking])
 
@@ -128,7 +101,7 @@ export default function App() {
 
       <main>
         <Hero onBook={() => openBooking()} />
-        <Programs onBook={openBooking} />
+        <Programs onBook={() => openBooking()} />
 
         <Hold>
           <Steps onBook={() => openBooking()} />
@@ -159,13 +132,7 @@ export default function App() {
         <Footer />
       </Suspense>
 
-      <StickyCTA onBook={() => openBooking()} hidden={booking} />
-
-      {modalReady && (
-        <Suspense fallback={null}>
-          <BookingModal open={booking} initialProgram={program} onClose={closeBooking} />
-        </Suspense>
-      )}
+      <StickyCTA onBook={() => openBooking()} hidden={booking.isOpen} />
     </div>
   )
 }

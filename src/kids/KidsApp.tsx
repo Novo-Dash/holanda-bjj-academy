@@ -1,5 +1,6 @@
 import { Suspense, useCallback, useEffect, useRef, type ReactNode } from 'react'
-import { bootTracking, setTrackContext, track } from '@/lib/track'
+import { captureAttribution } from '@/nd/attribution'
+import { setTrackContext, track, trackView } from '@/kids/lib/track'
 import type { Variant } from './data/kids'
 import { prefetchPrograms, setBooking } from './lib/booking-kids'
 import { afterPaint, usePageMotion } from './lib/motion'
@@ -61,9 +62,11 @@ export default function KidsApp({ variant }: { variant: Variant }) {
 
     /* Tracking e horários entram no OCIOSO depois do load: nada disso pode
        disputar a thread principal com o primeiro toque (INP, P6). */
+    /* A atribuição (UTMs, gclid, fbclid) é guardada na primeira visita da
+       sessão, como no kit; as tags já vieram do bloco nd:tracking do head. */
+    captureAttribution()
     const start = () => {
-      bootTracking()
-      track('view_content', { content_name: 'Kids Program' })
+      trackView()
       void prefetchPrograms()
     }
     /* O Safari só ganhou requestIdleCallback há pouco; sem ele, um atraso fixo. */
@@ -94,7 +97,7 @@ export default function KidsApp({ variant }: { variant: Variant }) {
         Skip to content
       </a>
       <span id="hk-top-sentinel" aria-hidden="true" />
-      <Nav onBook={book} />
+      <Nav />
       <main id="main">
         <span id="top" />
         <Hero onBook={book} variant={variant} />

@@ -1,6 +1,6 @@
 import { useId, useState } from 'react'
 import { site } from '@/data/site'
-import { track } from '@/lib/track'
+import { track } from '@/kids/lib/track'
 import { faq } from '../data/kids'
 import { afterPaint } from '../lib/motion'
 import { Button, Pending, shows } from '../ui/parts'

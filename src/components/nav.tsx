@@ -3,7 +3,6 @@ import { AnimatePresence, motion } from 'motion/react'
 import { Button } from '@/components/ui/button'
 import { Phone } from '@/components/icons'
 import { site } from '@/data/site'
-import { track } from '@/lib/track'
 import { cn } from '@/lib/utils'
 
 /* DOIS destinos, e não os cinco de antes.
@@ -146,7 +145,7 @@ export function Nav({ onBook }: { onBook: () => void }) {
 
         <div className="flex shrink-0 items-center gap-2.5">
           <div className="hidden rounded-full bg-ink p-[3px] shadow-lift sm:block">
-            <Pill href={site.phoneHref} onClick={() => track('cta_click', { location: 'nav_phone' })}>
+            <Pill href={site.phoneHref}>
               <Phone className="h-4 w-4" />
               <span className="tnum">{site.phone}</span>
             </Pill>
@@ -221,10 +220,7 @@ export function Nav({ onBook }: { onBook: () => void }) {
                   <Pill
                     href={site.phoneHref}
                     block
-                    onClick={() => {
-                      track('cta_click', { location: 'nav_phone' })
-                      setOpen(false)
-                    }}
+                    onClick={() => setOpen(false)}
                   >
                     <Phone className="h-4 w-4" />
                     <span className="tnum">{site.phone}</span>

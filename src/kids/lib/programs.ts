@@ -1,19 +1,15 @@
+import { fetchPrograms, type Program } from '@/nd/programs'
+
 /**
- * As turmas kids e os horários abertos, ao vivo, da API de programas da Novo
- * Dash (o mesmo endpoint que o Dárcio Kids e o Satori Kids usam em produção).
- * Nada da lista é escrito à mão: turma nova, renomeada ou pausada no GHL
- * aparece no próximo carregamento.
+ * As turmas kids e os horários abertos, ao vivo, pelo KIT da Novo Dash
+ * (`fetchPrograms('kids')`, src/nd/programs.ts): a mesma API que a `/`, o
+ * Dárcio Kids e o Satori Kids usam, já com os horários aposentados e as
+ * turmas escondidas do client.ts aplicados. Nada da lista é escrito à mão.
  *
  * Em 09/10/2026 a location da Holanda devolvia três calendários kids:
  *   Kids BJJ (Ages 4-6) · Kids BJJ (Ages 7-13) · Kids No-Gi (Ages 7-13)
- * A idade da criança escolhe a turma de kimono (gi) da faixa dela. O no-gi não
- * entra na escolha automática [CONFIRMAR com o Adryan se entra como segunda
- * opção quando não houver horário no gi].
+ * A idade vem do nome do calendário ("Ages 4-6").
  */
-
-const PROGRAMS_URL = 'https://clients.novodash.com/api/public/programs'
-/* O mesmo id público que está em src/booking/webhook.ts. */
-const LOCATION_ID = 'umbThmlnc77LC745O8FF'
 
 export type KidsProgram = {
   calendarId: string
@@ -24,6 +20,8 @@ export type KidsProgram = {
   nogi: boolean
   /** "YYYY-MM-DD" -> ["HH:MM"], no fuso da academia. */
   slots: Record<string, string[]>
+  /** O objeto do kit, para o envio do agendamento (src/nd/webhook.ts). */
+  raw: Program
 }
 
 let inflight: Promise<KidsProgram[]> | null = null
@@ -31,48 +29,29 @@ let inflight: Promise<KidsProgram[]> | null = null
 /** Uma vez por sessão. Começa no ocioso depois do load, para o passo 2 abrir
     pronto. */
 export function loadKidsPrograms(): Promise<KidsProgram[]> {
-  inflight ??= fetchPrograms().catch((err) => {
-    inflight = null
-    throw err
-  })
-  return inflight
-}
-
-async function fetchPrograms(): Promise<KidsProgram[]> {
-  const res = await fetch(`${PROGRAMS_URL}?location_id=${LOCATION_ID}`)
-  if (!res.ok) throw new Error(`programs ${res.status}`)
-  const data = (await res.json()) as { programs?: Array<Record<string, unknown>> }
-  const out: KidsProgram[] = []
-  for (const p of data.programs ?? []) {
-    if (p.audience !== 'kids' || typeof p.calendar_id !== 'string' || typeof p.name !== 'string') continue
-    const ages = p.name.match(/(\d+)\s*[-–]\s*(\d+)/)
-    if (!ages) continue
-    out.push({
-      calendarId: p.calendar_id,
-      name: p.name,
-      min: Number(ages[1]),
-      max: Number(ages[2]),
-      nogi: /no[\s-]?gi/i.test(p.name),
-      slots: normalize(p.slots),
+  inflight ??= fetchPrograms('kids')
+    .then((all) =>
+      all.flatMap((p) => {
+        const ages = p.name.match(/(\d+)\s*[-–]\s*(\d+)/)
+        if (p.audience !== 'kids' || !ages) return []
+        return [
+          {
+            calendarId: p.calendar_id,
+            name: p.name,
+            min: Number(ages[1]),
+            max: Number(ages[2]),
+            nogi: /no[\s-]?gi/i.test(p.name),
+            slots: p.slots,
+            raw: p,
+          },
+        ]
+      })
+    )
+    .catch((err) => {
+      inflight = null
+      throw err
     })
-  }
-  return out
-}
-
-/* Cada ISO traz o fuso da academia: corta o texto, nunca passa por Date
-   (UTC mudaria o dia). */
-function normalize(raw: unknown): Record<string, string[]> {
-  const out: Record<string, string[]> = {}
-  for (const [day, value] of Object.entries((raw ?? {}) as Record<string, unknown>)) {
-    const list = Array.isArray(value) ? value : (value as { slots?: unknown[] })?.slots
-    if (!Array.isArray(list)) continue
-    const times = list
-      .filter((iso): iso is string => typeof iso === 'string' && iso.slice(0, 10) === day)
-      .map((iso) => iso.slice(11, 16))
-      .sort()
-    if (times.length) out[day] = times
-  }
-  return out
+  return inflight
 }
 
 /** A turma de kimono da idade. */
@@ -106,7 +85,7 @@ export const dayNum = (key: string) => parseKey(key).getDate()
 export const month = (key: string) => parseKey(key).toLocaleDateString('en-US', { month: 'short' })
 export const longDate = (key: string) =>
   parseKey(key).toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })
-export { timeLabel } from '@/booking/webhook'
+export { timeLabel } from '@/nd/programs'
 
 /** Arquivo .ics gerado no navegador, para o "Add to calendar" do obrigado. */
 export function icsHref(dateKey: string, time: string, address: string) {
