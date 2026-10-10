@@ -502,3 +502,171 @@ sido postado no Instagram.
    (`onDark`) veste as quatro peças da barra, e o botão do telefone ganhou a
    variante `quietOnDark` — que continua sendo a peça SEM cor, porque quem tem
    cor na primeira tela é o botão de agendar, e só ele.
+
+---
+
+# HOLK-001 · LP Kids (/kids), 09/10/2026
+
+## 0. Referências abertas e o que ficou de cada uma
+
+O CÓDIGO foi lido (as memory de lá estão desatualizadas) e o ao vivo foi
+fotografado com Playwright em 1440 e 390 (`memory/prints/ref-*.png`, fora do
+git).
+
+| Rota | O que se absorveu | O que NÃO veio |
+|---|---|---|
+| `D:\DOCUMENTOS\NovoDash\Dárcio Lira Jiu-Jitsu` (/kids) | fonte de mão no título; botão "brinquedo" com base dura que afunda; texto que acende por `--p`; seção-mecanismo no primeiro dia; prerender + hidratação; FAQ em `grid-template-rows` | faixa branca, sticker-eyebrow, baralho de polaroids, fitas em X, cortina com pin, cartas distribuídas, fundo de pontinhos |
+| `D:\DOCUMENTOS\NovoDash\satori-bjj-phoenix-az-fresh` (/kids) | VSL vertical que toca muda e reinicia com som; API de programas ao vivo; FAQPage do mesmo array; "texto em vermelho é sempre branco cheio" | painel vermelho flutuante, polaroids penduradas, ticket com furo, ondas, rabisco de dois fios |
+
+Quem conhece as três páginas reconhece a família; ninguém diz que é a mesma.
+
+## 1. A tese e o objeto
+
+"O portão de entrada de um lugar sério que recebe criança com alegria." O
+objeto é o **TORII** do distintivo, que também está pintado em vermelho na
+parede da sala (as fotos kids do cliente foram tiradas diante dele). A
+geometria é a medida da `/` (`src/data/torii.ts`, que agora as duas páginas
+compartilham).
+
+O torii vira: o mural atrás da VSL no hero; o portão que cresce ao rolar (a
+Signature); o eyebrow; a viga das regras da Safety; a borda curva das seções
+vermelha e escura (kasagi); os cinco portões da primeira aula; o emblema que
+se desenha no fechamento; o marcador da lista dos pais; a seta do botão (a
+travessa, nuki). O traço sob "calmer" é a curva do kasagi, não um rabisco.
+
+## 2. Design pass (F4): escolhas do Adryan
+
+- **Fonte: Shantell Sans.** Finalistas renderizadas no hero real:
+  `brand/kids-font-options.png` (Shantell, Gluten, Lilita One).
+- **Hero: direção B, "Mural"** (torii cheio e vermelho atrás da VSL).
+  Alternativas em `brand/kids-hero-directions.png` (A: portão em traço; C: foto
+  no vão + VSL menor). O código das direções A e C foi removido.
+
+## 3. Tipografia: uma letra, duas vozes
+
+Shantell Sans no título (INFM 10, BNCE 0: a voz dos pais) e na voz da criança
+(INFM 100, BNCE 80: stickers, "For kids"). Lexend no corpo. As duas
+referências usavam fonte de mão; nenhuma tinha duas vozes na mesma família.
+
+**O corte da fonte** (o fontsource só tem INFM+BNCE juntos na folha `full`, e
+importar outra ignora o eixo EM SILÊNCIO):
+
+```
+fontTools.varLib.instancer: SPAC=0, wght=(600,800), BNCE=(0,100)  (INFM inteiro)
+fontTools.subset: U+0020-007E, U+00A0, U+00B7, U+00E9, U+2018-201D, U+2026, U+2022, U+2713
+```
+
+Resultado: **108 KB** (a meta do PRD era 95; o peso é das variações dos três
+eixos, não dos glifos: tirar features de layout baixou só 1,5 KB). Fallback
+com métrica calibrada contra a Arial (size-adjust 111% / 110%): CLS 0.
+
+## 4. Paleta
+
+Fundo é o **cinza do tatame** (#EEF1F2), não papel quente: a `/` é papel; a
+Kids é o chão onde a criança treina. Tinta fria #16191C. Vermelho do torii
+#C8161D (o mesmo token da `/`, [CONFIRMAR hex]). Pedra #5F4F41 para texto
+secundário (a parede de pedra da sala). Contrastes no comentário de cada token.
+
+`--hk-ink-dim` (#5F656B) existe por acessibilidade: o texto "ainda apagado"
+(palavras da Aggression, passos da primeira aula) começava a 18% e 40% de
+opacidade e reprovava AA no Lighthouse. Hoje ele vai do cinza AA (5,2:1 no
+tatame) à tinta. O efeito ficou mais sutil e nunca ilegível.
+
+## 5. Ordem e o formulário no primeiro terço
+
+Safety sobe para III e o formulário entra em linha em IV (divergência com a
+copy, registrada no PRD §6). Medido no build client (390×844): o formulário
+começa em **2.894 px, 23% da página**. A regra do diagnóstico ("acima de 37%
+de rolagem") está cumprida com folga; a meta mais dura do PRD (2.400 px, três
+telas) NÃO: o hero com a VSL ocupa ~1.500 px no celular. Chegar a 2.400
+exige tirar a VSL do primeiro terço no celular (decisão do Adryan, não
+tomada aqui).
+
+Todo botão acima do formulário rola até ele (foco no TÍTULO, para o teclado
+não abrir no meio da rolagem); todo botão abaixo abre o MESMO formulário numa
+folha (`<dialog>` nativo), com estado compartilhado.
+
+## 6. Desvios do PRD, com o motivo
+
+| PRD | Feito | Por quê |
+|---|---|---|
+| GSAP + ScrollTrigger adiados | **Sem GSAP** | Os três efeitos de scroll são "uma variável de 0 a 1": IO + rAF fazem a conta. ~40 KB a menos num público com INP de 300 ms |
+| `@base-ui/react` (Dialog, Accordion) | **`<dialog>` nativo** e accordion próprio | `showModal()` já prende foco, fecha no Esc e torna o resto inerte. Zero JS de biblioteca |
+| Entrada inicial ≤ 70 KB gzip | **86 KB** (16 da página + 68 do React) | O `react-dom` sozinho tem ~58 KB gzip; a meta era irreal com React 19. O que está sob controle (a página) tem 16 KB |
+| Shantell ≤ 95 KB | **108 KB** | Ver §3 |
+| Unsplash como placeholder | **Nenhuma foto de banco** | Criança de banco numa LP de academia infantil é a mentira mais fácil de detectar |
+| Menu sanfona no celular | **Sem menu** | Os quatro links são atalhos; agendar e ligar estão no topo e na barra de baixo |
+| Mensagem de falha do envio | **Não existe** | O envio é "dispara e esquece" com `keepalive` (o mesmo da `/`): a interface nunca espera o webhook. O telefone está sob o botão |
+| `hydrate on visible` | **Suspense por seção** | Mesmo efeito (a hidratação devolve a thread entre seções) sem código próprio |
+| Mapa embutido | **Só "Get directions"** | Iframe do Google Maps pesa no INP |
+
+## 7. Medições (build client, 09/10)
+
+- **Lighthouse mobile** (mediana de 3, trackers bloqueados): Performance 94,
+  Acessibilidade 100, Boas práticas 100, SEO 100. TBT 0 a 60 ms, CLS 0,
+  LCP 2,9 s (meta 2,0: o LCP é o subtítulo em Lexend, que disputa banda com a
+  Shantell no 4G lento simulado; a Lexend é pré-carregada primeiro).
+- **Toque com CPU 4×** (Event Timing): selo 136 ms, sticker 48, CTA 32, idade
+  64, campo 40, Quick-check 56, FAQ 40, faixa 32, abrir a folha 136.
+  Processamento máximo 61 ms (a folha, que monta o formulário na primeira
+  abertura). Nenhum toque acima de 200 ms.
+- **Estilo e layout na carga**: de 1,6 s para ~0,3 s com `content-visibility`
+  nas seções depois do formulário.
+- Nenhuma tela vazia em 27 posições de rolagem lenta, em 390 e em 1440.
+- Sem rolagem horizontal em 360, 390 e 1440.
+
+## 8. Três armadilhas desta página
+
+1. **Grade sem colunas declaradas cresce até o conteúdo.** Uma pastilha longa
+   no Coach e o botão "Meet Professor Diego in a Free Class" (com `nowrap`)
+   empurravam a página a 425 px num celular de 390, e o celular alarga a
+   viewport de layout: até a nav FIXA parecia estourar. Correção na base:
+   `minmax(0, 1fr)` em toda grade de uma coluna; botão pode quebrar.
+2. **O Tailwind da `/` lê os arquivos da Kids.** Palavras soltas e até uma
+   string de log (`[booking:kids]`, lida como propriedade arbitrária) viravam
+   CSS na `/`. Correção: `@source not "./kids"` e o log sem colchetes.
+3. **`content-visibility` engana print de página inteira.** O fullPage do
+   Playwright mostra as seções em branco; numa rolagem de verdade elas
+   aparecem antes de chegar à tela. Para conferir, rolar (ver §7).
+
+## 9. Achado no material do cliente
+
+O vídeo da aula kids (`raw/trial class.mp4`) termina com **o Diego segurando o
+cinturão de campeão por equipe do NAGA** e as crianças com as medalhas. É o
+disco da faixa de prova. O título por escrito continua `gated` até o cliente
+confirmar evento, data e que é por equipe.
+
+## 10. Rodada de ajustes do Adryan (09/10, revisão no navegador)
+
+O que mudou depois da primeira entrega, sempre a pedido dele. Onde o pedido
+derrubou uma decisão anterior, a anterior está riscada aqui para ninguém
+voltar a ela.
+
+| Pedido | O que foi feito | Decisão que caiu |
+|---|---|---|
+| Selos do hero numa linha só, sem "CONFIRMAR" | Quatro chips sempre numa linha (≥ 960px); as pendências deles foram para o README | |
+| Tirar "Get directions" ("é rota de fuga") | Saiu do hero e do fechamento. O endereço continua no eyebrow, no fechamento e no rodapé, sem link de saída. O link para a `/` no rodapé também saiu | P7 do PRD (rota no hero) |
+| Tirar o zoom do torii do hero | O torii fica parado | ~~Signature "atravessar o portão"~~ |
+| Micro do botão em 1 a 2 linhas, centrada e colada | "Under a minute. We text you the address and what to wear." | |
+| O formulário é POPUP | A seção IV (formulário em linha) foi excluída. Todo botão abre a folha (`<dialog>`) | ~~Formulário em linha no primeiro terço~~ (§5) |
+| Safety "igual ao Dárcio, com ícones animados" | Quatro cartões ilustrados (luva + carimbo, crianças do mesmo tamanho, mão que bate no tatame, olho que pisca e acompanha), animados por Web Animations ao entrar, no hover e no toque | ~~Placas penduradas na viga~~ |
+| Linha do tempo e relógio iguais ao Dárcio, com visual novo | Espinha central em zigue-zague, cronômetro de esporte que desce com a rolagem e marca o minuto de cada passo (-15, -10, -5, 00:00, "class!", "done ✓"), torii pequeno em cada estação, fotos que abrem em círculo | ~~Cinco portões em fila~~ |
+| Coach centrado, sem "CONFIRMAR", foto em polaroid | Duas colunas dentro da casca, polaroid com "Professor Diego Holanda" à mão. Grau, anos, linhagem, idioma e NAGA saem até confirmar | ~~Retrato sangrando à esquerda~~ |
+| Reviews iguais ao Satori, em branco, com as reviews do Google | Carrossel do Satori (setas, pista sangrando, cartão ativo vermelho, 5 s, pontos), SEM os defeitos dele (teclado no documento, tablist sem painel, autoplay em reduced-motion). Oito avaliações de pais, só as completas; as em português traduzidas e marcadas | |
+| Quick-check vermelho + divisor kids animado | Seção vermelha; o divisor é um varal de bandeirinhas pendurado na curva do kasagi, balançando. As linhas se preenchem por tempo no desktop e pela rolagem no celular (sem marcar a caixa) | |
+| "For parents / For kids" em duas pranchetas animadas | Prancheta de tinta (pais: ✓ + marca-texto) e prancheta vermelha (crianças: estrelas + carimbo), que se preenchem sozinhas ao entrar | ~~Página dupla com stickers e faixa de graus tocável~~ |
+| Aggression melhor diagramada, foto em polaroid | Polaroid ("Line up. Bow in.") à esquerda; pergunta, resposta que acende e a fala do pai num balão à direita | |
+| FAQ numa coluna, accordion mais kids | Coluna única; cartão de brinquedo com balão "?", botão redondo que gira de + para × com mola | ~~FAQ em duas colunas com título fixo~~ |
+| Rodapé e mapa iguais ao Satori, na nossa identidade | Fechamento + mapa + rodapé numa seção escura. Mapa em cinza sob véu de tinta, viga vermelha no topo, pino trocado por torii que pula | ~~Rodapé separado com link para adultos~~ |
+| Primeira aula, Coach e reviews em branco | Feito. A Aggression foi para o cinza do tatame para as brancas não emendarem | |
+
+**Correção de leitura de material:** `public/hero.webp` é a SALA VAZIA, não a
+turma (a turma posada ao ar livre é `raw/instagram/photo (1).jpg`). O
+fechamento usa a sala como fundo; a linha do tempo usa a sala no passo 1 e a
+turma no passo 5.
+
+**Armadilha de dev:** o Vite desta pasta e o do GB Rowlett usam a porta 5175
+(um em `::1`, outro em `127.0.0.1`). Parar o `npm run dev` pelo terminal pode
+deixar o `vite` filho vivo segurando a porta; conferir com `netstat` antes de
+subir de novo.
+

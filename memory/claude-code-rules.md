@@ -9,8 +9,8 @@ componentes. Preset OLD SCHOOL em leitura minimalista e soft.
 - Endereço: **47 Franklin Street, Framingham, MA 01702**
   (o briefing dizia 10702, que não é CEP de Massachusetts; o Google geocodifica
   este endereço exato como 01702)
-- Telefone: **(913) 963-3160** · Instagram **@holanda.bjjacademy**
-- Programas: Beginners · Advanced · Kids 7 a 15 · No-Gi
+- Telefone: **(508) 361-7778** · Instagram **@holanda.bjjacademy**
+- Programas: Beginners · Adults · Kids **4 a 13** · No-Gi
 - Oferta: **primeira aula grátis**, foco das campanhas
 - Aquisição: Google Ads Pmax (500/mês, teste de 15 dias) e Meta em preparação
 
@@ -47,3 +47,33 @@ nota real do Google (hoje 5.0/100, provisória) · e-mail · Pixel/GTM/GA4
 ## ONDE MEXER
 `src/data/site.ts` é o contrato. Publicar é trocar valores lá, não componente.
 Ver `README.md` (o que falta) e `design-decisions.md` (o porquê de cada escolha).
+
+---
+
+## Rota /kids (HOLK-001)
+
+Segunda entrada do Vite (`kids/index.html` → `src/kids/main.tsx`), prerender
+em `scripts/prerender-kids.mjs`. Não usa Tailwind, `motion` nem GSAP.
+
+1. **A `/` não muda.** O CSS da `/` foi conferido byte a byte contra a linha de
+   base (`@source not "./kids"` no index.css existe para isso). Nada de import
+   da `/` dentro de `src/kids` além de `site.ts`, `track.ts`, `webhook.ts` e
+   `torii.ts`.
+2. **Copy só em `src/kids/data/kids.ts`; hex só no bloco de tokens de
+   `src/kids/kids.css`.** `kids-sections.css` não tem hex nenhum.
+3. **Pendência:** `pending` imprime a pastilha em prospect; `gated` some em
+   client. Nunca placeholder plausível. O título do NAGA é `gated`.
+4. **Estado-base = estado final.** Todo efeito (portão, palavras que acendem,
+   portões da primeira aula, ✓ das regras, cor do coach) parte do CSS pronto e
+   o JS só anima até ele. Reduced-motion e sem-JS mostram a página inteira.
+5. **Toque em CSS** (`:active`), trabalho depois da pintura (`afterPaint`).
+   Nada de `offsetWidth` para reiniciar animação: Web Animations.
+6. **Grade de uma coluna = `minmax(0, 1fr)`** (regra na base do kids.css): a
+   trilha `auto` empurrava a página para fora da tela no celular.
+7. **Em dev o formulário NÃO envia** (vai para o console). `?send=1` envia de
+   verdade; avisar o Adryan para apagar o contato de teste no GHL.
+8. **Variantes de headline:** `/kids` (A), `/kids/b`, `/kids/c`. b e c são
+   `noindex` com canonical para `/kids`. Em dev, `?v=b`.
+9. **Fonte:** `public/fonts/shantell-kids.woff2` é um CORTE da Shantell Sans
+   (SPAC 0, wght 600 a 800, INFM e BNCE). Atualizar a fonte = refazer o corte
+   (comando em design-decisions.md), nunca trocar pela folha do fontsource.

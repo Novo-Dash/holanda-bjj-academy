@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="480" height="480" viewBox="0 0 480 480">
+  <!-- Só as LINHAS do holanda-pattern-seamless.svg, num ladrilho de 480px e sem
+       o fundo branco: para as seções vermelhas. Branco translúcido; o
+       vermelho por baixo é o da seção. -->
+  <g fill="none" stroke="white" stroke-opacity=".05" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="0" cy="0" r="170"/><circle cx="0" cy="0" r="183"/>
+    <circle cx="480" cy="0" r="170"/><circle cx="480" cy="0" r="183"/>
+    <circle cx="0" cy="480" r="170"/><circle cx="0" cy="480" r="183"/>
+    <circle cx="480" cy="480" r="170"/><circle cx="480" cy="480" r="183"/>
+    <circle cx="240" cy="240" r="158"/><circle cx="240" cy="240" r="170"/>
+    <path d="M183 0H297 M183 13H297 M183 467H297 M183 480H297 M0 183V297 M13 183V297 M467 183V297 M480 183V297"/>
+    <path d="M240 0V68 M253 0V68 M240 412V480 M253 412V480 M0 240H68 M0 253H68 M412 240H480 M412 253H480"/>
+    <g transform="translate(240 240)">
+      <path d="M-62 -43H62 M-68 -34H68 M-57 -13H57 M-52 -6H52"/>
+      <path d="M-41 -5L-46 65 M-30 -5L-33 65 M-5 -5V65 M6 -5V65 M31 -5L34 65 M42 -5L47 65"/>
+    </g>
+    <g transform="translate(0 0)"><path d="M-50 -25H50 M-50 -17H50 M-36 -3L-40 53 M0 -3V53 M36 -3L40 53"/></g>
+    <g transform="translate(480 0)"><path d="M-50 -25H50 M-50 -17H50 M-36 -3L-40 53 M0 -3V53 M36 -3L40 53"/></g>
+    <g transform="translate(0 480)"><path d="M-50 -25H50 M-50 -17H50 M-36 -3L-40 53 M0 -3V53 M36 -3L40 53"/></g>
+    <g transform="translate(480 480)"><path d="M-50 -25H50 M-50 -17H50 M-36 -3L-40 53 M0 -3V53 M36 -3L40 53"/></g>
+  </g>
+</svg>

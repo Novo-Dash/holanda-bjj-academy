@@ -193,3 +193,41 @@ componente.
   preço ficou, reescrita para responder sem inventar número.
 - **O botão de WhatsApp**: entra sozinho quando `site.whatsapp` deixar de ser
   nulo.
+
+---
+
+## Rota /kids (LP Kids, HOLK-001)
+
+Página só para pais e crianças, destino da campanha kids do Meta. Copy em
+`copy-kids.md`, contrato em `prd-HOLK-001.md`, decisões em
+`memory/design-decisions.md` (seção HOLK-001).
+
+```bash
+npm run dev      # http://localhost:5173/kids/   (?v=b ou ?v=c troca a headline)
+npm run build    # build das duas páginas + prerender da /kids (3 variantes)
+```
+
+- **Entrada própria do Vite**: `kids/index.html` → `src/kids/main.tsx`. Não
+  usa Tailwind, `motion` nem GSAP. Copy em `src/kids/data/kids.ts`; tokens em
+  `src/kids/kids.css`.
+- **Variantes de headline**: `/kids` (A), `/kids/b`, `/kids/c` (noindex,
+  canonical para `/kids`). Cada anúncio pode apontar para uma.
+- **Formulário**: nome, telefone e idade criam o lead no GHL; o passo 2
+  mostra os horários REAIS do calendário da idade (API de programas da Novo
+  Dash) e agenda. Em `npm run dev` nada é enviado (vai para o console);
+  `?send=1` envia de verdade.
+- **Modo**: `VITE_UX_MODE=client` na Vercel esconde as pastilhas e os itens
+  ainda não confirmados (título NAGA, graus, horários, etc.).
+
+### O que falta do cliente para a /kids
+
+| # | O que | Trava? |
+|---|---|---|
+| 1 | **Autorização de imagem dos responsáveis** para as crianças das fotos e do vídeo | **Sim, para a campanha** |
+| 2 | **Vídeo campeão do anúncio Kids** (9:16) | Não: a VSL hoje é a aula kids de 30 s |
+| 3 | **NAGA**: evento, data e que o título é por equipe | Não: sem isso a faixa de prova mostra a nota do Google |
+| 4 | GHL aceita lead sem e-mail e sem nome da criança | **Sim**: conferir no primeiro envio de teste |
+| 5 | Conversão do Google Ads ativa e primária + tag `google-ads` no GHL | Não trava a página; trava a medição |
+| 6 | Grade kids em texto, graus kids, anti-bullying, tatame e professores, duração da aula, contrato, desconto família, kimono emprestado, idioma, estacionamento | Não: cada um aparece sozinho quando entra no `kids.ts` |
+| 7 | Fotos: pódio NAGA, Diego ensinando criança, pais assistindo | Não, mas é o maior salto de qualidade |
+

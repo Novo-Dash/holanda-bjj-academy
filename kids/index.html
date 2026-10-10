@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="theme-color" content="#ffffff" />
+
+    <!-- As duas fontes da primeira tela, com nome fixo para poderem ser
+         pré-carregadas (nome com hash só existe depois do build). `crossorigin`
+         é obrigatório mesmo na mesma origem, senão o arquivo desce duas vezes.
+         A Lexend vem PRIMEIRO: o LCP do celular é o subtítulo do hero, e ela
+         tem 40 KB contra os 108 KB da Shantell. -->
+    <link rel="preload" href="/fonts/lexend-latin-wght.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/shantell-kids.woff2" as="font" type="font/woff2" crossorigin />
+
+    <!-- SEO (rodada de 09/10). Título com a busca que o pai faz ("kids
+         jiu-jitsu framingham") na frente e até ~60 caracteres; descrição até
+         ~155, com a oferta. Sem travessão nem meia-risca (regra da casa). -->
+    <title>Kids Jiu-Jitsu in Framingham, MA · Ages 4 to 13 | Holanda BJJ</title>
+    <meta
+      name="description"
+      content="Kids jiu-jitsu for ages 4 to 13 in Framingham, MA. Kids train with kids their own size and parents watch every class. The first class is free."
+    />
+    <link rel="canonical" href="https://lp.holandabjjacademy.com/kids" />
+    <!-- /kids: index, follow (com preview de imagem grande). /kids/b e
+         /kids/c: noindex. O prerender troca este marcador. -->
+    <!--robots-->
+    <meta name="author" content="Holanda BJJ Academy" />
+    <meta name="geo.region" content="US-MA" />
+    <meta name="geo.placename" content="Framingham" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Holanda BJJ Academy" />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:url" content="https://lp.holandabjjacademy.com/kids" />
+    <meta property="og:title" content="Kids Jiu-Jitsu in Framingham · The first class is free" />
+    <meta
+      property="og:description"
+      content="Ages 4 to 13. Kids train with kids their own size, and you watch every minute from the side of the mat."
+    />
+    <meta property="og:image" content="https://lp.holandabjjacademy.com/kids/og.jpg" />
+    <meta property="og:image:type" content="image/jpeg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta
+      property="og:image:alt"
+      content="Holanda BJJ Kids: kids jiu-jitsu that sends them home calmer, not wilder. Ages 4 to 13 in Framingham, MA."
+    />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Kids Jiu-Jitsu in Framingham · The first class is free" />
+    <meta
+      name="twitter:description"
+      content="Ages 4 to 13. Kids train with kids their own size, and you watch every minute from the side of the mat."
+    />
+    <meta name="twitter:image" content="https://lp.holandabjjacademy.com/kids/og.jpg" />
+    <meta
+      name="twitter:image:alt"
+      content="Holanda BJJ Kids: kids jiu-jitsu that sends them home calmer, not wilder. Ages 4 to 13 in Framingham, MA."
+    />
+
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
+    <link rel="icon" type="image/png" sizes="64x64" href="/favicon-64.png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+
+    <link rel="dns-prefetch" href="https://www.clarity.ms" />
+
+    <!-- Microsoft Clarity. Mesmo snippet da `/`, com uma guarda: não grava em
+         localhost nem em preview da Vercel. O diagnóstico de 18/09 a 07/10
+         achou 4 sessões de localhost no projeto de produção, com INP de
+         1.176 ms puxando a média para baixo (item 04 do plano). -->
+    <script type="text/javascript">
+      if (!/^(localhost|127\.0\.0\.1|\[::1\])$|\.vercel\.app$/.test(location.hostname)) {
+        (function(c,l,a,r,i,t,y){
+            c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+            t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+            y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+        })(window, document, "clarity", "script", "yicxudsgy2");
+        window.clarity("set", "page", "kids");
+      }
+    </script>
+
+    <!-- Schema: só dado confirmado, como na `/`. Sem aggregateRating (o
+         Google ignora nota que o próprio negócio publica sobre si) e sem
+         horário (a grade kids ainda não foi confirmada em texto). A oferta é a
+         da copy: a primeira aula é grátis. O FAQPage entra no prerender,
+         gerado do mesmo array que a página mostra. -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": "SportsActivityLocation",
+            "@id": "https://lp.holandabjjacademy.com/#academy",
+            "name": "Holanda BJJ Academy",
+            "description": "Brazilian jiu-jitsu academy in Framingham, Massachusetts, with kids classes for ages 4 to 13, grouped by age and size.",
+            "url": "https://lp.holandabjjacademy.com/",
+            "telephone": "+1-508-361-7778",
+            "email": "holanda.bjjacademy@gmail.com",
+            "image": "https://lp.holandabjjacademy.com/kids/og.jpg",
+            "logo": "https://lp.holandabjjacademy.com/logo.webp",
+            "address": {
+              "@type": "PostalAddress",
+              "streetAddress": "47 Franklin Street",
+              "addressLocality": "Framingham",
+              "addressRegion": "MA",
+              "postalCode": "01702",
+              "addressCountry": "US"
+            },
+            "areaServed": { "@type": "City", "name": "Framingham, MA" },
+            "hasMap": "https://www.google.com/maps/search/?api=1&query=47+Franklin+Street,+Framingham,+MA+01702",
+            "sameAs": ["https://www.instagram.com/holanda.bjjacademy/"]
+          },
+          {
+            "@type": "Service",
+            "@id": "https://lp.holandabjjacademy.com/kids#program",
+            "name": "Kids Jiu-Jitsu (ages 4 to 13)",
+            "serviceType": "Kids Brazilian jiu-jitsu classes",
+            "provider": { "@id": "https://lp.holandabjjacademy.com/#academy" },
+            "areaServed": { "@type": "City", "name": "Framingham, MA" },
+            "audience": { "@type": "PeopleAudience", "suggestedMinAge": 4, "suggestedMaxAge": 13 },
+            "offers": {
+              "@type": "Offer",
+              "name": "Free first kids class",
+              "price": "0",
+              "priceCurrency": "USD",
+              "url": "https://lp.holandabjjacademy.com/kids"
+            }
+          },
+          {
+            "@type": "WebPage",
+            "@id": "https://lp.holandabjjacademy.com/kids#page",
+            "url": "https://lp.holandabjjacademy.com/kids",
+            "name": "Kids Jiu-Jitsu in Framingham, MA · Ages 4 to 13 | Holanda BJJ",
+            "inLanguage": "en-US",
+            "about": { "@id": "https://lp.holandabjjacademy.com/kids#program" },
+            "primaryImageOfPage": "https://lp.holandabjjacademy.com/kids/og.jpg"
+          }
+        ]
+      }
+    </script>
+    <!--faq-ld-->
+  </head>
+  <body>
+    <div id="root"><!--app--></div>
+    <script type="module" src="/src/kids/main.tsx"></script>
+  </body>
+</html>

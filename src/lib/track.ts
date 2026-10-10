@@ -129,7 +129,18 @@ export function bootTracking() {
  * Um evento. Vai para o dataLayer sempre (é onde o GTM lê) e, quando o Pixel
  * existe, também para o Meta com o nome padrão dele quando há um.
  */
-export function track(event: string, params: Params = {}) {
+/**
+ * Parâmetros que vão em TODO evento da página. A `/` não usa; a Kids grava
+ * `page: 'kids'` e a variante de headline (prd-HOLK-001 §18), para a mesma
+ * conta separar as duas páginas sem depender de filtro de URL.
+ */
+let context: Params = {}
+export function setTrackContext(params: Params) {
+  context = { ...context, ...params }
+}
+
+export function track(event: string, input: Params = {}) {
+  const params = { ...context, ...input }
   pushLayer({ event, ...params })
 
   /* SEM `InitiateCheckout`, e a ausência é deliberada. Ele pressupõe carrinho e
@@ -142,6 +153,8 @@ export function track(event: string, params: Params = {}) {
     page_view: 'PageView',
     view_content: 'ViewContent',
     generate_lead: 'Lead',
+    /* Só a Kids dispara: é o agendamento concluído no calendário. */
+    trial_booked: 'Schedule',
   }
   const standard = META_STANDARD[event]
   try {
@@ -149,7 +162,8 @@ export function track(event: string, params: Params = {}) {
       if (standard) window.fbq('track', standard, params)
       else window.fbq('trackCustom', event, params)
     }
-    if (window.gtag && !standard) window.gtag('event', event, params)
+    /* `trial_booked` é padrão no Meta (Schedule) e evento próprio no GA4. */
+    if (window.gtag && (!standard || event === 'trial_booked')) window.gtag('event', event, params)
   } catch {
     /* idem: nunca derrubar a página por causa de medição. */
   }
@@ -167,6 +181,7 @@ export function trackLead(params: Params = {}) {
     if (window.gtag && ADS_ID && ADS_LEAD_LABEL) {
       window.gtag('event', 'conversion', {
         send_to: `${ADS_ID}/${ADS_LEAD_LABEL}`,
+        ...context,
         ...params,
       })
     }

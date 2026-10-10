@@ -3,7 +3,7 @@
 ## Cliente
 
 **Holanda BJJ Academy** — academia de jiu-jitsu brasileiro em
-**47 Franklin Street, Framingham, MA 01702**. Telefone **(913) 963-3160**,
+**47 Franklin Street, Framingham, MA 01702**. Telefone **(508) 361-7778** (trocado em 23/09; o (913) 963-3160 do briefing original não vale mais),
 Instagram **@holanda.bjjacademy**. Responsável: **Diego do Nascimento Holanda**
 (nome confirmado via Smoothcomp; faixa e linhagem ainda não).
 
@@ -80,3 +80,46 @@ janela redimensionada): sem rolagem horizontal em nenhum dos dois.
 
 Falta o conteúdo real do cliente e os identificadores do CRM. A lista completa,
 com onde cada item entra, está no `README.md`.
+
+---
+
+# HOLK-001 · LP Kids (rota /kids, 09/10/2026)
+
+## Por que existe
+
+O diagnóstico de 18/09 a 07/10 (Clarity + GHL + Meta + Perfil do Google)
+mostrou que a demanda paga é kids: **14 dos 18 leads do Meta pediram turma
+kids**. A `/` fala com quatro programas; a `/kids` fala só com o pai ou a mãe
+e com a criança. A campanha kids do Meta passa a apontar para ela.
+
+Números do diagnóstico que viraram regra de construção (detalhe no
+`prd-HOLK-001.md` §1):
+
+- rolagem média de **37%**, **82% no celular**: oferta, prova, segurança e
+  FORMULÁRIO no primeiro terço da página;
+- **INP de 300 ms**, um terço do tráfego no navegador do Instagram/Facebook:
+  orçamento de JS e resposta de toque em CSS;
+- **8,1% de cliques mortos** (fotos, selos, cards): todo selo, sticker e foto
+  responde ao toque;
+- **47 pedidos de rota** em setembro: endereço e "Get directions" no hero e no
+  fechamento;
+- **13 leads do Meta parados em follow-up**: o formulário AGENDA na hora, com
+  o horário real do calendário da idade, e leva o Quick-check como `notes`.
+
+## Fontes
+
+- Copy: `copy-kids.md` (ETAPA 1, 08/10/2026). É literal na página.
+- PRD: `prd-HOLK-001.md`. Prompt de abertura: `prompt-claude-code-HOLK.md`.
+- Referências visuais: as LPs kids do Dárcio Lira e do Satori (ver
+  design-decisions.md, HOLK-001).
+
+## Turmas kids no CRM (API de programas da Novo Dash, 09/10)
+
+| Calendário | Dias e hora |
+|---|---|
+| Kids BJJ (Ages 4-6) | seg, qua, sex · 17h |
+| Kids BJJ (Ages 7-13) | seg, qua, qui · 18h |
+| Kids No-Gi (Ages 7-13) | ter · 18h |
+
+A idade escolhida no formulário escolhe o calendário de kimono da faixa. O
+no-gi não entra na escolha automática [CONFIRMAR com o Adryan].

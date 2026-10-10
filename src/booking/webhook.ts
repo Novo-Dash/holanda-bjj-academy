@@ -228,3 +228,86 @@ export function sendBooking(d: BookingData): void {
     source: SOURCE_LABEL,
   })
 }
+
+/* ── LP Kids (prd-HOLK-001 §11) ─────────────────────────────────────────────
+   Mesmos identificadores, mesma atribuição, mesmo contrato do n8n. O que muda:
+   a origem diz que o lead é da página de kids, a idade da criança vai junto
+   (é ela que escolhe a turma), e as afirmações marcadas no "Is jiu-jitsu right
+   for my kid?" vão como `notes`, para quem liga já saber se o assunto é
+   timidez, energia ou bullying (13 leads do Meta estavam parados em
+   follow-up no diagnóstico de 18/09 a 07/10).
+
+   A Kids AGENDA de verdade: os horários vêm da API de programas da Novo Dash
+   (src/kids/lib/programs.ts), com o calendar_id real de cada turma, então o
+   segundo envio só sai com calendário e horário reais.
+
+   EM DESENVOLVIMENTO NADA É ENVIADO: o payload vai para o console. Um teste
+   local na Kids criaria lead de verdade no CRM da academia. Para testar o
+   envio real, abrir com `?send=1` e avisar o Adryan para apagar o contato. */
+
+export const KIDS_SOURCE_LABEL = 'Landing Page - Kids'
+
+export type KidsLead = {
+  name: string
+  phone: string
+  childAge: number
+  /** Nome do calendário no GHL (ex.: "Kids BJJ (Ages 4-6)"). */
+  program: string
+  notes: string
+  variant: string
+}
+
+function kidsPost(url: string, payload: Record<string, unknown>) {
+  const live = !import.meta.env.DEV || new URLSearchParams(window.location.search).has('send')
+  if (!live) {
+    console.info('booking kids (DEV, não enviado):', url, payload)
+    return
+  }
+  post(url, payload)
+}
+
+/** Webhook 1: o lead, no instante em que a pessoa conclui o passo 1. */
+export function sendKidsLead(d: KidsLead): void {
+  const [first = '', ...rest] = d.name.trim().split(/\s+/)
+  kidsPost(`https://services.leadconnectorhq.com/hooks/${GHL_LOCATION_ID}/webhook-trigger/${LEAD_WEBHOOK_UUID}`, {
+    event: 'lead_captured',
+    name: d.name.trim(),
+    firstName: first,
+    lastName: rest.join(' '),
+    /* [CONFIRMAR] que o workflow do GHL aceita lead sem e-mail: a copy pede
+       quatro campos e o e-mail não é um deles (PRD §11.2). */
+    email: '',
+    phone: d.phone.trim(),
+    phoneE164: toE164(d.phone),
+    child_age: String(d.childAge),
+    interest: 'kids',
+    program: d.program,
+    audience: 'kids',
+    notes: d.notes,
+    headline_variant: d.variant,
+    submittedAt: new Date().toISOString(),
+    source: KIDS_SOURCE_LABEL,
+    ...getAttribution(),
+  })
+}
+
+/** "17:00" -> "5:00 PM": o formato exato que o fluxo do n8n espera. */
+export function timeLabel(hhmm: string) {
+  const [h, m] = hhmm.split(':').map(Number)
+  return `${h % 12 || 12}:${String(m).padStart(2, '0')} ${h >= 12 ? 'PM' : 'AM'}`
+}
+
+/** Webhook 2: o agendamento. Contrato do n8n: não acrescentar campos. */
+export function sendKidsBooking(d: KidsLead & { calendarId: string; date: string; time: string }): void {
+  kidsPost(N8N_BOOKING_URL, {
+    parent_name: d.name.trim(),
+    email: '',
+    phone: d.phone.trim(),
+    calendar_id: d.calendarId,
+    location_id: GHL_LOCATION_ID,
+    stage: 'appointment_selected',
+    appointment_date: d.date,
+    appointment_time: timeLabel(d.time),
+    source: KIDS_SOURCE_LABEL,
+  })
+}

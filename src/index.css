@@ -1,4 +1,7 @@
 @import "tailwindcss";
+/* A rota /kids tem CSS próprio e não usa Tailwind: sem esta linha, palavras
+   soltas nos arquivos dela viram classes no CSS desta página. */
+@source not "./kids";
 
 /* ── As duas fontes ──────────────────────────────────────────────────────────
    Declaradas aqui e não importadas do `@fontsource-variable`, para os arquivos

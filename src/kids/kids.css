@@ -1,0 +1,853 @@
+/*
+ * LP Kids · Holanda BJJ Academy (prd-HOLK-001.md)
+ *
+ * Folha própria da rota /kids. Não importa nada da `/` (nem Tailwind): é outra
+ * entrada do Vite, com outra voz. TODO hex da rota mora no bloco de tokens
+ * abaixo, e só nele.
+ *
+ * A tese (PRD 8.0): o portão de entrada de um lugar sério que recebe criança
+ * com alegria. O objeto é o TORII do distintivo, que também está pintado na
+ * parede da sala. O fundo é o cinza do tatame. O vermelho é a ação.
+ */
+
+/* ── Fontes ───────────────────────────────────────────────────────────────
+   Shantell Sans, cortada para esta página (PRD 9.2): SPAC fixo em 0, peso
+   600 a 800, e os dois eixos que fazem as duas vozes: INFM (informalidade) e
+   BNCE (pulo). 108 KB. Importar a folha errada do fontsource faz o INFM ser
+   ignorado em silêncio, e por isso o arquivo é declarado à mão.
+
+   Os fallbacks têm métrica calibrada contra a Arial (medida nos arquivos:
+   largura média 0,511 contra 0,469 da Arial Bold; 0,473 contra 0,429 da Arial),
+   para a troca de fonte não remexer a primeira tela. */
+@font-face {
+  font-family: 'Shantell Kids';
+  src:
+    url('/fonts/shantell-kids.woff2') format('woff2-variations'),
+    url('/fonts/shantell-kids.woff2') format('woff2');
+  font-weight: 600 800;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Lexend Kids';
+  src:
+    url('/fonts/lexend-latin-wght.woff2') format('woff2-variations'),
+    url('/fonts/lexend-latin-wght.woff2') format('woff2');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Shantell Fallback';
+  src: local('Arial Bold'), local('Arial-BoldMT'), local('Arial');
+  size-adjust: 111%;
+  ascent-override: 92%;
+  descent-override: 29%;
+  line-gap-override: 0%;
+}
+@font-face {
+  font-family: 'Lexend Fallback';
+  src: local('Arial'), local('ArialMT');
+  size-adjust: 110%;
+  ascent-override: 91%;
+  descent-override: 23%;
+  line-gap-override: 0%;
+}
+
+/* ── Tokens ───────────────────────────────────────────────────────────── */
+:root {
+  /* Base: o vinil cinza do tatame nas fotos do cliente. Nem creme, nem branco
+     de tela, nem preto. */
+  --hk-mat: #eef1f2;
+  --hk-mat-2: #e2e7e9; /* passo de superfície (cartão vazio, trilho) */
+  --hk-mat-3: #cfd6d9; /* fio e borda forte */
+  --hk-paper: #ffffff;
+
+  /* Tinta fria: casa com o cinza do tatame. ink sobre mat = 15,9:1. */
+  --hk-ink: #16191c;
+  --hk-ink-2: #2b3036;
+  --hk-ink-rgb: 22 25 28;
+  /* O texto ainda "apagado" (agressividade, passos da primeira aula): nunca
+     abaixo de AA. ink-dim sobre paper = 5,9:1 · sobre mat = 5,2:1. */
+  --hk-ink-dim: #5f656b;
+
+  /* Pedra quente: a parede de pedra da sala. Texto secundário e legenda.
+     stone sobre mat = 6,2:1; stone sobre paper = 7,0:1. */
+  --hk-stone: #5f4f41;
+
+  /* O vermelho do distintivo [CONFIRMAR hex com o cliente]. É o MESMO token da
+     `/` (#C8161D): trocar o hex do logo é trocar nas duas.
+     torii sobre paper = 5,9:1 · paper sobre torii = 5,9:1 · torii sobre mat = 5,2:1
+     paper sobre torii-deep = 8,2:1 (áreas grandes com texto branco). */
+  --hk-torii: #c8161d;
+  --hk-torii-deep: #9e0f15;
+  --hk-torii-ink: #6e0a0e; /* base afundada do botão sobre o bloco vermelho */
+  --hk-torii-wash: #f9e4e5; /* fundo do item marcado, do campo com erro */
+  --hk-torii-rgb: 200 22 29;
+
+  /* Amarelo de medalha: SÓ os botões das seções vermelhas (NAGA e Quick-check)
+     (pedido do Adryan, 09/10). Texto nele é tinta: ink sobre gold = 11,6:1. */
+  --hk-gold: #ffc531;
+  --hk-gold-deep: #c98f00;
+
+  /* Ilustrações da Safety (personagens): pele, bochecha e a sombra fria do
+     tatame. Só elas usam estes três. */
+  --hk-skin: #f3c8a2;
+  --hk-blush: #ee9a8e;
+  --hk-shade: #dfe5e8;
+
+  /* O "G" do Google nos cartões de depoimento. Não é paleta da página: é a
+     marca deles, e só o GoogleMark usa. */
+  --hk-g-blue: #4285f4;
+  --hk-g-green: #34a853;
+  --hk-g-yellow: #fbbc05;
+  --hk-g-red: #ea4335;
+
+  /* Pastilha de pendência: só existe em prospect, nunca vai ao ar. */
+  --hk-pending-bg: #fff4c2;
+  --hk-pending-ink: #5c4a00;
+  --hk-pending-line: #b39500;
+
+  /* Vidro da barra do topo */
+  --hk-nav-glass: rgb(255 255 255 / 0.86);
+
+  /* Tipografia */
+  --hk-display: 'Shantell Kids', 'Shantell Fallback', 'Arial Rounded MT Bold', sans-serif;
+  --hk-body: 'Lexend Kids', 'Lexend Fallback', system-ui, sans-serif;
+  /* As duas vozes da mesma letra (PRD 8.3). */
+  --hk-voice-parent: 'INFM' 10, 'BNCE' 0;
+  --hk-voice-kid: 'INFM' 100, 'BNCE' 80;
+
+  /* Espaço: escala de 4px. */
+  --s-1: 4px;
+  --s-2: 8px;
+  --s-3: 12px;
+  --s-4: 16px;
+  --s-5: 20px;
+  --s-6: 24px;
+  --s-8: 32px;
+  --s-10: 40px;
+  --s-12: 48px;
+  --s-16: 64px;
+  --s-20: 80px;
+  --s-24: 96px;
+
+  --shell: min(1200px, 100% - 32px);
+  --gutter: 16px;
+  --sec-y: clamp(72px, 9vw, 128px);
+  --sec-y-tight: clamp(40px, 5vw, 64px);
+
+  /* Raio: generoso e de brinquedo, nunca o padrão de biblioteca. */
+  --r-pill: 999px;
+  --r-card: 24px;
+  --r-plate: 18px;
+  --r-field: 14px;
+
+  /* Elevação (PRD 8.4): borda + contato; e, no que se toca, a sombra DURA. */
+  --elev-1: 0 0 0 1px rgb(var(--hk-ink-rgb) / 0.07), 0 2px 0 rgb(var(--hk-ink-rgb) / 0.06);
+  --elev-2:
+    0 0 0 1px rgb(var(--hk-ink-rgb) / 0.08), 0 4px 0 rgb(var(--hk-ink-rgb) / 0.1),
+    0 18px 32px -20px rgb(var(--hk-ink-rgb) / 0.45);
+  --elev-3: 0 -12px 40px -16px rgb(var(--hk-ink-rgb) / 0.35);
+
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-spring: cubic-bezier(0.3, 1.6, 0.5, 1);
+  --t-tap: 120ms;
+  --t-ui: 200ms;
+  --t-move: 350ms;
+
+  color-scheme: light;
+}
+
+/* ── Base ─────────────────────────────────────────────────────────────── */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  scroll-behavior: smooth;
+  scroll-padding-top: 88px;
+}
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+body {
+  margin: 0;
+  background: var(--hk-paper);
+  color: var(--hk-ink);
+  font-family: var(--hk-body);
+  font-size: 1rem;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: clip;
+}
+img,
+video,
+svg {
+  display: block;
+  max-width: 100%;
+}
+img,
+video {
+  height: auto;
+}
+button,
+input,
+select,
+textarea {
+  font: inherit;
+  color: inherit;
+}
+button {
+  cursor: pointer;
+  background: none;
+  border: 0;
+  padding: 0;
+}
+a {
+  color: inherit;
+}
+p,
+h1,
+h2,
+h3,
+ul,
+ol,
+figure,
+blockquote,
+dl,
+dd {
+  margin: 0;
+}
+ul,
+ol {
+  padding: 0;
+  list-style: none;
+}
+/* A barra de rolagem na cor da marca: trilho do tatame, polegar vermelho do
+   torii. `scrollbar-color` (Firefox, Chrome 121+) e os pseudo-elementos
+   -webkit- para o Safari. */
+html {
+  scrollbar-color: var(--hk-torii) var(--hk-mat);
+}
+::-webkit-scrollbar {
+  width: 12px;
+  height: 12px;
+}
+::-webkit-scrollbar-track {
+  background: var(--hk-mat);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--hk-torii);
+  border-radius: var(--r-pill);
+  border: 3px solid var(--hk-mat);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--hk-torii-deep);
+}
+::selection {
+  background: var(--hk-torii);
+  color: var(--hk-paper);
+}
+
+/* Foco desenhado (PRD 8.9): anel duplo, tinta + folga de papel. Nunca o azul
+   do navegador. */
+:focus {
+  outline: none;
+}
+:focus-visible {
+  outline: 3px solid var(--hk-ink);
+  outline-offset: 3px;
+  box-shadow: 0 0 0 3px var(--hk-paper);
+  border-radius: 8px;
+}
+.hk-on-dark :focus-visible,
+.hk-on-red :focus-visible {
+  outline-color: var(--hk-paper);
+  box-shadow: 0 0 0 3px var(--hk-ink);
+}
+
+/* Toque: sem o atraso de toque duplo dos WebViews e sem o flash cinza. */
+a,
+button,
+input,
+label,
+summary,
+[role='button'] {
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.hk-skip {
+  position: absolute;
+  left: var(--s-4);
+  top: -100px;
+  z-index: 100;
+  padding: var(--s-3) var(--s-4);
+  background: var(--hk-ink);
+  color: var(--hk-paper);
+  border-radius: var(--r-field);
+  font-weight: 600;
+  text-decoration: none;
+}
+.hk-skip:focus-visible {
+  top: var(--s-4);
+}
+
+.hk-shell {
+  width: var(--shell);
+  margin-inline: auto;
+}
+
+/* Toda grade de UMA coluna nasce com `minmax(0, 1fr)`. Sem isso a trilha
+   implícita é `auto`, cresce até o conteúdo mais largo (uma linha que não
+   quebra, uma pastilha longa) e empurra a página para fora da tela no
+   celular. As grades de várias colunas redefinem isto nos próprios
+   breakpoints, em kids-sections.css. */
+[class*='__grid'],
+.hk-coach__copy,
+.hk-check__head,
+.hk-check__score,
+.hk-faq__head,
+.hk-final__in,
+.hk-form,
+.hk-field {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.hk-sec {
+  position: relative;
+  padding-block: var(--sec-y);
+}
+
+/* ── Tipografia (classes hk-type-*, nunca text-*) ─────────────────────── */
+.hk-type-h1,
+.hk-type-h2,
+.hk-type-h3,
+.hk-type-q,
+.hk-kid {
+  font-family: var(--hk-display);
+  font-variation-settings: var(--hk-voice-parent);
+  text-wrap: balance;
+}
+.hk-type-h1 {
+  font-size: min(clamp(2.35rem, 1.2rem + 4.4vw, 4.6rem), 8.4svh);
+  font-weight: 800;
+  line-height: 1.02;
+  letter-spacing: -0.02em;
+}
+.hk-type-h2 {
+  font-size: clamp(2rem, 1.3rem + 2.6vw, 3.4rem);
+  font-weight: 750;
+  line-height: 1.06;
+  letter-spacing: -0.015em;
+}
+.hk-type-q {
+  font-size: clamp(2.3rem, 1.1rem + 4.6vw, 5.2rem);
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  font-variation-settings:
+    'INFM' 30,
+    'BNCE' 0;
+}
+.hk-type-h3 {
+  font-size: clamp(1.25rem, 1.05rem + 0.6vw, 1.5rem);
+  font-weight: 700;
+  line-height: 1.2;
+  font-variation-settings:
+    'INFM' 0,
+    'BNCE' 0;
+}
+/* A voz da criança: a MESMA letra, solta e pulando. */
+.hk-kid {
+  font-size: clamp(1.15rem, 1rem + 0.5vw, 1.45rem);
+  font-weight: 600;
+  line-height: 1.25;
+  font-variation-settings: var(--hk-voice-kid);
+  letter-spacing: 0;
+}
+.hk-type-body {
+  font-size: clamp(1rem, 0.93rem + 0.3vw, 1.125rem);
+  line-height: 1.6;
+  max-width: 66ch;
+}
+.hk-type-lead {
+  font-size: clamp(1.05rem, 0.96rem + 0.4vw, 1.25rem);
+  line-height: 1.55;
+  max-width: 58ch;
+}
+.hk-micro {
+  font-size: 0.875rem;
+  line-height: 1.5;
+  color: var(--hk-stone);
+}
+
+/* Eyebrow: um torii de 14px e o rótulo. É o único lugar onde o rótulo vai em
+   caixa alta. */
+.hk-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-2);
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--hk-stone);
+}
+.hk-eyebrow svg {
+  width: 16px;
+  height: auto;
+  color: var(--hk-torii);
+  flex: none;
+}
+.hk-on-dark .hk-eyebrow,
+.hk-on-red .hk-eyebrow {
+  color: rgb(255 255 255 / 0.86);
+}
+.hk-on-dark .hk-eyebrow svg,
+.hk-on-red .hk-eyebrow svg {
+  color: var(--hk-paper);
+}
+
+/* O traço à mão sob a palavra marcada. */
+.hk-mark {
+  position: relative;
+  display: inline-block;
+  white-space: nowrap;
+}
+.hk-mark > svg {
+  position: absolute;
+  left: -2%;
+  bottom: -0.16em;
+  width: 104%;
+  height: 0.32em;
+  overflow: visible;
+  color: var(--hk-torii);
+  pointer-events: none;
+}
+
+/* ── Pendência (só em prospect) ───────────────────────────────────────── */
+.hk-pending {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin: 4px 0;
+  padding: 3px 10px;
+  border-radius: var(--r-pill);
+  background: var(--hk-pending-bg);
+  color: var(--hk-pending-ink);
+  font: 600 0.75rem/1.4 var(--hk-body);
+  letter-spacing: 0;
+  text-transform: none;
+  vertical-align: middle;
+  max-width: 100%;
+  border: 1px dashed var(--hk-pending-line);
+}
+
+/* ── Botão (PRD 8.9) ──────────────────────────────────────────────────────
+   Pílula vermelha com a base afundada. A seta é a TRAVESSA do torii (nuki):
+   sai pela direita e volta pela esquerda. O feedback de toque é CSS puro
+   (:active), sem esperar o React, por causa do INP de 300 ms (P6). */
+.hk-btn {
+  --btn-bg: var(--hk-torii);
+  --btn-fg: var(--hk-paper);
+  --btn-base: var(--hk-torii-deep);
+  --btn-glow: rgb(var(--hk-torii-rgb) / 0.5);
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--s-3);
+  min-height: 56px;
+  max-width: 100%;
+  padding: var(--s-3) var(--s-6) var(--s-3) var(--s-8);
+  border-radius: var(--r-pill);
+  background: var(--btn-bg);
+  color: var(--btn-fg);
+  font: 700 1.0625rem/1.15 var(--hk-body);
+  letter-spacing: 0.005em;
+  text-align: center;
+  text-wrap: balance;
+  text-decoration: none;
+  box-shadow:
+    0 5px 0 var(--btn-base),
+    0 16px 28px -14px var(--btn-glow);
+  translate: 0 0;
+  rotate: 0deg;
+  transition:
+    translate var(--t-tap) ease,
+    rotate var(--t-ui) var(--ease-spring),
+    box-shadow var(--t-tap) ease,
+    background-color var(--t-ui) ease;
+  user-select: none;
+}
+.hk-btn__arrow {
+  position: relative;
+  width: 22px;
+  height: 14px;
+  overflow: hidden;
+  flex: none;
+}
+.hk-btn__arrow svg {
+  position: absolute;
+  inset: 0;
+  width: 22px;
+  height: 14px;
+  transition: translate var(--t-move) var(--ease-out);
+}
+.hk-btn__arrow svg + svg {
+  translate: -130% 0;
+}
+@media (hover: hover) {
+  .hk-btn:hover {
+    translate: 0 -2px;
+    rotate: -0.6deg;
+    box-shadow:
+      0 7px 0 var(--btn-base),
+      0 22px 34px -14px var(--btn-glow);
+  }
+  .hk-btn:hover .hk-btn__arrow svg {
+    translate: 130% 0;
+  }
+  .hk-btn:hover .hk-btn__arrow svg + svg {
+    translate: 0 0;
+  }
+}
+.hk-btn:active {
+  translate: 0 4px;
+  rotate: 0deg;
+  box-shadow:
+    0 1px 0 var(--btn-base),
+    0 6px 14px -10px var(--btn-glow);
+  transition-duration: 40ms;
+}
+.hk-btn--light {
+  --btn-bg: var(--hk-paper);
+  --btn-fg: var(--hk-torii-deep);
+  --btn-base: var(--hk-torii-ink);
+  --btn-glow: rgb(0 0 0 / 0.35);
+}
+/* Amarelo: o botão da seção vermelha do NAGA. */
+.hk-btn--gold {
+  --btn-bg: var(--hk-gold);
+  --btn-fg: var(--hk-ink);
+  --btn-base: var(--hk-gold-deep);
+  --btn-glow: rgb(0 0 0 / 0.3);
+}
+.hk-btn--small {
+  min-height: 44px;
+  padding: 0 var(--s-5);
+  font-size: 0.95rem;
+  box-shadow:
+    0 4px 0 var(--btn-base),
+    0 12px 22px -14px var(--btn-glow);
+}
+.hk-btn--block {
+  width: 100%;
+}
+
+/* Link de texto: sublinhado grosso que vira vermelho. */
+.hk-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 44px;
+  font-weight: 600;
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 4px;
+  text-decoration-color: rgb(var(--hk-ink-rgb) / 0.3);
+  transition:
+    text-decoration-color var(--t-ui) ease,
+    color var(--t-ui) ease;
+}
+.hk-link svg {
+  width: 18px;
+  height: 18px;
+  color: var(--hk-torii);
+  flex: none;
+}
+@media (hover: hover) {
+  .hk-link:hover {
+    text-decoration-color: var(--hk-torii);
+  }
+}
+.hk-link:active {
+  color: var(--hk-torii);
+}
+
+/* ── Sticker: a voz da criança, colada na página ─────────────────────────
+   É BOTÃO (diagnóstico: cliques mortos). O toque faz o carimbo: aperta e
+   volta com mola, e a letra pula mais. */
+.hk-sticker {
+  --tilt: -3deg;
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-2);
+  max-width: 19rem;
+  padding: var(--s-3) var(--s-4) var(--s-3) var(--s-4);
+  background: var(--hk-paper);
+  color: var(--hk-ink);
+  border-radius: 14px 14px 14px 4px;
+  text-align: left;
+  rotate: var(--tilt);
+  box-shadow:
+    0 0 0 1px rgb(var(--hk-ink-rgb) / 0.08),
+    0 3px 0 rgb(var(--hk-ink-rgb) / 0.12),
+    0 14px 24px -16px rgb(var(--hk-ink-rgb) / 0.5);
+  transition:
+    rotate var(--t-move) var(--ease-spring),
+    scale var(--t-tap) ease;
+}
+.hk-sticker .hk-kid {
+  font-size: clamp(1.05rem, 0.95rem + 0.4vw, 1.25rem);
+  transition: font-variation-settings var(--t-move) var(--ease-out);
+}
+/* o canto descolado */
+.hk-sticker::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 18px;
+  height: 18px;
+  border-radius: 0 14px 0 8px;
+  background: linear-gradient(225deg, var(--hk-mat) 0 50%, var(--hk-mat-2) 50% 100%);
+  box-shadow: -1px 1px 0 rgb(var(--hk-ink-rgb) / 0.08);
+}
+@media (hover: hover) {
+  .hk-sticker:hover {
+    rotate: calc(var(--tilt) + 4deg);
+  }
+}
+.hk-sticker:active {
+  scale: 0.94;
+  transition-duration: 60ms;
+}
+/* O balanço é Web Animations (parts.tsx); aqui só a letra pula mais. */
+.hk-sticker.is-wiggle .hk-kid {
+  font-variation-settings:
+    'INFM' 100,
+    'BNCE' 100;
+}
+.hk-sticker__dot {
+  width: 10px;
+  height: 10px;
+  flex: none;
+  border-radius: 50%;
+  background: var(--hk-torii);
+}
+
+/* ── Chip (selo de confiança, botão que leva à prova) ─────────────────── */
+.hk-chips {
+  display: flex;
+  gap: var(--s-3);
+}
+.hk-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-2);
+  min-height: 48px;
+  padding: var(--s-2) var(--s-4) var(--s-2) var(--s-3);
+  border-radius: var(--r-plate);
+  background: var(--hk-paper);
+  color: var(--hk-ink);
+  font-size: 0.9375rem;
+  font-weight: 600;
+  line-height: 1.25;
+  text-align: left;
+  white-space: nowrap;
+  text-decoration: none;
+  box-shadow:
+    var(--elev-1),
+    0 3px 0 rgb(var(--hk-ink-rgb) / 0.1);
+  transition:
+    translate var(--t-tap) ease,
+    box-shadow var(--t-tap) ease;
+}
+.hk-chip svg {
+  width: 22px;
+  height: 22px;
+  flex: none;
+  color: var(--hk-torii);
+}
+@media (hover: hover) {
+  .hk-chip:hover {
+    translate: 0 -2px;
+    box-shadow:
+      var(--elev-1),
+      0 5px 0 rgb(var(--hk-ink-rgb) / 0.12);
+  }
+}
+.hk-chip:active {
+  translate: 0 2px;
+  box-shadow:
+    var(--elev-1),
+    0 1px 0 rgb(var(--hk-ink-rgb) / 0.12);
+  transition-duration: 40ms;
+}
+
+/* ── Nav ──────────────────────────────────────────────────────────────── */
+.hk-nav {
+  position: fixed;
+  inset: 0 0 auto 0;
+  z-index: 40;
+  transition:
+    background-color var(--t-move) ease,
+    box-shadow var(--t-move) ease;
+}
+.hk-nav__in {
+  width: var(--shell);
+  margin-inline: auto;
+  display: flex;
+  align-items: center;
+  gap: var(--s-4);
+  min-height: 72px;
+}
+.hk-nav.is-scrolled {
+  background: var(--hk-nav-glass);
+  box-shadow:
+    0 1px 0 rgb(var(--hk-ink-rgb) / 0.08),
+    0 12px 30px -24px rgb(var(--hk-ink-rgb) / 0.5);
+}
+@supports (backdrop-filter: blur(1px)) {
+  .hk-nav.is-scrolled:not(.is-webview) {
+    backdrop-filter: blur(14px) saturate(1.2);
+    -webkit-backdrop-filter: blur(14px) saturate(1.2);
+  }
+}
+@supports not (backdrop-filter: blur(1px)) {
+  .hk-nav.is-scrolled {
+    background: var(--hk-paper);
+  }
+}
+.hk-nav.is-webview.is-scrolled {
+  background: var(--hk-paper);
+}
+.hk-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-3);
+  min-height: 44px;
+  text-decoration: none;
+  margin-right: auto;
+}
+.hk-brand img {
+  width: 44px;
+  height: 44px;
+  flex: none;
+}
+.hk-brand span {
+  font-family: var(--hk-display);
+  font-variation-settings: var(--hk-voice-parent);
+  font-weight: 800;
+  font-size: 1.125rem;
+  line-height: 1;
+  letter-spacing: -0.01em;
+}
+.hk-brand span b {
+  color: var(--hk-torii);
+  font-weight: 800;
+  font-variation-settings: var(--hk-voice-kid);
+}
+.hk-nav__links {
+  display: none;
+  gap: var(--s-1);
+}
+.hk-nav__links a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 0 var(--s-3);
+  border-radius: var(--r-pill);
+  font-size: 0.95rem;
+  font-weight: 500;
+  text-decoration: none;
+  transition: background-color var(--t-ui) ease;
+}
+@media (hover: hover) {
+  .hk-nav__links a:hover {
+    background: rgb(var(--hk-ink-rgb) / 0.06);
+  }
+}
+.hk-nav__phone {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--s-2);
+  min-width: 44px;
+  min-height: 44px;
+  padding: 0 var(--s-2);
+  border-radius: var(--r-pill);
+  font-weight: 600;
+  font-size: 0.95rem;
+  text-decoration: none;
+  white-space: nowrap;
+}
+.hk-nav__phone svg {
+  width: 22px;
+  height: 22px;
+  color: var(--hk-torii);
+}
+.hk-nav__phone span {
+  display: none;
+}
+@media (min-width: 960px) {
+  .hk-nav__links {
+    display: flex;
+  }
+  .hk-nav__phone span {
+    display: inline;
+  }
+}
+@media (max-width: 559px) {
+  .hk-nav__in {
+    gap: var(--s-2);
+  }
+  .hk-nav .hk-btn--small {
+    padding: 0 var(--s-4);
+    font-size: 0.9rem;
+    white-space: nowrap;
+  }
+  .hk-brand {
+    gap: var(--s-2);
+  }
+  .hk-brand span {
+    font-size: 0.95rem;
+  }
+  .hk-brand img {
+    width: 36px;
+    height: 36px;
+  }
+}
+
+/* ── Torii (o objeto da marca) ────────────────────────────────────────── */
+.hk-torii {
+  overflow: visible;
+}
+.hk-torii--line path {
+  fill: none;
+  stroke: currentColor;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+}
