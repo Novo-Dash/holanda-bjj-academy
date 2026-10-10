@@ -66,7 +66,6 @@ export function Safety() {
                 <button
                   type="button"
                   className="hs-stage"
-                  aria-label={`${r.title} ${safety.playLabel}`}
                   onPointerEnter={(e) => e.pointerType === 'mouse' && play(e.currentTarget.parentElement)}
                   onClick={(e) => {
                     play(e.currentTarget.parentElement)
@@ -77,6 +76,12 @@ export function Safety() {
                     {i + 1}
                   </span>
                   <Art id={`${uid}-${i}`} />
+                  {/* Nome do botão em texto oculto, e não aria-label: o nome
+                      precisa conter o que está visível dentro dele (o número
+                      e o "tap!"), senão reprova o "label in name". */}
+                  <span className="sr-only">
+                    {safety.playLabel}: {r.title}
+                  </span>
                 </button>
                 <h3 className="hs-title">{r.title}</h3>
                 <p className="hs-text">{r.text}</p>

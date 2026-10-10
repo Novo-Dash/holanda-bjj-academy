@@ -82,7 +82,9 @@
     <!-- Schema: só dado confirmado, como na `/`. Sem aggregateRating (o
          Google ignora nota que o próprio negócio publica sobre si) e sem
          horário (a grade kids ainda não foi confirmada em texto). A oferta é a
-         da copy: a primeira aula é grátis. O FAQPage entra no prerender,
+         da copy: a primeira aula é grátis. O `geo` saiu do OpenStreetMap para
+         o endereço confirmado (precisão de imóvel, 10/10). O `uploadDate` da
+         VSL é a data do arquivo aprovado no Drive. O FAQPage entra no prerender,
          gerado do mesmo array que a página mostra. -->
     <script type="application/ld+json">
       {
@@ -106,6 +108,7 @@
               "postalCode": "01702",
               "addressCountry": "US"
             },
+            "geo": { "@type": "GeoCoordinates", "latitude": 42.2793633, "longitude": -71.4183778 },
             "areaServed": { "@type": "City", "name": "Framingham, MA" },
             "hasMap": "https://www.google.com/maps/search/?api=1&query=47+Franklin+Street,+Framingham,+MA+01702",
             "sameAs": ["https://www.instagram.com/holanda.bjjacademy/"]
@@ -127,12 +130,24 @@
             }
           },
           {
+            "@type": "VideoObject",
+            "@id": "https://lp.holandabjjacademy.com/kids#vsl",
+            "name": "Kids jiu-jitsu at Holanda BJJ Academy",
+            "description": "A kids class at Holanda BJJ Academy in Framingham, MA: kids line up, train with partners their size and learn with the coach.",
+            "thumbnailUrl": "https://lp.holandabjjacademy.com/kids/vsl-poster.webp",
+            "contentUrl": "https://lp.holandabjjacademy.com/kids/vsl.mp4",
+            "uploadDate": "2026-09-28",
+            "duration": "PT31S",
+            "inLanguage": "en-US"
+          },
+          {
             "@type": "WebPage",
             "@id": "https://lp.holandabjjacademy.com/kids#page",
             "url": "https://lp.holandabjjacademy.com/kids",
             "name": "Kids Jiu-Jitsu in Framingham, MA · Ages 4 to 13 | Holanda BJJ",
             "inLanguage": "en-US",
             "about": { "@id": "https://lp.holandabjjacademy.com/kids#program" },
+            "video": { "@id": "https://lp.holandabjjacademy.com/kids#vsl" },
             "primaryImageOfPage": "https://lp.holandabjjacademy.com/kids/og.jpg"
           }
         ]
