@@ -655,17 +655,12 @@
   transition-delay: calc(var(--k, 0) * 90ms);
 }
 /* `data-draw`: o traço se desenha (pathLength = 1). */
-.hk-motion [data-draw].is-pending .hk-plate__check path,
 .hk-motion [data-draw].is-pending .hk-final__gate path {
   stroke-dashoffset: 1;
 }
-.hk-plate__check path,
 .hk-final__gate path {
   stroke-dasharray: 1 1;
   stroke-dashoffset: 0;
-}
-.hk-motion [data-draw] .hk-plate__check path {
-  transition: stroke-dashoffset 450ms var(--ease-out) 200ms;
 }
 .hk-motion [data-draw] .hk-final__gate path {
   transition: stroke-dashoffset 1400ms var(--ease-out);

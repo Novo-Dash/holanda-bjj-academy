@@ -114,31 +114,11 @@ export function Check(p: P) {
   )
 }
 
-/** O "+" do FAQ: duas peças, para a vertical poder girar e sumir. */
-export function Plus(p: P) {
-  return (
-    <svg {...base} strokeWidth={2.75} {...p}>
-      <path d="M4 12h16" />
-      <path d="M12 4v16" className="hk-plus-v" />
-    </svg>
-  )
-}
-
 export function Alert(p: P) {
   return (
     <svg {...base} {...p}>
       <path d="M12 3 2 20.5h20z" />
       <path d="M12 9.5v5M12 17v.5" />
-    </svg>
-  )
-}
-
-export function Instagram(p: P) {
-  return (
-    <svg {...base} {...p}>
-      <rect x="3.5" y="3.5" width="17" height="17" rx="5" />
-      <circle cx="12" cy="12" r="4" />
-      <path d="M17 7v.01" />
     </svg>
   )
 }

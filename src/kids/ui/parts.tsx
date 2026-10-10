@@ -3,7 +3,7 @@ import { ArrowNuki, Torii } from './icons'
 import { afterPaint, prefersReducedMotion } from '../lib/motion'
 
 /** client = a página que vai ao ar; prospect = a de revisão, com as pastilhas. */
-export const CLIENT = import.meta.env.VITE_UX_MODE === 'client'
+const CLIENT = import.meta.env.VITE_UX_MODE === 'client'
 
 /** Item com `gated` e pendência não existe em client (PRD 0.5). */
 export function shows(item: { pending?: string; gated?: boolean }) {

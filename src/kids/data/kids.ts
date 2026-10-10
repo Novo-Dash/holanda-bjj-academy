@@ -13,14 +13,6 @@ import { reviews, site } from '@/data/site'
  *    do título do NAGA: plausível é exatamente o que ninguém confere depois.
  */
 
-export type Item = {
-  text: string
-  /** O que falta, em português, para a pastilha do modo prospect. */
-  pending?: string
-  /** Não renderiza em client enquanto `pending` existir. */
-  gated?: boolean
-}
-
 export type Variant = 'a' | 'b' | 'c'
 
 export const nav = {
@@ -53,7 +45,6 @@ export const hero = {
   cta: 'Book My Kid’s Free Class',
   /* Resumida a pedido do Adryan (09/10): 1 a 2 linhas, centrada sob o botão. */
   micro: 'Under a minute. We text you the address and what to wear.',
-  directions: 'Get directions',
 }
 
 /** Os quatro selos. Cada um é BOTÃO para a seção que prova o que ele diz

@@ -245,9 +245,9 @@ export function sendBooking(d: BookingData): void {
    local na Kids criaria lead de verdade no CRM da academia. Para testar o
    envio real, abrir com `?send=1` e avisar o Adryan para apagar o contato. */
 
-export const KIDS_SOURCE_LABEL = 'Landing Page - Kids'
+const KIDS_SOURCE_LABEL = 'Landing Page - Kids'
 
-export type KidsLead = {
+type KidsLead = {
   name: string
   phone: string
   childAge: number

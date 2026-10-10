@@ -17,11 +17,11 @@ import { quickCheck } from '../data/kids'
  * como `notes`.
  */
 
-export type Step = 1 | 2 | 3
+type Step = 1 | 2 | 3
 type ProgramsState = 'idle' | 'loading' | 'ready' | 'error'
 type Errors = Partial<Record<'name' | 'phone' | 'age' | 'day' | 'time', string>>
 
-export type BookingState = {
+type BookingState = {
   step: Step
   name: string
   phone: string

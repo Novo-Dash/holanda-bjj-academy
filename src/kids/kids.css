@@ -133,9 +133,7 @@
   --s-24: 96px;
 
   --shell: min(1200px, 100% - 32px);
-  --gutter: 16px;
   --sec-y: clamp(72px, 9vw, 128px);
-  --sec-y-tight: clamp(40px, 5vw, 64px);
 
   /* Raio: generoso e de brinquedo, nunca o padrão de biblioteca. */
   --r-pill: 999px;
