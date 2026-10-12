@@ -73,7 +73,7 @@ export const trust = [
   },
   {
     id: 'kimono',
-    label: 'Kimono on loan, day one',
+    label: 'Gi on loan, day one',
     hint: 'see the first class',
     target: '#first-class',
     icon: 'gi',
@@ -193,7 +193,7 @@ export const firstClass = {
     {
       at: -10,
       title: 'Gear up.',
-      text: 'T-shirt, shorts with no pockets or zippers, and a water bottle. We lend a kimono for the gi class.',
+      text: 'T-shirt, shorts with no pockets or zippers, and a water bottle. We lend a gi for the gi class.',
       img: '/kids/fc-2',
       alt: 'Kids in white and black gis walking onto the mat for warm-up',
     },
@@ -341,7 +341,7 @@ export const faq = {
     },
     {
       q: 'What should my kid wear?',
-      a: 'A t-shirt, shorts without pockets or zippers, and a water bottle. We lend a kimono for the first class.',
+      a: 'A t-shirt, shorts without pockets or zippers, and a water bottle. We lend a gi for the first class.',
       pending: 'Confirmar empréstimo de kimono para kids',
     },
     { q: 'Can I stay and watch?', a: 'Yes. Parents are welcome to watch the whole class.' },
