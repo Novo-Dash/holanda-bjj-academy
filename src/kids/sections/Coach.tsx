@@ -22,16 +22,16 @@ export function Coach({ onBook }: { onBook: Book }) {
           <picture>
             <source
               type="image/webp"
-              srcSet="/kids/coach-560.webp 560w, /kids/coach-1120.webp 1120w"
+              srcSet="/kids/coach-v2-560.webp 560w, /kids/coach-v2-1120.webp 1120w"
               sizes="(min-width: 960px) 40vw, 80vw"
             />
             <img
-              src="/kids/coach-560.webp"
+              src="/kids/coach-v2-560.webp"
               width={560}
               height={700}
               loading="lazy"
               decoding="async"
-              alt="Professor Diego Holanda in a black gi, standing on the mat of the academy"
+              alt="Professor Diego Holanda in a black Holanda BJJ gi, arms crossed"
             />
           </picture>
           <figcaption className="hk-kid">{coach.photoCaption}</figcaption>
