@@ -53,3 +53,6 @@ Thumbs.db
 .tmp/
 coverage/
 .eslintcache
+
+# Prints de referência (F0 da Kids): pesados e só de consulta
+memory/prints/

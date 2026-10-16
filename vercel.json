@@ -1,5 +1,10 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
+  "rewrites": [
+    { "source": "/kids", "destination": "/kids/index.html" },
+    { "source": "/kids/b", "destination": "/kids/b/index.html" },
+    { "source": "/kids/c", "destination": "/kids/c/index.html" }
+  ],
   "headers": [
     {
       "source": "/(.*)",

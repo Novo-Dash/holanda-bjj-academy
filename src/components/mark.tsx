@@ -1,4 +1,5 @@
 import { cn } from '@/lib/utils'
+import { TORII, TORII_VIEWBOX } from '@/data/torii'
 
 /**
  * A marca, em traço: o TORII do distintivo do cliente.
@@ -22,24 +23,24 @@ import { cn } from '@/lib/utils'
  */
 export function Mark({ className }: { className?: string }) {
   return (
-    <svg viewBox="0 0 424 376" className={className} fill="currentColor" aria-hidden="true">
+    <svg viewBox={TORII_VIEWBOX} className={className} fill="currentColor" aria-hidden="true">
       {/* Kasagi, a viga de cima. Ela é um ARCO e não uma barra: no distintivo
           a face de cima sobe 19px do meio para as pontas e a de baixo sobe 51,
           então a peça afina até quase sumir nas extremidades. Desenhada como
           trapézio, a marca inteira ficava pesada no topo e deixava de parecer
           madeira apoiada. */}
-      <path d="M0 2C40 14 120 21 212 21C304 21 384 14 424 2L424 18L400 50C330 62 270 65 212 65C154 65 94 62 24 50L0 18Z" />
+      <path d={TORII.kasagi} />
       {/* Gakuzuka, o montante curto entre a viga e a travessa. */}
-      <path d="M197 78h32v34h-32Z" />
+      <path d={TORII.gakuzuka} />
       {/* Nuki, a travessa. É ela que atravessa os dois pilares e passa para
           fora deles nos dois lados, que é o que distingue um torii de uma
           letra grega. */}
-      <path d="M34 110h358v34H34Z" />
+      <path d={TORII.nuki} />
       {/* Hashira, os dois pilares. Quadriláteros e não retângulos: eles se
           afastam da vertical conforme descem, exatamente como no distintivo, e
           é essa abertura que dá a impressão de peso apoiado no chão. */}
-      <path d="M98 70h35l-19 304H69Z" />
-      <path d="M293 70h35l28 304h-45Z" />
+      <path d={TORII.left} />
+      <path d={TORII.right} />
     </svg>
   )
 }
