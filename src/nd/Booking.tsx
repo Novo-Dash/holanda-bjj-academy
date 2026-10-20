@@ -6,9 +6,10 @@ import { client, copy, copyOf, unitOf, type Copy } from './config'
 import {
   dateKey, fetchPrograms, groupPrograms, isPaid, isWaitlist, locale, longDate, noteOf, optionHint, parseKey, shortName, timeLabel, type Program,
 } from './programs'
-import { adsConversion, fbTrack, gaTrack, identify, startUnit } from './tracking'
+import { captureLead } from './lead'
+import { adsConversion, fbTrack, gaTrack, startUnit } from './tracking'
 import type { Audience, Client } from './types'
-import { sendBooking, sendLead, type BookingData } from './webhook'
+import { sendBooking, type BookingData } from './webhook'
 import './nd.css'
 
 // The booking funnel of every Novo Dash landing page. Identical in all LPs;
@@ -31,6 +32,12 @@ type Options = {
   leadExtra?: Record<string, unknown>
   /** Class picked on open (a program card's "Book this class"): GHL calendar id. /book also reads ?class=<calendar id>. */
   calendarId?: string
+  /** Contact the page already collected (a campaign's own form): step 1 keeps only the class picker. */
+  contact?: Pick<BookingData, 'fullName' | 'email' | 'phone'>
+  /** The page already sent Webhook 1 and the Lead events for this contact (captureLead): step 1 does not repeat them. */
+  leadSent?: boolean
+  /** Narrows the class list on this page (one age group...). Nothing left, the page's full list shows. */
+  filter?: (p: Program) => boolean
 }
 type Ctx = { open: (options?: Options) => void; close: () => void; isOpen: boolean }
 
@@ -182,8 +189,18 @@ function BookingModal({ options, onClose }: { options: Options; onClose: () => v
 
 type ProgramsState = { status: 'loading' | 'ready' | 'error'; list: Program[] }
 
-/** The funnel itself, for pages that embed it (the /book route, an inline closing section). */
+/** The funnel itself, for pages that embed it (the /book route, an inline closing section, a campaign's last step). */
 export function BookingForm(props: Options & { onDone?: () => void }) {
+  const inherited = useCopy()
+  if (!props.copy) return <Funnel {...props} />
+  return (
+    <CopyContext.Provider value={{ ...inherited, ...props.copy }}>
+      <Funnel {...props} />
+    </CopyContext.Provider>
+  )
+}
+
+function Funnel(props: Options & { onDone?: () => void }) {
   const inherited = useUnit()
   const c = props.unit ? unitOf(props.unit) : inherited
   const { leadExtra, onDone } = props
@@ -193,10 +210,15 @@ export function BookingForm(props: Options & { onDone?: () => void }) {
   const scope = useId()
   const [step, setStep] = useState<1 | 2 | 'done'>(1)
   const [data, setData] = useState<BookingData>(() => ({
-    ...prefillFromUrl(c.academy.country), childName: '', calendarId: '', date: '', time: '', preferredAudience: audience ?? '',
+    ...prefillFromUrl(c.academy.country), ...props.contact, childName: '', calendarId: '', date: '', time: '', preferredAudience: audience ?? '',
   }))
   const [programs, setPrograms] = useState<ProgramsState>({ status: 'loading', list: [] })
-  const leadSent = useRef(false)
+  const leadSent = useRef(props.leadSent ?? false)
+  // Kept in a ref: pages pass the filter inline, and a new function each render must not refetch.
+  const filter = useRef(props.filter)
+  useEffect(() => {
+    filter.current = props.filter
+  })
   const patch = (next: Partial<BookingData>) => setData((prev) => ({ ...prev, ...next }))
 
   useEffect(() => {
@@ -204,8 +226,10 @@ export function BookingForm(props: Options & { onDone?: () => void }) {
     gaTrack('view_content', { content_name: 'Trial Booking' }, c.tracking)
     let alive = true
     fetchPrograms(audience, c)
-      .then((list) => {
+      .then((all) => {
         if (!alive) return
+        const narrowed = filter.current ? all.filter(filter.current) : all
+        const list = narrowed.length ? narrowed : all
         setPrograms({ status: 'ready', list })
         const wanted = props.calendarId ?? new URLSearchParams(window.location.search).get('class')
         if (list.length) setData((prev) => (prev.calendarId ? prev : { ...prev, calendarId: (list.find((p) => p.calendar_id === wanted) ?? list[0]).calendar_id }))
@@ -259,15 +283,11 @@ export function BookingForm(props: Options & { onDone?: () => void }) {
       isFallback={isFallback}
       onChange={patch}
       leadOnly={leadOnly}
+      contactKnown={Boolean(props.contact)}
       onNext={() => {
         if (!leadSent.current) {
-          // Identify before the Lead fires, or Advanced Matching and Enhanced Conversions miss it.
           leadSent.current = true
-          identify(user(), c.tracking)
-          sendLead(data, program, source, leadExtra, c)
-          fbTrack('Lead', { content_category: who }, user(), c.tracking)
-          gaTrack('generate_lead', { audience: who }, c.tracking)
-          adsConversion(c.tracking.adsLeadLabel, c.tracking)
+          captureLead(data, program, source, leadExtra, c)
         }
         // Waitlist class: the lead is all there is; no calendar, no Webhook 2, no Schedule.
         setStep(isWaitlist(program) || leadOnly ? 'done' : 2)
@@ -277,10 +297,11 @@ export function BookingForm(props: Options & { onDone?: () => void }) {
 }
 
 function Step1({
-  scope, data, programs, program, isFallback, leadOnly, onChange, onNext,
+  scope, data, programs, program, isFallback, leadOnly, contactKnown, onChange, onNext,
 }: {
   scope: string
   leadOnly: boolean
+  contactKnown: boolean
   data: BookingData
   programs: ProgramsState
   program: Program | null
@@ -306,9 +327,11 @@ function Step1({
   const submit = (e: FormEvent) => {
     e.preventDefault()
     const next: Record<string, string> = {}
-    if (data.fullName.trim().length < 2) next.fullName = 'Please enter your full name.'
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(data.email.trim())) next.email = 'Please enter a valid email address.'
-    if (!isPhone(data.phone, country)) next.phone = PHONE_ERROR[country]
+    if (!contactKnown) {
+      if (data.fullName.trim().length < 2) next.fullName = 'Please enter your full name.'
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(data.email.trim())) next.email = 'Please enter a valid email address.'
+      if (!isPhone(data.phone, country)) next.phone = PHONE_ERROR[country]
+    }
     if (isFallback ? !data.preferredAudience : !program) next.class = isFallback ? 'Please choose adults or kids.' : 'Please choose a class.'
     if (needsChild && data.childName.trim().length < 2) next.childName = "Please enter your child's first name."
     setErrors(next)
@@ -329,7 +352,7 @@ function Step1({
   return (
     <form onSubmit={submit} noValidate className="nd-stack">
       <Head step={1} total={leadOnly ? 1 : 2} title={copy.formTitle} text={copy.formText} />
-      <div className="nd-stack-sm">
+      {contactKnown ? null : <div className="nd-stack-sm">
         <Field id={`${scope}-name`} label="Full name" autoComplete="name" placeholder="Jane Doe" value={data.fullName} error={errors.fullName}
           onChange={(e) => edit({ fullName: e.target.value })} />
         <div className="nd-row">
@@ -338,7 +361,7 @@ function Step1({
           <Field id={`${scope}-phone`} label="Phone" type="tel" inputMode="tel" autoComplete="tel" placeholder={PHONE_PLACEHOLDER[country]} value={data.phone} error={errors.phone}
             onChange={(e) => edit({ phone: formatPhone(e.target.value, country) })} />
         </div>
-      </div>
+      </div>}
       <fieldset className="nd-stack-xs">
         <legend className="nd-label">{isFallback ? 'Who is training?' : 'Choose your class'}<span className="nd-req" aria-hidden="true">*</span></legend>
         {programs.status === 'loading' ? (

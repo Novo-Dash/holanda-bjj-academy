@@ -1,0 +1,168 @@
+/* Black Friday LP: every rule is scoped under .bf26 (see BlackFridayPage). */
+.bf26 .hero {
+  position: relative;
+  isolation: isolate;
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* Real academy photo as a full-bleed background, darkened for AA on the copy. */
+.bf26 .hero-bg { position: absolute; inset: 0; z-index: -1; }
+.bf26 .hero-bg img {
+  width: 100%; height: 100%; object-fit: cover; object-position: var(--hero-pos, 50% 30%);
+  filter: grayscale(.35) contrast(1.05);
+}
+.bf26 .hero-bg::after {
+  content: ''; position: absolute; inset: 0;
+  background:
+    linear-gradient(90deg, rgba(0,0,0,.94) 0%, rgba(0,0,0,.82) 42%, rgba(0,0,0,.55) 100%),
+    linear-gradient(180deg, rgba(0,0,0,.55) 0%, transparent 22%, transparent 62%, #000 100%);
+}
+
+.bf26 .hero-top {
+  display: flex; justify-content: space-between; align-items: center;
+  padding-top: 20px; padding-bottom: 20px;
+}
+.bf26 .hero-brand {
+  display: inline-flex; align-items: center; gap: 12px; text-decoration: none;
+  font: 800 16px/1 var(--display); letter-spacing: .01em;
+}
+.bf26 .hero-brand img { width: auto; height: 42px; }
+/* Phone: icon + number inside an outlined pill. */
+.bf26 .hero-phone {
+  display: inline-flex; align-items: center; gap: 10px;
+  min-height: 44px; padding: 4px 18px 4px 5px;
+  border: 1.5px solid rgba(239,233,223,.4); border-radius: 999px;
+  background: rgba(0,0,0,.35);
+  font: 500 15px/1 var(--body); color: var(--ink); text-decoration: none;
+  font-variant-numeric: tabular-nums;
+  transition: border-color .2s, background .2s;
+}
+.bf26 .hero-phone:hover { border-color: var(--accent); background: hsl(from var(--accent) h s 42.4% / .12); }
+.bf26 .hero-phone-icon {
+  display: grid; place-items: center; width: 34px; height: 34px; border-radius: 50%;
+  background: var(--accent); color: var(--accent-ink, #fff);
+}
+.bf26 .hero-phone-icon svg { width: 17px; height: 17px; }
+
+.bf26 .hero-grid {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 64px;
+  align-items: center;
+  padding-top: 24px; padding-bottom: 40px;
+}
+/* No VSL yet: one column, no empty track or gap on the right. */
+.bf26 .hero-grid--solo { grid-template-columns: 1fr; gap: 0; }
+
+.bf26 .hero-title {
+  display: inline-flex; flex-direction: column;
+  margin: 0 0 28px;
+  /* The Roger Gracie KV voice: condensed, bold, italic, tight. */
+  font-family: var(--display); font-weight: 700; font-style: var(--display-style);
+  font-size: clamp(110px, 16vw, 232px); line-height: .86; letter-spacing: -.005em;
+  text-transform: uppercase;
+}
+.bf26 .hero-title span { display: block; }
+/* The black belt ties the two words together, as wide as the longer one. */
+.bf26 .hero-belt { max-width: none; width: 100%; margin: 20px 0 22px; }
+.bf26 .hero-lead {
+  margin: 0 0 30px; max-width: 540px; text-wrap: balance;
+  font-size: 17px; line-height: 1.5; color: var(--cream);
+}
+.bf26 .hero-terms {
+  display: flex; align-items: flex-start; gap: 10px;
+  margin: -12px 0 28px; max-width: 600px; text-wrap: pretty;
+  font-size: 14px; line-height: 1.45; color: rgba(239,233,223,.82);
+}
+.bf26 .hero-terms svg { flex: none; width: 18px; height: 18px; margin-top: 1px; color: var(--warm); }
+/* The hero CTA: bigger, glowing, with a ring that keeps pulsing out. */
+.bf26 .hero-actions .btn {
+  position: relative; min-height: 66px; padding: 0 38px; font-size: 23px; letter-spacing: .07em;
+  box-shadow: 0 18px 40px -14px hsl(from var(--accent) h s 42.4% / .85);
+  animation: cta-breathe 2.4s ease-in-out infinite;
+}
+.bf26 .hero-actions .btn::after {
+  content: ''; position: absolute; inset: 0; border-radius: inherit; pointer-events: none;
+  box-shadow: 0 0 0 0 hsl(from var(--accent) h s 61.6% / .7);
+  animation: cta-ring 2.4s ease-out infinite;
+}
+.bf26 .hero-actions .btn:hover { animation-play-state: paused; transform: translateY(-2px); }
+.bf26 .hero-actions .btn svg { width: 22px; height: 22px; }
+@keyframes cta-breathe { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.045); } }
+@keyframes cta-ring { 0% { box-shadow: 0 0 0 0 hsl(from var(--accent) h s 61.6% / .7); } 70%, 100% { box-shadow: 0 0 0 18px hsl(from var(--accent) h s 61.6% / 0); } }
+.bf26 .hero-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 18px 24px; }
+.bf26 .hero-rating { margin: 0; display: flex; flex-direction: column; gap: 2px; font-size: 14px; color: var(--cream); }
+.bf26 .hero-rating b { color: var(--ink); }
+.bf26 .hero-stars { color: #f5c24a; letter-spacing: 2px; font-size: 13px; }
+
+/* VSL: vertical 9:16 */
+.bf26 .vsl { margin: 0; width: clamp(240px, 22vw, 320px); justify-self: end; }
+.bf26 .vsl-frame {
+  position: relative; aspect-ratio: 9 / 16; overflow: hidden;
+  background: #0b0a09; border: 1px solid rgba(255,255,255,.14);
+  box-shadow: 0 40px 80px -30px rgba(0,0,0,.9), 0 0 0 8px rgba(0,0,0,.35);
+}
+.bf26 .vsl-frame video { width: 100%; height: 100%; object-fit: cover; background: #000; }
+.bf26 .vsl-poster {
+  appearance: none; border: 0; padding: 0; margin: 0; cursor: pointer;
+  position: absolute; inset: 0; width: 100%; height: 100%; background: none;
+}
+.bf26 .vsl-poster img {
+  width: 100%; height: 100%; object-fit: cover; filter: brightness(.82);
+  transition: transform .6s var(--ease-out), filter .4s;
+}
+.bf26 .vsl-poster:hover img { transform: scale(1.03); filter: brightness(.95); }
+.bf26 .vsl-play {
+  position: absolute; left: 50%; top: 50%; width: 84px; height: 84px; margin: -42px 0 0 -42px;
+  border-radius: 50%; background: var(--accent); color: var(--accent-ink, #fff);
+  display: grid; place-items: center;
+  box-shadow: 0 0 0 10px hsl(from var(--accent) h s 42.4% / .22), 0 18px 40px rgba(0,0,0,.5);
+  transition: transform .25s var(--ease-out);
+}
+.bf26 .vsl-play svg { width: 34px; height: 34px; margin-left: 4px; }
+.bf26 .vsl-poster:hover .vsl-play { transform: scale(1.06); }
+.bf26 .vsl figcaption {
+  display: flex; align-items: center; gap: 10px; margin-top: 14px;
+  font-size: 14px; color: var(--cream);
+}
+.bf26 .vsl-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); }
+
+@media (max-width: 900px) {
+  .bf26 .hero { min-height: 0; }
+  .bf26 .hero-bg img { object-position: var(--hero-pos-m, var(--hero-pos, 50% 30%)); }
+  .bf26 .hero-bg::after {
+    background: linear-gradient(180deg, rgba(0,0,0,.68) 0%, rgba(0,0,0,.78) 45%, rgba(0,0,0,.93) 72%, #000 100%);
+  }
+  .bf26 .hero-grid { grid-template-columns: 1fr; gap: 36px; padding-top: 12px; }
+  .bf26 .vsl { width: min(100%, 300px); justify-self: center; }
+  .bf26 .hero-phone { font-size: 14px; }
+
+  /* Single column: everything in the copy block centers on the page axis. */
+  .bf26 .hero-copy { text-align: center; }
+  .bf26 .hero-lead, .bf26 .hero-terms { margin-inline: auto; }
+  .bf26 .hero-terms { display: block; text-align: center; max-width: 440px; }
+  .bf26 .hero-terms svg { display: inline-block; vertical-align: -3px; margin: 0 6px 0 0; }
+  .bf26 .hero-actions { flex-direction: column; justify-content: center; }
+  .bf26 .hero-rating { align-items: center; }
+}
+@media (max-width: 480px) {
+  .bf26 .hero-lead { font-size: 15.5px; }
+  .bf26 .hero-actions .btn { width: 100%; }
+  .bf26 .vsl-play { width: 68px; height: 68px; margin: -34px 0 0 -34px; }
+}
+
+/* Hero fits one screen: the headline and the VSL also scale with the viewport
+   height, so on short laptop screens (1280x720) the CTA stays above the fold. */
+.bf26 .hero-title { font-size: clamp(64px, min(16vw, 23svh), 232px); }
+.bf26 .hero-belt { margin-block: 1.8svh 2svh; }
+.bf26 .vsl { width: min(clamp(220px, 22vw, 320px), 38svh); }
+.bf26 .hero-grid { padding-top: 1svh; padding-bottom: 3svh; }
+@media (max-width: 900px) {
+  .bf26 .hero { min-height: 100svh; }
+  /* Phones keep the big headline, capped by height on short screens. */
+  .bf26 .hero-title { font-size: clamp(64px, min(28vw, 13svh), 140px); }
+}

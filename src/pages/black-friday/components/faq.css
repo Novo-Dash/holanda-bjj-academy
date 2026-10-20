@@ -1,0 +1,169 @@
+/* Black Friday LP: every rule is scoped under .bf26 (see BlackFridayPage). */
+.bf26 .faq {
+  position: relative; margin-top: -1px;
+  padding: 41px 0 0;
+  background: linear-gradient(180deg, var(--arena-deep) 0%, hsl(from var(--arena) h s 7.3%) 55%, hsl(from var(--arena) h s 3.3%) 100%);
+  interpolate-size: allow-keywords;
+}
+.bf26 .faq-col { max-width: 880px; }
+
+.bf26 .faq-head { text-align: center; margin-bottom: 44px; }
+.bf26 .faq-eyebrow { margin: 0 0 14px; color: var(--warm); }
+.bf26 .faq h2 {
+  margin: 0 0 14px;
+  font: var(--display-style) 700 clamp(44px, 7vw, 88px)/.9 var(--display);
+  letter-spacing: -.005em; text-transform: uppercase; text-wrap: balance;
+}
+.bf26 .faq-sub { margin: 0 auto; max-width: 52ch; text-wrap: balance; color: rgba(255,255,255,.72); font-size: 17px; }
+
+/* Accordion: glass cards */
+.bf26 .faq-list { display: flex; flex-direction: column; gap: 12px; }
+.bf26 .faq-item {
+  position: relative; overflow: hidden;
+  border-radius: 16px;
+  background: linear-gradient(180deg, rgba(255,255,255,.055) 0%, rgba(255,255,255,.025) 100%);
+  border: 1px solid rgba(255,255,255,.09);
+  transition: background .35s, border-color .35s, box-shadow .35s;
+}
+/* Red rank bar with a white stripe, lit when open. */
+.bf26 .faq-item::before {
+  content: ''; position: absolute; left: 0; top: 18px; bottom: 18px; width: 4px; border-radius: 0 4px 4px 0;
+  background: linear-gradient(180deg, var(--accent) 0 62%, #f3f1ec 62% 72%, var(--accent) 72%);
+  transform: scaleY(0); transform-origin: 50% 0; transition: transform .45s var(--ease-out);
+}
+.bf26 .faq-item:hover { border-color: rgba(255,255,255,.18); background: linear-gradient(180deg, rgba(255,255,255,.075) 0%, rgba(255,255,255,.035) 100%); }
+.bf26 .faq-item[open] {
+  border-color: rgba(255,255,255,.2);
+  background:
+    radial-gradient(80% 120% at 0% 0%, hsl(from var(--accent) h s 42.4% / .16), transparent 60%),
+    linear-gradient(180deg, rgba(255,255,255,.09) 0%, rgba(255,255,255,.04) 100%);
+  box-shadow: 0 24px 50px -28px rgba(0,0,0,.8);
+}
+.bf26 .faq-item[open]::before { transform: scaleY(1); }
+
+.bf26 .faq-item summary {
+  list-style: none; cursor: pointer;
+  display: flex; align-items: center; gap: 18px;
+  padding: 22px 22px 22px 26px;
+}
+.bf26 .faq-item summary::-webkit-details-marker { display: none; }
+.bf26 .faq-item summary:focus-visible { outline: 2px solid var(--warm); outline-offset: -4px; border-radius: 16px; }
+
+.bf26 .faq-num {
+  flex: none; display: grid; place-items: center; width: 40px; height: 40px; border-radius: 12px;
+  font: 800 13px/1 var(--display); letter-spacing: .04em; color: rgba(255,255,255,.75);
+  background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.1);
+  transition: background .35s, color .35s, border-color .35s;
+}
+.bf26 .faq-item[open] .faq-num { background: hsl(from var(--accent) h s 42.4% / .18); border-color: hsl(from var(--accent) h s 67.6% / .45); color: #fff; }
+
+.bf26 .faq-q { flex: 1; font: 700 19px/1.3 var(--display); color: #fff; }
+
+.bf26 .faq-toggle {
+  flex: none; display: grid; place-items: center; width: 40px; height: 40px; border-radius: 50%;
+  border: 1.5px solid rgba(255,255,255,.22); color: #fff;
+  transition: background .35s, border-color .35s, transform .45s var(--ease-out);
+}
+.bf26 .faq-toggle svg { width: 18px; height: 18px; }
+.bf26 .faq-item:hover .faq-toggle { border-color: rgba(255,255,255,.45); }
+.bf26 .faq-item[open] .faq-toggle {
+  color: var(--accent-ink, #fff);
+  background: var(--accent); border-color: var(--accent); transform: rotate(180deg);
+  box-shadow: 0 0 0 6px hsl(from var(--accent) h s 42.4% / .18);
+}
+
+/* Smooth height where ::details-content is supported; instant elsewhere. */
+.bf26 .faq-item::details-content {
+  block-size: 0; overflow: hidden;
+  transition: block-size .45s var(--ease-out), content-visibility .45s allow-discrete;
+}
+.bf26 .faq-item[open]::details-content { block-size: auto; }
+.bf26 .faq-a { padding: 0 72px 26px 84px; }
+.bf26 .faq-a p { margin: 0; color: rgba(255,255,255,.82); font-size: 17px; line-height: 1.65; max-width: 62ch; }
+.bf26 .faq-item[open] .faq-a p { animation: faq-in .5s var(--ease-out) .05s both; }
+@keyframes faq-in { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: none; } }
+
+/* Contact card closing the list. */
+.bf26 .faq-col { padding-bottom: 96px; }
+.bf26 .faq-contact {
+  display: flex; align-items: center; justify-content: space-between; gap: 20px; flex-wrap: wrap;
+  margin-top: 28px; padding: 24px 26px; border-radius: 16px;
+  background: linear-gradient(135deg, hsl(from var(--arena) h s 37.6%) 0%, var(--arena) 60%, hsl(from var(--arena) h s 19.6%) 100%);
+  border: 1px solid rgba(255,255,255,.14);
+}
+.bf26 .faq-contact-title { margin: 0 0 4px; font: 800 20px/1.2 var(--display); color: #fff; }
+.bf26 .faq-contact-sub { margin: 0; font-size: 15px; color: rgba(255,255,255,.75); }
+.bf26 .faq-call {
+  display: inline-flex; align-items: center; gap: 10px;
+  min-height: 52px; padding: 5px 22px 5px 6px; border-radius: 999px;
+  background: #fff; color: hsl(from var(--arena) h s 12%);
+  font: 500 16px/1 var(--body); text-decoration: none; font-variant-numeric: tabular-nums;
+  box-shadow: 0 12px 28px -14px rgba(0,0,0,.7);
+  transition: transform .25s var(--ease-out);
+}
+.bf26 .faq-call:hover { transform: translateY(-2px); }
+.bf26 .faq-call-icon { display: grid; place-items: center; width: 40px; height: 40px; border-radius: 50%; background: var(--accent); color: var(--accent-ink, #fff); }
+.bf26 .faq-call-icon svg { width: 18px; height: 18px; }
+
+@media (max-width: 600px) {
+  .bf26 .faq { padding: 33px 0 88px; }
+  .bf26 .faq-head { margin-bottom: 30px; }
+  .bf26 .faq-list { gap: 10px; }
+  .bf26 .faq-item summary { gap: 12px; padding: 18px 16px 18px 18px; }
+  .bf26 .faq-num { width: 34px; height: 34px; border-radius: 10px; font-size: 12px; }
+  .bf26 .faq-q { font-size: 17px; }
+  .bf26 .faq-toggle { width: 34px; height: 34px; }
+  .bf26 .faq-a { padding: 0 18px 22px 18px; }
+  .bf26 .faq-a p { font-size: 16px; }
+  .bf26 .faq-contact { padding: 22px 18px; }
+  .bf26 .faq-call { width: 100%; justify-content: center; padding-left: 6px; }
+}
+
+/* Full-width map closing the page, tinted into the navy, with an address card. */
+.bf26 .faq-map { position: relative; height: 520px; overflow: hidden; background: hsl(from var(--arena) h s 13.1%); }
+/* Wider than the section so the address (map center) lands right of the card. */
+.bf26 .faq-map iframe {
+  position: absolute; top: 0; left: 0; width: 130%; height: 100%; border: 0;
+  filter: grayscale(1) invert(.9) hue-rotate(var(--map-hue)) contrast(.95) brightness(.95);
+}
+.bf26 .faq-map-shade {
+  position: absolute; inset: 0; pointer-events: none;
+  background:
+    linear-gradient(180deg, hsl(from var(--arena) h s 3.3%) 0%, hsl(from var(--arena) h s 3.3% / 0) 22%),
+    linear-gradient(90deg, hsl(from var(--arena) h s 8.8% / .85) 0%, hsl(from var(--arena) h s 8.8% / .35) 45%, hsl(from var(--arena) h s 8.8% / 0) 70%),
+    hsl(from var(--arena) h s 26.3% / .22);
+}
+.bf26 .faq-map-pin {
+  position: absolute; left: 65%; top: 50%; width: 46px; height: 46px; margin: -46px 0 0 -23px;
+  color: var(--accent); pointer-events: none;
+  filter: drop-shadow(0 8px 12px rgba(0,0,0,.5));
+}
+.bf26 .faq-map-pin svg { width: 100%; height: 100%; }
+.bf26 .faq-map-inner { position: relative; height: 100%; display: flex; align-items: center; pointer-events: none; }
+.bf26 .faq-map-card {
+  pointer-events: auto; max-width: 380px; padding: 28px; border-radius: 16px;
+  background: hsl(from var(--arena) h s 8.8% / .82); border: 1px solid rgba(255,255,255,.14);
+  -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px);
+  box-shadow: 0 30px 60px -30px rgba(0,0,0,.9);
+}
+.bf26 .faq-map-eyebrow { margin: 0 0 10px; color: var(--warm); }
+.bf26 .faq-map-logo { display: block; width: auto; height: 46px; margin: 4px 0 16px; }
+.bf26 .faq-map-name { margin: 0 0 8px; font: 900 26px/1.05 var(--display); color: #fff; }
+.bf26 .faq-map-addr { margin: 0 0 20px; font-size: 16px; line-height: 1.55; color: rgba(255,255,255,.8); }
+.bf26 .faq-map-btn {
+  display: inline-flex; align-items: center; gap: 8px; min-height: 48px; padding: 0 20px; border-radius: 999px;
+  background: var(--accent); color: var(--accent-ink, #fff); font: 500 15px/1 var(--body); text-decoration: none;
+  box-shadow: 0 12px 26px -12px hsl(from var(--accent) h s 42.4% / .8); transition: background .2s;
+}
+.bf26 .faq-map-btn:hover { background: hsl(from var(--accent) h s 48%); }
+.bf26 .faq-map-btn svg { width: 18px; height: 18px; }
+
+@media (max-width: 600px) {
+  .bf26 .faq-col { padding-bottom: 64px; }
+  .bf26 .faq-map { height: auto; display: flex; flex-direction: column; }
+  .bf26 .faq-map iframe { position: relative; width: 100%; height: 320px; }
+  .bf26 .faq-map-shade { bottom: auto; height: 320px; background: linear-gradient(180deg, hsl(from var(--arena) h s 3.3%) 0%, hsl(from var(--arena) h s 3.3% / 0) 25%), hsl(from var(--arena) h s 26.3% / .22); }
+  .bf26 .faq-map-pin { left: 50%; top: 160px; }
+  .bf26 .faq-map-inner { height: auto; padding-block: 0 40px; margin-top: -48px; }
+  .bf26 .faq-map-card { max-width: none; width: 100%; padding: 22px; }
+}

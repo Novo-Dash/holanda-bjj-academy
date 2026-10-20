@@ -3,8 +3,9 @@ import react from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
 import { fileURLToPath, URL } from 'node:url'
 
-/* Duas entradas (MPA). A `/` é a página de sempre; a `/kids` é a LP de kids
-   (prd-HOLK-001.md), com HTML, CSS, fontes e JS próprios. Ser entrada e não
+/* Três entradas (MPA). A `/` é a página de sempre; a `/kids` é a LP de kids
+   (prd-HOLK-001.md), com HTML, CSS, fontes e JS próprios; a `/black-friday` é
+   a LP da campanha (src/pages/black-friday), no mesmo esquema. Ser entrada e não
    rota de router é o que garante que o bundle da `/` não mude de tamanho por
    causa da Kids, e que a Kids não carregue nada da `/` (motion, Tailwind). */
 export default defineConfig({
@@ -18,6 +19,7 @@ export default defineConfig({
       input: {
         main: fileURLToPath(new URL('./index.html', import.meta.url)),
         kids: fileURLToPath(new URL('./kids/index.html', import.meta.url)),
+        'black-friday': fileURLToPath(new URL('./black-friday/index.html', import.meta.url)),
       },
       /* O React é o que as duas páginas compartilham: num chunk com nome
          próprio, o cache do navegador serve a quem passa de uma para a outra,

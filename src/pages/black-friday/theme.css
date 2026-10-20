@@ -1,0 +1,52 @@
+/* ════════════════════════════════════════════════════════════════════
+   BLACK FRIDAY THEME — Holanda BJJ Academy (Framingham, MA)
+   The only stylesheet that changes from one academy to the next.
+   Every other color in the kit is derived from --accent and --arena
+   (lighter/darker shades keep their hue), so a new brand only sets these.
+   Source: the main LP (src/index.css): torii red, warm ink, Sofia Sans
+   Extra Condensed for titles and Archivo for text.
+   ════════════════════════════════════════════════════════════════════ */
+
+/* Fonts: the same self-hosted files as the main LP (public/fonts, preloaded by
+   black-friday/index.html), declared here because /black-friday is its own
+   entry and does not load src/index.css. The Archivo file is the `wdth` cut
+   (font-stretch range declared, or the axis is silently ignored); Sofia Extra
+   Condensed is narrow by design and has weight only. Neither ships an italic. */
+@font-face {
+  font-family: 'Archivo Variable';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 100 900;
+  font-stretch: 62% 125%;
+  src: url('/fonts/archivo-latin-wdth.woff2') format('woff2-variations');
+}
+@font-face {
+  font-family: 'Sofia Sans Extra Condensed Variable';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 1 1000;
+  src: url('/fonts/sofia-extra-condensed-latin-wght.woff2') format('woff2-variations');
+}
+
+.bf26 {
+  /* Brand (src/index.css: --color-red / --color-ink-2) */
+  --accent: #c8161d;          /* Torii red, the main LP's CTA. White text on it: 5.9:1 (AA). */
+  --arena: #211d19;           /* The LP's warm ink (--color-ink-2): arena, map tint, FAQ ground. */
+
+  /* Type: --display for titles, labels, buttons; --body for text. */
+  --display: 'Sofia Sans Extra Condensed Variable', 'Sofia Sans Extra Condensed', 'Archivo Narrow', Impact, sans-serif;
+  --body: 'Archivo Variable', 'Archivo', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --display-style: normal;    /* Upright uppercase titles, like the main LP's .display. */
+
+  /* Google Maps tint: rotates the inverted map toward --arena (hue 30deg). */
+  --map-hue: 355deg;
+
+  /* No italic file: never let the browser fake a slanted Sofia or Archivo. */
+  font-synthesis: none;
+}
+
+/* The mark is the round torii badge, not a wordmark: it needs more height
+   than the kit's 42/46px to stay legible. .bf26.bf26 outranks the component
+   CSS, which loads after this file. */
+.bf26.bf26 .hero-brand img { height: 64px; }
+.bf26.bf26 .faq-map-logo { height: 76px; }

@@ -1,3 +1,5 @@
 export { BookingForm, BookingProvider, BookPage, useBooking } from './Booking'
+export { captureLead } from './lead'
+export type { BookingData } from './webhook'
 export { fetchPrograms, groupPrograms, labelOf, shortName, timeLabel, type Program } from './programs'
 export { client, units, unitOf } from './config'

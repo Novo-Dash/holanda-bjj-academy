@@ -3,7 +3,8 @@
   "rewrites": [
     { "source": "/kids", "destination": "/kids/index.html" },
     { "source": "/kids/b", "destination": "/kids/b/index.html" },
-    { "source": "/kids/c", "destination": "/kids/c/index.html" }
+    { "source": "/kids/c", "destination": "/kids/c/index.html" },
+    { "source": "/black-friday", "destination": "/black-friday/index.html" }
   ],
   "headers": [
     {
