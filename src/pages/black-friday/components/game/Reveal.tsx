@@ -3,6 +3,7 @@ import { BookingForm } from '@/nd'
 import { ACADEMY, RESERVE_HOURS, SOURCE, type Prize } from '@/pages/black-friday/data/campaign'
 import { bookingFor, formatUSPhone, isValidUSPhone, submitClaim, type Contact } from '@/pages/black-friday/lib/lead'
 import type { Reservation } from '@/pages/black-friday/lib/reservation'
+import PrizeShow from './PrizeShow'
 
 interface Props {
   prize: Prize
@@ -79,9 +80,10 @@ export default function Reveal({ prize, reservation, headingRef }: Props) {
         </svg>
 
         <p className="voucher-for">{contact ? `Reserved for ${first}` : prize.pickedFor}</p>
-        <h3 className="voucher-title" ref={headingRef} tabIndex={-1}>
+        <h3 className={`voucher-title${prize.show?.length ? ' sr-only' : ''}`} ref={headingRef} tabIndex={-1}>
           {prize.title}
         </h3>
+        {prize.show?.length ? <PrizeShow perks={prize.show} /> : null}
         <p className="voucher-detail">{prize.detail}</p>
 
         <div className={`voucher-timer${clock.expired ? ' is-expired' : ''}`}>

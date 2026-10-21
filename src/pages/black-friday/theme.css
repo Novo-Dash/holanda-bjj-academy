@@ -31,7 +31,7 @@
 .bf26 {
   /* Brand (src/index.css: --color-red / --color-ink-2) */
   --accent: #c8161d;          /* Torii red, the main LP's CTA. White text on it: 5.9:1 (AA). */
-  --arena: #211d19;           /* The LP's warm ink (--color-ink-2): arena, map tint, FAQ ground. */
+  --arena: #7a0e12;           /* Section 2 in red (20/10): the Torii red, deepened. Arena, map tint, FAQ ground. */
 
   /* Type: --display for titles, labels, buttons; --body for text. */
   --display: 'Sofia Sans Extra Condensed Variable', 'Sofia Sans Extra Condensed', 'Archivo Narrow', Impact, sans-serif;
@@ -39,7 +39,7 @@
   --display-style: normal;    /* Upright uppercase titles, like the main LP's .display. */
 
   /* Google Maps tint: rotates the inverted map toward --arena (hue 30deg). */
-  --map-hue: 355deg;
+  --map-hue: 325deg;
 
   /* No italic file: never let the browser fake a slanted Sofia or Archivo. */
   font-synthesis: none;

@@ -72,11 +72,22 @@ export const VSL: { src: string | null; poster: string | null; label: string } =
 
 export type PrizeKey = 'kid' | 'family' | 'adultNew' | 'adultBack'
 
+/** One perk of the offer; each kind has its own animation on the voucher. */
+export type Perk =
+  | { kind: 'bonus'; base: number; plus: number; unit: string; label: string }
+  | { kind: 'price'; was: string; now: string; label: string }
+  | { kind: 'percent'; value: number; label: string }
+  | { kind: 'free'; label: string }
+  | { kind: 'gift'; title: string; label: string }
+  | { kind: 'total'; value: string; items: string[] }
+
 export interface Prize {
   key: PrizeKey
   pickedFor: string
   title: string
   detail: string
+  /** The offer as animated perk tiles on the voucher (components/game/PrizeShow). */
+  show?: Perk[]
   /** GHL tag sent with the lead. */
   tag: string
 }
@@ -89,38 +100,42 @@ export interface Prize {
 export const GIFT_MODE: 'match' | 'single' = 'match'
 export const SINGLE_PRIZE: PrizeKey = 'kid'
 
-// Holanda has not defined its Black Friday gifts yet: every prize and condition is TO CONFIRM with the client.
+// The client's Black Friday offer (20/10/2026).
 export const PRIZES: Record<PrizeKey, Prize> = {
   kid: {
     key: 'kid',
     pickedFor: 'Picked for your child',
-    title: '[Kids gift — TO CONFIRM]',
-    detail: '[Redemption terms — TO CONFIRM]',
-    tag: 'bf26-premio-kimono-kids',
+    title: '50% off your first gi',
+    detail: 'Enroll between Oct 31 and Nov 15. Only the first 10 students get it. Kids and adults.',
+    show: [{ kind: 'percent', value: 50, label: 'Off your first gi, kids and adults' }, { kind: 'gift', title: '10 spots', label: 'Only the first 10 students, Oct 31 to Nov 15' }],
+    tag: 'bf26-kimono50-kids',
   },
   family: {
     key: 'family',
     pickedFor: 'Picked for your family',
-    title: '[Family gift — TO CONFIRM]',
-    detail: '[Redemption terms — TO CONFIRM]',
-    tag: 'bf26-premio-familia',
+    title: '50% off your first gi',
+    detail: 'Enroll between Oct 31 and Nov 15. Only the first 10 students get it. Kids and adults.',
+    show: [{ kind: 'percent', value: 50, label: 'Off your first gi, kids and adults' }, { kind: 'gift', title: '10 spots', label: 'Only the first 10 students, Oct 31 to Nov 15' }],
+    tag: 'bf26-kimono50-familia',
   },
   adultNew: {
     key: 'adultNew',
     pickedFor: 'Picked for first-timers',
-    title: '[Membership discount — TO CONFIRM]',
-    detail: '[Redemption terms — TO CONFIRM]',
-    tag: 'bf26-premio-mensalidade',
+    title: '50% off your first gi',
+    detail: 'Enroll between Oct 31 and Nov 15. Only the first 10 students get it. Kids and adults.',
+    show: [{ kind: 'percent', value: 50, label: 'Off your first gi, kids and adults' }, { kind: 'gift', title: '10 spots', label: 'Only the first 10 students, Oct 31 to Nov 15' }],
+    tag: 'bf26-kimono50-iniciante',
   },
   adultBack: {
     key: 'adultBack',
     pickedFor: 'Picked for returning athletes',
-    title: '[Returning athlete gift — TO CONFIRM]',
-    detail: '[Redemption terms — TO CONFIRM]',
-    tag: 'bf26-premio-kimono-adulto',
+    title: '50% off your first gi',
+    detail: 'Enroll between Oct 31 and Nov 15. Only the first 10 students get it. Kids and adults.',
+    show: [{ kind: 'percent', value: 50, label: 'Off your first gi, kids and adults' }, { kind: 'gift', title: '10 spots', label: 'Only the first 10 students, Oct 31 to Nov 15' }],
+    tag: 'bf26-kimono50-retorno',
   },
 }
 
 /** FAQ answer for "What gifts can I unlock?". */
 export const GIFTS_SUMMARY =
-  'It depends on who is training: kids, families, first-timers and returning athletes each get their own gift. [Gift list — TO CONFIRM]'
+  'Everyone unlocks the same Black Friday deal: 50% off your first gi when you enroll between Oct 31 and Nov 15. Only the first 10 students get it.'

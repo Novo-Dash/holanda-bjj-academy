@@ -26,7 +26,7 @@ export const FAQ: QA[] = [
   },
   {
     q: 'How do I use my gift?',
-    a: '[How and until when to redeem your gift — TO CONFIRM]',
+    a: 'Claim it on this page, then book your free trial class. Your offer is applied when you enroll at the academy.',
   },
   {
     q: 'Do I need experience or to be in shape?',
