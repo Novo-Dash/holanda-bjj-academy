@@ -1,5 +1,5 @@
 import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
+import { createRoot, hydrateRoot } from 'react-dom/client'
 
 /* A fonte vem por pacote, nunca por <link>: o CDN do Google é um terceiro no
    caminho crítico e um domínio a mais para liberar no CSP.
@@ -37,10 +37,24 @@ import './index.css'
 import App from './App'
 import { BookingProvider } from './nd'
 
-createRoot(document.getElementById('root')!).render(
+const app = (
   <StrictMode>
     <BookingProvider>
       <App />
     </BookingProvider>
   </StrictMode>
 )
+
+/* O #root chega PRERENDERIZADO (scripts/prerender-main.mjs): o HTML já traz a
+   página inteira para crawlers e scrapers que não rodam JS, e aqui o React
+   hidrata em vez de pintar do zero.
+
+   A exceção é quem pede menos movimento. O prerender sai com o estado inicial
+   dos gestos de entrada (opacidade 0, que o `whileInView` anima), mas para essa
+   pessoa o Reveal renderiza SEM estado inicial, e numa hidratação o React não
+   corrige atributo divergente: o texto ficaria em opacidade 0 para sempre.
+   Nesse caso a árvore é pintada do zero, como era antes do prerender. */
+const root = document.getElementById('root')!
+const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+if (root.firstElementChild && !reduce) hydrateRoot(root, app)
+else createRoot(root).render(app)

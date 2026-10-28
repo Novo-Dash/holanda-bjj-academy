@@ -15,5 +15,5 @@
     "noUnusedParameters": true,
     "types": ["node"]
   },
-  "include": ["vite.config.ts", "vite.ssr.config.ts"]
+  "include": ["vite.config.ts", "vite.ssr.config.ts", "vite.ssr.main.config.ts"]
 }

@@ -59,11 +59,12 @@
     <!-- JPEG e 1200x630: é o que o Facebook e o WhatsApp aceitam sem discussão.
          A arte é gerada com a mesma Archivo da página, então o cartão sai na
          letra do site em vez de numa fonte de sistema. -->
-    <meta property="og:image" content="https://lp.holandabjjacademy.com/og.jpg" />
+    <meta property="og:image" content="https://lp.holandabjjacademy.com/og-image-v2.jpg" />
+    <meta property="og:image:secure_url" content="https://lp.holandabjjacademy.com/og-image-v2.jpg" />
     <meta property="og:image:type" content="image/jpeg" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
-    <meta property="og:image:alt" content="Holanda BJJ Academy, Framingham, Massachusetts" />
+    <meta property="og:image:alt" content="Holanda BJJ Academy logo over training photos: Brazilian jiu-jitsu in Framingham, MA. Your first class is free." />
 
     <!-- Twitter / X -->
     <meta name="twitter:card" content="summary_large_image" />
@@ -72,7 +73,8 @@
       name="twitter:description"
       content="Beginner-friendly classes for adults, kids and no-gi at Holanda BJJ Academy. No experience needed, and your first class is free."
     />
-    <meta name="twitter:image" content="https://lp.holandabjjacademy.com/og.jpg" />
+    <meta name="twitter:image" content="https://lp.holandabjjacademy.com/og-image-v2.jpg" />
+    <meta name="twitter:image:alt" content="Holanda BJJ Academy logo over training photos: Brazilian jiu-jitsu in Framingham, MA. Your first class is free." />
 
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
     <link rel="icon" type="image/png" sizes="64x64" href="/favicon-64.png" />
@@ -82,8 +84,11 @@
     <link rel="dns-prefetch" href="https://www.clarity.ms" />
 
     <!--
-      Schema da academia. Só dados CONFIRMADOS entram aqui, e é por isso que ele
-      é curto.
+      Schema da academia. Só dados CONFIRMADOS entram aqui: o que a página já
+      mostra (endereço, telefone, e-mail, programas e o texto de cada um, a
+      oferta da primeira aula grátis, a VSL) e o geo do endereço confirmado.
+      Os quatro nós (academia, site, página e vídeo) se ligam por @id, e a
+      /kids reaproveita o mesmo #academy.
 
       O postalCode entrou: o briefing trazia 10702, que não é CEP de
       Massachusetts, e o Google geocodifica este endereço exato como 01702.
@@ -102,42 +107,158 @@
           justamente o tipo de marcação que rende aviso. A nota aparece na
           seção de avaliações da página, que é onde ela vale.
         · priceRange — a tabela de preços não veio.
-        · VideoObject — a VSL ainda não foi gravada. Quando ela existir, entra
-          aqui com name, description, thumbnailUrl, uploadDate e contentUrl.
 
       À medida que cada um for confirmado, entra aqui e sai da lista.
     -->
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
-        "@type": "SportsActivityLocation",
-        "@id": "https://lp.holandabjjacademy.com/#academy",
-        "name": "Holanda BJJ Academy",
-        "description": "Beginner-friendly Brazilian jiu-jitsu academy in Framingham, Massachusetts, with classes for adults, kids ages 4 to 13 and no-gi. The first class is free.",
-        "url": "https://lp.holandabjjacademy.com/",
-        "image": "https://lp.holandabjjacademy.com/og.jpg",
-        "telephone": "+1-508-361-7778",
-        "email": "holanda.bjjacademy@gmail.com",
-        "address": {
-          "@type": "PostalAddress",
-          "streetAddress": "47 Franklin Street",
-          "postalCode": "01702",
-          "addressLocality": "Framingham",
-          "addressRegion": "MA",
-          "addressCountry": "US"
-        },
-        "logo": "https://lp.holandabjjacademy.com/logo.webp",
-        "geo": { "@type": "GeoCoordinates", "latitude": 42.2793633, "longitude": -71.4183778 },
-        "hasMap": "https://www.google.com/maps/search/?api=1&query=47+Franklin+Street,+Framingham,+MA+01702",
-        "areaServed": { "@type": "City", "name": "Framingham" },
-        "sport": "Brazilian Jiu-Jitsu",
-        "knowsLanguage": ["en-US", "pt-BR"],
-        "sameAs": ["https://www.instagram.com/holanda.bjjacademy/"],
-        "employee": {
-          "@type": "Person",
-          "name": "Diego do Nascimento Holanda",
-          "jobTitle": "Head coach"
-        }
+        "@graph": [
+          {
+            "@type": "SportsActivityLocation",
+            "@id": "https://lp.holandabjjacademy.com/#academy",
+            "name": "Holanda BJJ Academy",
+            "alternateName": "Holanda BJJ",
+            "description": "Beginner-friendly Brazilian jiu-jitsu academy in Framingham, Massachusetts, with classes for adults, kids ages 4 to 13 and no-gi. The first class is free.",
+            "url": "https://lp.holandabjjacademy.com/",
+            "logo": "https://lp.holandabjjacademy.com/logo.webp",
+            "image": "https://lp.holandabjjacademy.com/og-image-v2.jpg",
+            "telephone": "+1-508-361-7778",
+            "email": "holanda.bjjacademy@gmail.com",
+            "address": {
+              "@type": "PostalAddress",
+              "streetAddress": "47 Franklin Street",
+              "postalCode": "01702",
+              "addressLocality": "Framingham",
+              "addressRegion": "MA",
+              "addressCountry": "US"
+            },
+            "geo": {
+              "@type": "GeoCoordinates",
+              "latitude": 42.2793633,
+              "longitude": -71.4183778
+            },
+            "hasMap": "https://www.google.com/maps/search/?api=1&query=47+Franklin+Street,+Framingham,+MA+01702",
+            "areaServed": {
+              "@type": "City",
+              "name": "Framingham, MA"
+            },
+            "knowsAbout": [
+              "Brazilian Jiu-Jitsu",
+              "Beginner Brazilian Jiu-Jitsu",
+              "Kids Brazilian Jiu-Jitsu",
+              "No-Gi Grappling"
+            ],
+            "knowsLanguage": [
+              "en-US",
+              "pt-BR"
+            ],
+            "sameAs": [
+              "https://www.instagram.com/holanda.bjjacademy/"
+            ],
+            "employee": {
+              "@type": "Person",
+              "@id": "https://lp.holandabjjacademy.com/#diego",
+              "name": "Diego do Nascimento Holanda",
+              "alternateName": "Professor Diego Holanda",
+              "jobTitle": "Head coach",
+              "worksFor": {
+                "@id": "https://lp.holandabjjacademy.com/#academy"
+              }
+            },
+            "makesOffer": {
+              "@type": "Offer",
+              "name": "Free trial class",
+              "price": "0",
+              "priceCurrency": "USD",
+              "description": "The first class is free, for adults, kids and no-gi. No experience needed.",
+              "url": "https://lp.holandabjjacademy.com/"
+            },
+            "hasOfferCatalog": {
+              "@type": "OfferCatalog",
+              "name": "Programmes",
+              "itemListElement": [
+                {
+                  "@type": "Offer",
+                  "itemOffered": {
+                    "@type": "Service",
+                    "name": "Beginners",
+                    "description": "A dedicated entry point for complete beginners. You learn the fundamentals in a calm, structured setting: no uniform and no experience required for your first class."
+                  }
+                },
+                {
+                  "@type": "Offer",
+                  "itemOffered": {
+                    "@type": "Service",
+                    "name": "Adults Jiu-Jitsu",
+                    "description": "The core programme. A curriculum that starts from the very first grip and keeps challenging experienced grapplers. Technical, controlled and completely beginner-friendly."
+                  }
+                },
+                {
+                  "@type": "Offer",
+                  "itemOffered": {
+                    "@type": "Service",
+                    "name": "Jiu-Jitsu Kids",
+                    "url": "https://lp.holandabjjacademy.com/kids",
+                    "audience": {
+                      "@type": "PeopleAudience",
+                      "suggestedMinAge": 4,
+                      "suggestedMaxAge": 13
+                    },
+                    "description": "Confidence, focus and discipline, taught as habits instead of speeches. Children train with children their own size, and parents are welcome to stay and watch."
+                  }
+                },
+                {
+                  "@type": "Offer",
+                  "itemOffered": {
+                    "@type": "Service",
+                    "name": "No-Gi Grappling",
+                    "description": "Grappling without the kimono: faster exchanges and wrestling-based transitions. A perfect complement to your gi training, or a starting point on its own."
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "@type": "WebSite",
+            "@id": "https://lp.holandabjjacademy.com/#website",
+            "url": "https://lp.holandabjjacademy.com/",
+            "name": "Holanda BJJ Academy",
+            "inLanguage": "en-US",
+            "publisher": {
+              "@id": "https://lp.holandabjjacademy.com/#academy"
+            }
+          },
+          {
+            "@type": "WebPage",
+            "@id": "https://lp.holandabjjacademy.com/#page",
+            "url": "https://lp.holandabjjacademy.com/",
+            "name": "Holanda BJJ Academy · Brazilian Jiu-Jitsu in Framingham, MA",
+            "inLanguage": "en-US",
+            "isPartOf": {
+              "@id": "https://lp.holandabjjacademy.com/#website"
+            },
+            "about": {
+              "@id": "https://lp.holandabjjacademy.com/#academy"
+            },
+            "video": {
+              "@id": "https://lp.holandabjjacademy.com/#vsl"
+            },
+            "primaryImageOfPage": "https://lp.holandabjjacademy.com/og-image-v2.jpg",
+            "dateModified": "2026-10-28"
+          },
+          {
+            "@type": "VideoObject",
+            "@id": "https://lp.holandabjjacademy.com/#vsl",
+            "name": "Holanda BJJ Academy: your first jiu-jitsu class",
+            "description": "Holanda BJJ Academy in Framingham, MA: beginner-friendly Brazilian jiu-jitsu classes for adults, kids and no-gi, and how the free first class works.",
+            "thumbnailUrl": "https://lp.holandabjjacademy.com/video/vsl-poster.webp",
+            "contentUrl": "https://lp.holandabjjacademy.com/video/vsl.mp4",
+            "uploadDate": "2026-09-18",
+            "duration": "PT1M11S",
+            "inLanguage": "en-US"
+          }
+        ]
       }
     </script>
     <!-- nd:tracking:start (Novo Dash kit; gerado de src/nd/client.ts, não editar à mão) -->
