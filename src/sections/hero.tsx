@@ -96,10 +96,6 @@ export function Hero({ onBook }: { onBook: () => void }) {
             </Reveal>
 
             {/* O espaço explícito no fim de cada bloco NÃO é decoração: sem ele
-                o `textContent` do h1 sai tudo emendado ("Brazilianjiu-jitsu
-                in"), que é o que o leitor de tela pronuncia. Em elemento de
-                bloco ele colapsa na renderização e não empurra nada. */}
-            {/* O espaço explícito no fim de cada bloco NÃO é decoração: sem ele
                 o `textContent` do h1 sai tudo emendado ("jiu-jitsuclass"), que
                 é o que o leitor de tela pronuncia. Em elemento de bloco ele
                 colapsa na renderização e não empurra nada.
@@ -110,7 +106,8 @@ export function Hero({ onBook }: { onBook: () => void }) {
                 longa com uma pausa no meio. */}
             <h1 className="display type-hero mt-6 text-paper">
               <Reveal gesture="veil" as="span" className="block">
-                Your first jiu-jitsu{' '}
+                {/* nowrap: em 320px o hífen quebrava a palavra em "JIU-" / "JITSU" */}
+                Your first <span className="whitespace-nowrap">jiu-jitsu</span>{' '}
               </Reveal>
               <Reveal gesture="veil" delay={0.08} as="span" className="block">
                 class is easier{' '}

@@ -69,7 +69,7 @@ export function Footer() {
                 <li key={item.href}>
                   <a
                     href={item.href}
-                    className="inline-block py-1.5 text-paper/85 no-underline hover:text-paper"
+                    className="inline-block py-1.5 text-paper/85 no-underline hover:text-paper max-lg:inline-flex max-lg:min-h-11 max-lg:items-center"
                   >
                     {item.label}
                   </a>
@@ -96,7 +96,7 @@ export function Footer() {
               href={site.mapsDirections}
               target="_blank"
               rel="noreferrer"
-              className="label mt-3 inline-flex items-center gap-3 py-1.5 text-paper/85 no-underline hover:text-paper"
+              className="label mt-3 inline-flex items-center gap-3 py-1.5 max-lg:min-h-11 text-paper/85 no-underline hover:text-paper"
             >
               Get directions
               <span aria-hidden="true" className="block h-1.5 w-1.5 rotate-45 bg-red" />
@@ -105,7 +105,7 @@ export function Footer() {
             <p className="mt-4 text-[0.88rem]">
               <a
                 href={site.phoneHref}
-                className="tnum inline-block py-1 text-paper/85 no-underline hover:text-paper"
+                className="tnum inline-block py-1 text-paper/85 no-underline hover:text-paper max-lg:inline-flex max-lg:min-h-11 max-lg:items-center"
               >
                 {site.phone}
               </a>
@@ -113,7 +113,7 @@ export function Footer() {
               {site.email ? (
                 <a
                   href={`mailto:${site.email}`}
-                  className="inline-block py-1 text-paper/85 no-underline hover:text-paper"
+                  className="inline-block py-1 text-paper/85 no-underline hover:text-paper max-lg:inline-flex max-lg:min-h-11 max-lg:items-center"
                 >
                   {site.email}
                 </a>
@@ -135,7 +135,7 @@ export function Footer() {
               href={site.socials.instagram}
               target="_blank"
               rel="noreferrer"
-              className="inline-block py-1.5 text-paper/60 no-underline hover:text-paper"
+              className="inline-block py-1.5 text-paper/60 no-underline hover:text-paper max-lg:inline-flex max-lg:min-h-11 max-lg:items-center"
             >
               {site.socials.instagramHandle}
             </a>
@@ -144,7 +144,7 @@ export function Footer() {
                 href={site.socials.facebook ?? undefined}
                 target="_blank"
                 rel="noreferrer"
-                className="inline-block py-1.5 text-paper/60 no-underline hover:text-paper"
+                className="inline-block py-1.5 text-paper/60 no-underline hover:text-paper max-lg:inline-flex max-lg:min-h-11 max-lg:items-center"
               >
                 Facebook
               </a>
