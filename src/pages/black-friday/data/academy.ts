@@ -36,10 +36,10 @@ export const IMAGES = {
   /** Full-bleed hero background; darkened by the hero overlay. The main LP's hero: the academy mat. */
   hero: { src: '/hero.webp?v=2', position: '50% 55%', positionMobile: '42% 55%' },
   /** Logo that reads on a dark background (navbar + map card): the round torii badge, white ring. */
-  logo: { src: '/logo.webp', width: 512, height: 512 },
+  logo: { src: '/logo-160.webp', width: 160, height: 160 },
   /** Question 1 cards. */
-  me: { src: '/programs/adults.webp?v=2', position: '50% 30%' },
-  kid: { src: '/programs/kids.webp', position: '50% 38%' },
+  me: { src: '/programs/adults-720.webp?v=2', position: '50% 30%' },
+  kid: { src: '/programs/kids-720.webp', position: '50% 38%' },
   both: { src: '/kids/fc-5-800.webp', position: '45% 78%' },
 }
 

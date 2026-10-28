@@ -53,8 +53,21 @@ export function Vsl({ className }: { className?: string }) {
       },
       { rootMargin: '300px 0px', threshold: [0, 0.5] }
     )
-    io.observe(v)
-    return () => io.disconnect()
+    /* O vídeo (3 MB) só é armado DEPOIS do `load` e de mais dois segundos: armado
+       na hidratação ele disputava a banda com a fonte, o JS e as fotos da
+       primeira tela e era o que segurava o LCP no celular (9 s no Lighthouse).
+       Até lá aparece o pôster; o toque em "som" ou "play" carrega na hora. */
+    let timer = 0
+    const arm = () => {
+      timer = window.setTimeout(() => io.observe(v), 2000)
+    }
+    if (document.readyState === 'complete') arm()
+    else window.addEventListener('load', arm, { once: true })
+    return () => {
+      window.removeEventListener('load', arm)
+      window.clearTimeout(timer)
+      io.disconnect()
+    }
   }, [])
 
   const withSound = () => {

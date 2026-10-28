@@ -115,7 +115,9 @@ export function Nav({ onBook }: { onBook: () => void }) {
           className="block h-[4.5rem] w-[4.5rem] shrink-0"
         >
           <img
-            src="/logo.webp"
+            src="/logo-160.webp"
+          srcSet="/logo-160.webp 160w, /logo.webp 512w"
+          sizes="72px"
             alt=""
             width={512}
             height={512}

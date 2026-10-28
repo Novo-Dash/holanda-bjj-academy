@@ -15,3 +15,15 @@ import { twMerge } from 'tailwind-merge'
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
+
+/**
+ * srcset de uma foto local que tem a variante menor ao lado, por convenção de
+ * nome: `foo.webp?v=2` -> `foo-640.webp?v=2 640w, foo.webp?v=2 1121w`. As
+ * variantes são geradas da original (mesmo recorte, só menor); sem elas o
+ * celular baixava a foto de 1121px para um cartão de 350px.
+ */
+export function variantSrcSet(src: string, small: number, full: number) {
+  const [path, query] = src.split('?')
+  const q = query ? `?${query}` : ''
+  return `${path.replace(/\.webp$/, `-${small}.webp`)}${q} ${small}w, ${src} ${full}w`
+}

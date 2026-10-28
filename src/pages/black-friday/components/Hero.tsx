@@ -11,7 +11,7 @@ export default function Hero() {
         aria-hidden="true"
         style={{ '--hero-pos': IMAGES.hero.position, '--hero-pos-m': IMAGES.hero.positionMobile } as CSSProperties}
       >
-        <img src={IMAGES.hero.src} alt="" fetchPriority="high" decoding="async" />
+        <img src={IMAGES.hero.src} srcSet="/hero-960.webp?v=2 960w, /hero.webp?v=2 1920w" sizes="100vw" alt="" fetchPriority="high" decoding="async" />
       </div>
 
       <div className="wrap hero-top">

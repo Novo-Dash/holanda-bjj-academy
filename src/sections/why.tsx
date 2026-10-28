@@ -3,7 +3,7 @@ import { motion, useReducedMotion, useScroll, useTransform } from 'motion/react'
 import { Media, SectionHead } from '@/components/paper'
 import { ReasonIcon } from '@/components/icons'
 import { reasons, type Reason } from '@/data/site'
-import { cn } from '@/lib/utils'
+import { cn, variantSrcSet } from '@/lib/utils'
 
 /** Qual dos quatro cartões é o escuro. Um só: o cartão invertido é o acento da
     fileira, e acento repetido deixa de ser acento. O terceiro por ser o do meio
@@ -275,6 +275,8 @@ function ReasonCard({
       <div className={cn('relative shrink-0', pinned ? 'w-[46%]' : 'h-56 w-full')}>
         <Media
           src={reason.image}
+          srcSet={reason.image ? variantSrcSet(reason.image, 720, 835) : undefined}
+          sizes="(min-width: 1024px) 21vw, calc(100vw - 2.5rem)"
           alt={reason.imageAlt}
           brief={reason.brief}
           fill

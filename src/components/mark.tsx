@@ -73,7 +73,9 @@ export function Wordmark({
   return (
     <span className={cn('flex items-center gap-3', className)}>
       <img
-        src="/logo.webp"
+        src="/logo-160.webp"
+        srcSet="/logo-160.webp 160w, /logo.webp 512w"
+        sizes="44px"
         alt=""
         width={512}
         height={512}

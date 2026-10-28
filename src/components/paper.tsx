@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState, type MouseEvent, type ReactNode } from 'react'
-import { cn } from '@/lib/utils'
+import { cn, variantSrcSet } from '@/lib/utils'
 import { Mark } from '@/components/mark'
 import { Reveal } from '@/components/reveal'
 import { site } from '@/data/site'
@@ -63,6 +63,8 @@ export function PhotoBackdrop({
     <>
       <img
         src={site.heroImage.src}
+        srcSet={variantSrcSet(site.heroImage.src, 960, site.heroImage.width)}
+        sizes="100vw"
         alt={site.heroImage.alt}
         width={site.heroImage.width}
         height={site.heroImage.height}
@@ -124,6 +126,8 @@ export function Media({
   width,
   height,
   priority = false,
+  srcSet,
+  sizes,
 }: {
   src: string | null
   alt: string
@@ -144,6 +148,8 @@ export function Media({
   height: number
   /** Só o hero. Tira a imagem da fila preguiçosa e pede prioridade de rede. */
   priority?: boolean
+  srcSet?: string
+  sizes?: string
 }) {
   if (!src) {
     return (
@@ -173,6 +179,8 @@ export function Media({
     >
       <img
         src={src}
+        srcSet={srcSet}
+        sizes={sizes}
         alt={alt}
         width={width}
         height={height}
@@ -333,7 +341,25 @@ function PlayableVideo({
       },
       { rootMargin: '100% 0px' }
     )
-    arm.observe(el)
+    /* O arquivo só começa a descer DEPOIS do `load`, de mais dois segundos e
+       de um respiro ocioso. A VSL tem 6,7 MB: armada no primeiro quadro ela
+       disputava a banda com a fonte, o JS e as fotos da primeira tela, e era o
+       que segurava o LCP no celular (12 s no Lighthouse). Os dois segundos
+       cobrem a entrada animada do hero, que termina por volta de 1,3 s depois
+       da hidratação; só o `load` ainda deixava o vídeo começar antes dela. Até
+       lá quem aparece é o pôster, que é leve. */
+    let idle = 0
+    let timer = 0
+    const startArming = () => {
+      const w = window as Window & { requestIdleCallback?: (cb: () => void, o?: { timeout: number }) => number }
+      const go = () => arm.observe(el)
+      timer = window.setTimeout(() => {
+        if (w.requestIdleCallback) idle = w.requestIdleCallback(go, { timeout: 1000 })
+        else go()
+      }, 2000)
+    }
+    if (document.readyState === 'complete') startArming()
+    else window.addEventListener('load', startArming, { once: true })
 
     const toggle = new IntersectionObserver(
       (entries) => {
@@ -347,6 +373,10 @@ function PlayableVideo({
     toggle.observe(el)
 
     return () => {
+      window.removeEventListener('load', startArming)
+      const w = window as Window & { cancelIdleCallback?: (id: number) => void }
+      if (idle && w.cancelIdleCallback) w.cancelIdleCallback(idle)
+      window.clearTimeout(timer)
       arm.disconnect()
       toggle.disconnect()
     }

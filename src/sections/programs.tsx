@@ -3,7 +3,7 @@ import { SectionHead } from '@/components/paper'
 import { ArrowDiagonal } from '@/components/icons'
 import { Mark } from '@/components/mark'
 import { programs, type Program } from '@/data/site'
-import { cn } from '@/lib/utils'
+import { cn, variantSrcSet } from '@/lib/utils'
 
 /**
  * [II] PROGRAMAS — "quatro jeitos de começar", em quatro cartões de foto com
@@ -134,6 +134,8 @@ function ProgramCard({
         {program.image ? (
           <img
             src={program.image}
+            srcSet={variantSrcSet(program.image, 720, 1121)}
+            sizes="(min-width: 1024px) 290px, (min-width: 640px) calc(50vw - 3rem), calc(100vw - 2.5rem)"
             alt={program.imageAlt}
             width={560}
             height={700}
