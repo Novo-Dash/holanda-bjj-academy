@@ -84,7 +84,7 @@ export const site = {
     src: '/hero.webp?v=2',
     width: 1920,
     height: 917,
-    alt: 'Alunos e professores da Holanda BJJ Academy reunidos na sala de treino, adultos e crianças de kimono',
+    alt: 'Students and coaches of Holanda BJJ Academy together in the training room, adults and kids in gi',
   },
 
   /**

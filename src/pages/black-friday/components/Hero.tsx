@@ -31,7 +31,7 @@ export default function Hero() {
       <div className={VSL.src ? 'wrap hero-grid' : 'wrap hero-grid hero-grid--solo'}>
         <div className="hero-copy">
           <h1 className="hero-title">
-            <span>Black</span>
+            <span>Black{' '}</span>
             <span className="belt-line hero-belt" aria-hidden="true" />
             <span>Friday</span>
           </h1>

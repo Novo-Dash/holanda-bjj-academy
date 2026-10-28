@@ -6,7 +6,7 @@ import Hero from './black-friday/components/Hero'
 import GiftGame from './black-friday/components/game/GiftGame'
 import Faq from './black-friday/components/Faq'
 
-const TITLE = `Black Friday · ${ACADEMY.name}`
+const TITLE = `Black Friday Jiu-Jitsu in ${ACADEMY.city} | ${ACADEMY.name}`
 const DESCRIPTION =
   `Brazilian Jiu-Jitsu in ${ACADEMY.city}. Answer two quick questions and unlock your Black Friday gift. Kids ${ACADEMY.kidsMin}+ and adults, no experience needed.`
 
