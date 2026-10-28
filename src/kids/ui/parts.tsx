@@ -35,7 +35,6 @@ export function Button({
   href,
   onClick,
   variant = 'primary',
-  size,
   block,
   arrow = true,
   type = 'button',
@@ -44,8 +43,7 @@ export function Button({
   children: ReactNode
   href?: string
   onClick?: (e: MouseEvent<HTMLElement>) => void
-  variant?: 'primary' | 'light' | 'gold'
-  size?: 'small'
+  variant?: 'primary' | 'gold'
   block?: boolean
   arrow?: boolean
   type?: 'button' | 'submit'
@@ -54,7 +52,6 @@ export function Button({
   const cls = [
     'hk-btn',
     variant !== 'primary' && `hk-btn--${variant}`,
-    size && `hk-btn--${size}`,
     block && 'hk-btn--block',
     className,
   ]

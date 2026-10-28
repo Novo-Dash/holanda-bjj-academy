@@ -538,26 +538,12 @@ summary,
     0 6px 14px -10px var(--btn-glow);
   transition-duration: 40ms;
 }
-.hk-btn--light {
-  --btn-bg: var(--hk-paper);
-  --btn-fg: var(--hk-torii-deep);
-  --btn-base: var(--hk-torii-ink);
-  --btn-glow: rgb(0 0 0 / 0.35);
-}
 /* Amarelo: o botão da seção vermelha do NAGA. */
 .hk-btn--gold {
   --btn-bg: var(--hk-gold);
   --btn-fg: var(--hk-ink);
   --btn-base: var(--hk-gold-deep);
   --btn-glow: rgb(0 0 0 / 0.3);
-}
-.hk-btn--small {
-  min-height: 44px;
-  padding: 0 var(--s-5);
-  font-size: 0.95rem;
-  box-shadow:
-    0 4px 0 var(--btn-base),
-    0 12px 22px -14px var(--btn-glow);
 }
 .hk-btn--block {
   width: 100%;

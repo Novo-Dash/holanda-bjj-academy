@@ -148,7 +148,6 @@
 }
 .bf26 .faq-map-eyebrow { margin: 0 0 10px; color: var(--warm); }
 .bf26 .faq-map-logo { display: block; width: auto; height: 46px; margin: 4px 0 16px; }
-.bf26 .faq-map-name { margin: 0 0 8px; font: 900 26px/1.05 var(--display); color: #fff; }
 .bf26 .faq-map-addr { margin: 0 0 20px; font-size: 16px; line-height: 1.55; color: rgba(255,255,255,.8); }
 .bf26 .faq-map-btn {
   display: inline-flex; align-items: center; gap: 8px; min-height: 48px; padding: 0 20px; border-radius: 999px;
