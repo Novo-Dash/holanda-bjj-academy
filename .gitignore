@@ -56,3 +56,6 @@ coverage/
 
 # Prints de referência (F0 da Kids): pesados e só de consulta
 memory/prints/
+
+# QA local (prints da auditoria de responsividade do finalizador)
+.responsive-check/
