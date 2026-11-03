@@ -46,7 +46,7 @@ export default function Hero() {
               <path d="M12 11v5M12 8h.01" />
             </svg>
             <span>
-              Valid when you enroll. Starts with a {TRIAL.label}.
+              <b>Nov 9 to Nov 23 only.</b> Valid when you enroll. Starts with a {TRIAL.label}.
             </span>
           </p>
           <div className="hero-actions">

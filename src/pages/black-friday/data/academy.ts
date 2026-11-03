@@ -106,36 +106,36 @@ export const PRIZES: Record<PrizeKey, Prize> = {
     key: 'kid',
     pickedFor: 'Picked for your child',
     title: '50% off your first gi',
-    detail: 'Enroll between Oct 31 and Nov 15. Only the first 10 students get it. Kids and adults.',
-    show: [{ kind: 'percent', value: 50, label: 'Off your first gi, kids and adults' }, { kind: 'gift', title: '10 spots', label: 'Only the first 10 students, Oct 31 to Nov 15' }],
+    detail: 'Enroll between Nov 9 and Nov 23. Only the first 10 students get it. Kids and adults.',
+    show: [{ kind: 'percent', value: 50, label: 'Off your first gi, kids and adults' }, { kind: 'gift', title: '10 spots', label: 'Only the first 10 students, Nov 9 to Nov 23' }],
     tag: 'bf26-kimono50-kids',
   },
   family: {
     key: 'family',
     pickedFor: 'Picked for your family',
     title: '50% off your first gi',
-    detail: 'Enroll between Oct 31 and Nov 15. Only the first 10 students get it. Kids and adults.',
-    show: [{ kind: 'percent', value: 50, label: 'Off your first gi, kids and adults' }, { kind: 'gift', title: '10 spots', label: 'Only the first 10 students, Oct 31 to Nov 15' }],
+    detail: 'Enroll between Nov 9 and Nov 23. Only the first 10 students get it. Kids and adults.',
+    show: [{ kind: 'percent', value: 50, label: 'Off your first gi, kids and adults' }, { kind: 'gift', title: '10 spots', label: 'Only the first 10 students, Nov 9 to Nov 23' }],
     tag: 'bf26-kimono50-familia',
   },
   adultNew: {
     key: 'adultNew',
     pickedFor: 'Picked for first-timers',
     title: '50% off your first gi',
-    detail: 'Enroll between Oct 31 and Nov 15. Only the first 10 students get it. Kids and adults.',
-    show: [{ kind: 'percent', value: 50, label: 'Off your first gi, kids and adults' }, { kind: 'gift', title: '10 spots', label: 'Only the first 10 students, Oct 31 to Nov 15' }],
+    detail: 'Enroll between Nov 9 and Nov 23. Only the first 10 students get it. Kids and adults.',
+    show: [{ kind: 'percent', value: 50, label: 'Off your first gi, kids and adults' }, { kind: 'gift', title: '10 spots', label: 'Only the first 10 students, Nov 9 to Nov 23' }],
     tag: 'bf26-kimono50-iniciante',
   },
   adultBack: {
     key: 'adultBack',
     pickedFor: 'Picked for returning athletes',
     title: '50% off your first gi',
-    detail: 'Enroll between Oct 31 and Nov 15. Only the first 10 students get it. Kids and adults.',
-    show: [{ kind: 'percent', value: 50, label: 'Off your first gi, kids and adults' }, { kind: 'gift', title: '10 spots', label: 'Only the first 10 students, Oct 31 to Nov 15' }],
+    detail: 'Enroll between Nov 9 and Nov 23. Only the first 10 students get it. Kids and adults.',
+    show: [{ kind: 'percent', value: 50, label: 'Off your first gi, kids and adults' }, { kind: 'gift', title: '10 spots', label: 'Only the first 10 students, Nov 9 to Nov 23' }],
     tag: 'bf26-kimono50-retorno',
   },
 }
 
 /** FAQ answer for "What gifts can I unlock?". */
 export const GIFTS_SUMMARY =
-  'Everyone unlocks the same Black Friday deal: 50% off your first gi when you enroll between Oct 31 and Nov 15. Only the first 10 students get it.'
+  'Everyone unlocks the same Black Friday deal: 50% off your first gi when you enroll between Nov 9 and Nov 23. Only the first 10 students get it.'
