@@ -261,30 +261,19 @@ function ReferralForm({ initial }: { initial: Partial<Values> }) {
   )
 }
 
-/* ── the flyer panel: the program at a glance, next to the form ── */
+/* ── the flyer panel: the approved A4 flyer itself (05/11, Adryan), whole, next to the form; a tap opens
+   it full size (its QR code included) ── */
 function Flyer() {
   return (
-    <aside className="relative isolate flex min-h-[34rem] flex-col justify-between lg:h-full lg:min-h-0 overflow-hidden rounded-plate bg-ink text-paper shadow-lift" aria-label="Referral program at a glance">
-      <img src={FLYER_PHOTO} alt={`The ${site.name} team together outdoors`} width={640} height={1138} loading="lazy" decoding="async" className="rf-flyer__photo absolute inset-0 -z-20 h-full w-full object-cover" />
-      <span aria-hidden="true" className="absolute inset-0 -z-10 bg-gradient-to-b from-ink/70 via-ink/35 to-ink" />
-      <span aria-hidden="true" className="pointer-events-none absolute inset-[6px] rounded-[calc(var(--radius-plate)-4px)] border border-paper/20" />
-
-      <div className="flex items-center justify-between p-7">
-        <Wordmark invert />
-        <span className="label hidden text-paper/70 min-[420px]:inline">Referral program</span>
-      </div>
-
-      <div className="p-7 pt-24">
-        <p className="display text-[clamp(2.4rem,4vw,3.4rem)] leading-[0.92]">Refer a friend.<br /><span className="mark">Earn rewards.</span></p>
-        <ul className="mt-7 grid grid-cols-2 gap-x-6 border-t border-paper/20 pt-5 sm:grid-cols-3">
-          {REWARDS.map((r) => (
-            <li key={r.pts} className="flex flex-col gap-1 border-b border-paper/10 py-2.5">
-              <span className="display text-[1.6rem] leading-none tracking-[-0.01em] text-paper">{fmt(r.pts)}<span className="label ml-1.5 text-[0.55rem] text-paper/55">pts</span></span>
-              <span className="text-[0.82rem] text-paper/75">{r.label}</span>
-            </li>
-          ))}
-        </ul>
-      </div>
+    <aside className="rf-flyer relative overflow-hidden rounded-plate bg-paper-2 shadow-lift lg:h-full" aria-label="The referral program flyer">
+      <a href={FLYER_PHOTO} target="_blank" rel="noreferrer" className="block h-full" aria-label="Open the referral program flyer full size">
+        <img
+          src={FLYER_PHOTO}
+          alt={`${site.name} referral program flyer: bring one friend, earn points and exchange them for rewards, from a T-shirt at 100 points to an iPhone 18 Pro at 1,500.`}
+          width={1240} height={1754} loading="lazy" decoding="async"
+          className="rf-flyer__img h-full w-full object-contain"
+        />
+      </a>
     </aside>
   )
 }

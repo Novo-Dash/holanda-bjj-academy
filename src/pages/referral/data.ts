@@ -36,8 +36,8 @@ export const GALLERY: { src: string; wide?: boolean }[] = [
   { src: r('strip-11.webp') },
 ]
 
-/** The flyer panel: the team outdoors, the "bring a friend" picture. */
-export const FLYER_PHOTO = r('flyer.webp')
+/** The flyer panel: the approved A4 flyer (01-ReferralProgram-A4), whole, 1240x1754. */
+export const FLYER_PHOTO = r('01_referralprogram_a4.webp')
 export const FINAL_PHOTO = r('final.webp')
 
 export type Reward = {

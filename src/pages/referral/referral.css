@@ -41,13 +41,10 @@
   transition: filter 0.5s var(--ease-club), transform 0.8s var(--ease-club);
 }
 .rf-strip__card:hover img { filter: none; transform: scale(1.05); }
-/* ── THE FLYER: the photo drifts up slowly while the panel is on screen ── */
-.rf-flyer__photo { animation: rf-drift 18s ease-in-out infinite alternate; }
-@keyframes rf-drift {
-  from { transform: scale(1.06) translateY(1.5%); }
-  to { transform: scale(1.12) translateY(-2%); }
-}
-@media (prefers-reduced-motion: reduce) { .rf-flyer__photo { animation: none; } }
+/* ── THE FLYER: the A4 flyer whole; on desktop it takes the form's height and keeps its proportions ── */
+.rf-flyer__img { transition: transform 0.6s var(--ease-club); }
+.rf-flyer a:hover .rf-flyer__img { transform: scale(1.015); }
+@media (prefers-reduced-motion: reduce) { .rf-flyer__img { transition: none; } }
 
 /* ── THE TWO BIG PRIZES: the flyer's ink and red cards ── */
 .rf-big--ink { background: radial-gradient(120% 90% at 85% 100%, #3a3632 0% /* flyer */, var(--color-ink-2) 45%, var(--color-ink) 100%); }
