@@ -402,7 +402,7 @@ function Clipboard({ onBook }: { onBook: () => void }) {
                 or call{' '}
                 <a
                   href={site.phoneHref}
-                  className="tnum text-ink underline underline-offset-4 decoration-red"
+                  className="tnum -my-[14px] inline-block py-[14px] text-ink underline underline-offset-4 decoration-red"
                 >
                   {site.phone}
                 </a>

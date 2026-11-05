@@ -47,7 +47,7 @@ export function StickyCTA({ onBook, hidden }: { onBook: () => void; hidden: bool
             >
               <Phone className="h-5 w-5" />
             </a>
-            <Button size="lg" onClick={onBook} className="flex-1">
+            <Button size="lg" onClick={onBook} className="min-w-0 flex-1 max-[359px]:gap-2.5 max-[359px]:px-4">
               {offer.label}
             </Button>
           </div>

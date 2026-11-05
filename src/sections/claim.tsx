@@ -86,7 +86,7 @@ export function Claim({ onBook }: { onBook: () => void }) {
                 or call{' '}
                 <a
                   href={site.phoneHref}
-                  className="tnum text-paper underline underline-offset-4 decoration-red"
+                  className="tnum -my-[14px] inline-block py-[14px] text-paper underline underline-offset-4 decoration-red"
                 >
                   {site.phone}
                 </a>
