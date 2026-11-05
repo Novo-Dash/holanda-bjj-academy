@@ -20,6 +20,7 @@ export default defineConfig({
         main: fileURLToPath(new URL('./index.html', import.meta.url)),
         kids: fileURLToPath(new URL('./kids/index.html', import.meta.url)),
         'black-friday': fileURLToPath(new URL('./black-friday/index.html', import.meta.url)),
+        referral: fileURLToPath(new URL('./referral/index.html', import.meta.url)),
       },
       /* O React é o que as duas páginas compartilham: num chunk com nome
          próprio, o cache do navegador serve a quem passa de uma para a outra,

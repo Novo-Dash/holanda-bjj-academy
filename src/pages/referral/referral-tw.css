@@ -1,0 +1,6 @@
+/* The /referral stylesheet: the main page's whole system (tokens, the two fonts, Tailwind, the
+   utilities) through a CSS @import, which is inlined when the CSS is built. Importing index.css from
+   referral-main.tsx instead would make it a module SHARED by the two entries: Vite then splits it into a
+   common chunk and the main page's lazy sections reference that file, so the CSS that prerender-main
+   inlines in `/` would be downloaded a second time. Here `/` keeps its own main-*.css untouched. */
+@import "../../index.css";
