@@ -361,7 +361,16 @@ function PhotoStrip() {
       <div ref={track} className="rf-strip__track">
         {strip.map((g, i) => (
           <div key={i} className={cn('rf-strip__card', g.wide && 'rf-strip__card--wide')} aria-hidden={i >= GALLERY.length || undefined}>
-            <img src={g.src} alt={i < GALLERY.length ? (g.wide ? `The ${site.name} team on the mat, photo ${i + 1}` : `Training at ${site.name}, photo ${i + 1}`) : ''} width={g.wide ? 1200 : 400} height={g.wide ? 800 : 500} loading="lazy" decoding="async" draggable={false} />
+            {/* the first cards are on screen at load (the wide one is the LCP): no lazy there, and the team
+                photos come in 640 and 1200 for the size they are shown at */}
+            <img
+              src={g.src}
+              srcSet={g.wide ? `${g.src.replace('.webp', '-640.webp')} 640w, ${g.src} 1200w` : undefined}
+              sizes={g.wide ? '(max-width: 872px) 288px, 456px' : undefined}
+              alt={i < GALLERY.length ? (g.wide ? `The ${site.name} team on the mat, photo ${i + 1}` : `Training at ${site.name}, photo ${i + 1}`) : ''}
+              width={g.wide ? 1200 : 400} height={g.wide ? 800 : 500}
+              loading={i < 5 ? 'eager' : 'lazy'} fetchPriority={i === 1 ? 'high' : undefined} decoding="async" draggable={false}
+            />
           </div>
         ))}
       </div>

@@ -19,5 +19,8 @@ const app = (
     <ReferralPage />
   </StrictMode>
 )
-if (root.hasChildNodes()) hydrateRoot(root, app)
+// With reduced motion the tree renders fresh, as on the main page: the prerendered Reveal blocks carry
+// their hidden start.
+const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+if (root.firstElementChild && !reduce) hydrateRoot(root, app)
 else createRoot(root).render(app)
