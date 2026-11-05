@@ -42,7 +42,8 @@ const EASE = [0.22, 1, 0.36, 1] as const
 function useCountUp(target: number, ms = 1400) {
   const ref = useRef<HTMLElement>(null)
   const reduce = useReducedMotion()
-  const [n, setN] = useState(reduce ? target : 0)
+  // 0 on the server and on the first client frame alike (prerender); the effect jumps to the target when motion is off
+  const [n, setN] = useState(0)
   useEffect(() => {
     const el = ref.current
     if (!el || reduce) { setN(target); return }
@@ -154,11 +155,18 @@ function readUtms(): Utms {
 }
 
 function ReferralForm({ initial }: { initial: Partial<Values> }) {
-  const [values, setValues] = useState<Values>({ ...EMPTY, ...initial })
+  const [values, setValues] = useState<Values>(EMPTY)
   const [errors, setErrors] = useState<Partial<Record<keyof Values, string>>>({})
   const [status, setStatus] = useState<Status>({ kind: 'idle', message: '' })
-  // captured once, on load; re-applied after every successful send (they never leave this state)
-  const [utms] = useState<Utms>(readUtms)
+  // captured once, on load; re-applied after every successful send (they never leave this state).
+  // Read after mount: the prerendered HTML has them empty, and the first client render must match it.
+  const [utms, setUtms] = useState<Utms>(() => Object.fromEntries(UTM_KEYS.map((k) => [k, ''])) as Utms)
+  useEffect(() => { setUtms(readUtms()) }, [])
+  // the member's own details from a GHL email link, once the page is in the browser
+  useEffect(() => {
+    const fill = Object.fromEntries(Object.entries(initial).filter(([, v]) => v)) as Partial<Values>
+    if (Object.keys(fill).length) setValues((p) => ({ ...p, ...fill }))
+  }, [initial])
   const set = (k: keyof Values, v: string) => setValues((p) => ({ ...p, [k]: v }))
 
   const validate = () => {
@@ -523,11 +531,12 @@ function Footer() {
 export default function ReferralPage() {
   // A member arriving from a GHL email link carries their own contact in the URL: it fills "Your
   // details", then leaves the URL (it is the member's, not something to keep in the address bar).
-  const [initial] = useState(() => {
-    const p = prefillFromUrl()
-    return { referrer_name: p.fullName, referrer_email: p.email }
-  })
+  const [initial, setInitial] = useState<Partial<Values>>({})
   useEffect(() => {
+    try {
+      const p = prefillFromUrl()
+      if (p.fullName || p.email) setInitial({ referrer_name: p.fullName, referrer_email: p.email })
+    } catch { /* never break the page */ }
     try {
       const u = new URL(window.location.href)
       let changed = false

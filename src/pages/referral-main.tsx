@@ -1,5 +1,5 @@
 import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
+import { createRoot, hydrateRoot } from 'react-dom/client'
 import './referral/referral-tw.css'
 import { captureAttribution } from '@/nd/attribution'
 import ReferralPage from './ReferralPage'
@@ -11,8 +11,13 @@ import ReferralPage from './ReferralPage'
    at boot; the tags come from the nd:tracking block in the HTML head. */
 captureAttribution()
 
-createRoot(document.getElementById('root')!).render(
+// Prerendered at build time (scripts/prerender-referral.mjs): hydrate it. Plain render only when the
+// root comes empty (the dev server).
+const root = document.getElementById('root')!
+const app = (
   <StrictMode>
     <ReferralPage />
   </StrictMode>
 )
+if (root.hasChildNodes()) hydrateRoot(root, app)
+else createRoot(root).render(app)
