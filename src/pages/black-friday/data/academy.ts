@@ -63,10 +63,11 @@ export const CLASS_AGES: Record<string, string> = {}
 /** The trial on this page (no checkout here). */
 export const TRIAL = { label: 'free trial class' } as const
 
-/** Vertical (9:16) VSL. src null = the hero renders without the video block. [Black Friday VSL — TO CONFIRM] */
+/** Vertical (9:16) video in the hero's second column (05/11: the Black Friday ad, 01-HolandBJJ-ADS-v1,
+ *  1080x1920, 41s). Poster first, the file loads only on play. src null = the hero renders without it. */
 export const VSL: { src: string | null; poster: string | null; label: string } = {
-  src: null,
-  poster: null,
+  src: '/video/01-HolandBJJ-ADS-v1.mp4',
+  poster: '/video/bf-ads-poster.webp',
   label: 'See the mat before you step on it',
 }
 
