@@ -10,7 +10,7 @@ import { Phone } from '@/components/icons'
 import { Wordmark } from '@/components/mark'
 import { site } from '@/data/site'
 import { cn } from '@/lib/utils'
-import { FINAL_PHOTO, FLYER_PHOTO, GALLERY, REFERRAL_WEBHOOK, REWARDS, RULES, TOP_POINTS, type Reward } from './referral/data'
+import { FINAL_PHOTO, FLYER_PHOTO, FRIEND_OFFER, GALLERY, REFERRAL_WEBHOOK, REWARDS, RULES, TOP_POINTS, type Reward } from './referral/data'
 import './referral/referral.css'
 
 /**
@@ -269,7 +269,7 @@ function Flyer() {
       <a href={FLYER_PHOTO} target="_blank" rel="noreferrer" className="block h-full" aria-label="Open the referral program flyer full size">
         <img
           src={FLYER_PHOTO}
-          alt={`${site.name} referral program flyer: bring one friend, earn points and exchange them for rewards, from a T-shirt at 100 points to an iPhone 18 Pro at 1,500.`}
+          alt={`${site.name} referral program flyer: bring one friend, earn points and exchange them for rewards, from a T-shirt at 100 points to an iPhone 18 Pro at 1,500. New students get 50% off their first gi.`}
           width={1240} height={1754} loading="lazy" decoding="async"
           className="rf-flyer__img h-full w-full object-contain"
         />
@@ -577,7 +577,7 @@ export default function ReferralPage() {
                 </h1>
                 <Reveal gesture="rise" delay={0.3}>
                   <p className="type-body mx-auto mt-8 max-w-[50ch] leading-relaxed text-ink-soft">
-                    Jiu-jitsu is better with someone you trust beside you on the mat. Refer a friend, earn points, and trade them for real rewards, all the way up to a new iPhone.
+                    Jiu-jitsu is better with someone you trust beside you on the mat. Refer a friend, earn points, and trade them for real rewards, all the way up to a new iPhone. Your friend gets {FRIEND_OFFER}.
                   </p>
                 </Reveal>
                 <Reveal gesture="rise" delay={0.42}>
@@ -597,7 +597,7 @@ export default function ReferralPage() {
         {/* ── FLYER + FORM ── */}
         <section id="referral-form" className="band relative scroll-mt-6 bg-white">
           <div className="shell">
-            <SectionHead stroke="Refer" title="Send us their name. We do the rest." large aside={<p className="type-body leading-relaxed text-ink-soft">Your friend gets an invitation for a free trial class. When they join, the points are yours.</p>} />
+            <SectionHead stroke="Refer" title="Send us their name. We do the rest." large aside={<p className="type-body leading-relaxed text-ink-soft">Your friend gets a free trial class and, when they join, {FRIEND_OFFER}. The points are yours.</p>} />
             <div className="mt-12 grid grid-cols-1 items-stretch gap-6 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] lg:gap-8">
               <Reveal gesture="settle" className="h-full"><Flyer /></Reveal>
               <Reveal gesture="settle" delay={0.08} className="h-full"><ReferralForm initial={initial} /></Reveal>

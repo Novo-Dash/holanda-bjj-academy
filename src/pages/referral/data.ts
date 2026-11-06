@@ -36,8 +36,14 @@ export const GALLERY: { src: string; wide?: boolean }[] = [
   { src: r('strip-11.webp') },
 ]
 
-/** The flyer panel: the approved A4 flyer (01-ReferralProgram-A4), whole, 1240x1754. */
-export const FLYER_PHOTO = r('01_referralprogram_a4.webp')
+/** The flyer panel: the approved A4 flyer (01-ReferralProgram-A4), whole, 1240x1754. Since 06/11 its red
+ *  band reads "50% OFF YOUR FIRST GI" (it said "in the first month"; Mestre Holanda swapped the offer, and
+ *  the art was updated by Adryan). ?v=2 because webp is cached for 7 days. */
+export const FLYER_PHOTO = r('01_referralprogram_a4.webp?v=2')
+
+/** The new member's side of the deal (Mestre Holanda, 06/11): the friend who joins gets half off a gi.
+ *  Same wording as the Black Friday page, so the two offers read alike. */
+export const FRIEND_OFFER = '50% off their first gi'
 export const FINAL_PHOTO = r('final.webp')
 
 export type Reward = {
@@ -65,13 +71,14 @@ export const TOP_POINTS = REWARDS[REWARDS.length - 1].pts
 
 /**
  * The fleet's referral rules (Melbourne / Charleston / 2002), TO CONFIRM with Holanda. Left out on
- * purpose, as in 2002: Melbourne's "Program Duration" (its own dates) and a reward for the new member
- * (Holanda's list has none; the flyer's "[YOUR OFFER] in the first month" is still a placeholder).
+ * purpose, as in 2002: Melbourne's "Program Duration" (its own dates). The new member's reward is
+ * Holanda's own since 06/11 (FRIEND_OFFER).
  */
 export const RULES = [
   { title: 'Eligibility', text: 'All current members in good standing are eligible to participate in the referral program.' },
   { title: 'Referral verification', text: "Referrals must be verified by having the new member provide the referrer's name upon signing up, or by submitting a referral form available at the academy or online." },
   { title: 'Qualifying referral', text: 'A referral qualifies once the new member has signed up for a membership and has made their first payment.' },
+  { title: "Your friend's offer", text: `Every friend who joins through the program gets ${FRIEND_OFFER}. Ask at the front desk to claim it.` },
   { title: 'Reward distribution', text: 'Rewards are distributed monthly. Rewards are subject to availability, and models may vary.' },
   { title: 'No limits', text: 'There are no limits to the number of referrals a current member can make, but rewards will be capped monthly.' },
   { title: 'Referral tracking', text: 'Participants are responsible for ensuring their referrals are tracked properly. The academy may provide an online dashboard or regular updates.' },
