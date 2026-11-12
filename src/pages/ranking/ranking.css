@@ -1,0 +1,10 @@
+/* The /ranking stylesheet: the main page's system through @import (inlined at build), the same trick as
+   referral-tw.css, so the two entries never share a CSS chunk. */
+@import "../../index.css";
+
+/* One knob for the whole board: every size on the page is in em from here. 16px on a phone, 22px on a
+   1080p TV (1920 x 1.15vw), 44px on a 4K one. */
+.rk { font-size: clamp(16px, 1.15vw, 44px); }
+
+/* index.css leaves RankingPage.tsx out of the main page's CSS; its classes come in here only. */
+@source "../RankingPage.tsx";
