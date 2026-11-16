@@ -176,6 +176,10 @@ function ReferralForm({ initial }: { initial: Partial<Values> }) {
     if (!values.name.trim()) e.name = "Please enter your friend's name."
     if (!EMAIL_RE.test(values.email.trim())) e.email = 'Please enter a valid email address.'
     if (values.phone.replace(/\D/g, '').length !== 10) e.phone = 'Please enter a valid 10-digit US phone number.'
+    // nobody is their own friend (the ranking's n8n drops these too; here the CRM never gets them)
+    const same = (a: string, b: string) => a.trim().toLowerCase() === b.trim().toLowerCase()
+    if (!e.name && same(values.name, values.referrer_name)) e.name = "Please enter your friend's name, not your own."
+    if (!e.email && same(values.email, values.referrer_email)) e.email = "Please enter your friend's email, not your own."
     setErrors(e)
     return !Object.keys(e).length
   }
