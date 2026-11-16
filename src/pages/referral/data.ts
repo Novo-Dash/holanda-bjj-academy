@@ -74,11 +74,11 @@ export const TOP_POINTS = REWARDS[REWARDS.length - 1].pts
 export const POINTS_PER_FRIEND = 100
 
 /**
- * /ranking's data: the n8n "[ND] Referral Ranking v2" (o390bjsBSKyxExXz). It reads the referred contacts
+ * /ranking's data: the n8n "[ND] Referral Ranking" (P2fWi04DyyxBFyMq). It reads the referred contacts
  * of this GHL sub-account and answers names already shortened ("John S."), never an email:
  * { updatedAt, complete, referrers: [{ name, validated, pending }] }. Same location id as REFERRAL_WEBHOOK.
  */
-export const RANKING_URL = 'https://n8n.novodash.com/webhook/referral-ranking-v2?location_id=umbThmlnc77LC745O8FF'
+export const RANKING_URL = 'https://n8n.novodash.com/webhook/referral-ranking?location_id=umbThmlnc77LC745O8FF'
 
 /**
  * The fleet's referral rules (Melbourne / Charleston / 2002), TO CONFIRM with Holanda. Left out on
