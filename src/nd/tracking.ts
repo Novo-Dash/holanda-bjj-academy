@@ -9,7 +9,7 @@ import type { Client } from './types'
 
 type Params = Record<string, unknown>
 export type User = { name?: string; email?: string; phone?: string }
-type MetaEvent = 'ViewContent' | 'Lead' | 'Schedule'
+type MetaEvent = 'ViewContent' | 'Lead' | 'Schedule' | { custom: string }
 type Tracking = Client['tracking']
 
 // Local view of the globals: LPs declare window.fbq / window.gtag their own way.
@@ -44,16 +44,18 @@ export function startUnit({ pixel, ga4, ads }: Tracking) {
 }
 
 /** Browser Pixel + Conversions API mirror with the same event_id, so Meta counts it once. */
-export function fbTrack(event: MetaEvent, params: Params = {}, user?: User, t: Tracking = client.tracking) {
+export function fbTrack(ev: MetaEvent, params: Params = {}, user?: User, t: Tracking = client.tracking) {
+  const custom = typeof ev !== 'string'
+  const event = custom ? ev.custom : ev
   const { pixel } = t
   if (!pixel) return
   const eventId = `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 10)}`
   try {
     if (multi) {
       startUnit(t)
-      w.fbq?.('trackSingle', pixel, event, params, { eventID: eventId })
+      w.fbq?.(custom ? 'trackSingleCustom' : 'trackSingle', pixel, event, params, { eventID: eventId })
     } else {
-      w.fbq?.('track', event, params, { eventID: eventId })
+      w.fbq?.(custom ? 'trackCustom' : 'track', event, params, { eventID: eventId })
     }
   } catch {
     /* never break the funnel */
